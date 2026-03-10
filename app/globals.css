@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brown-50: #fdf8f5;
+  --color-brown-100: #f8ede6;
+  --color-brown-200: #eedbd0;
+  --color-brown-300: #e1c2b1;
+  --color-brown-400: #d0a28a;
+  --color-brown-500: #c28567;
+  --color-brown-600: #b56c4d;
+  --color-brown-700: #97553b;
+  --color-brown-800: #7b4632;
+  --color-brown-900: #643b2b;
+  --color-brown-950: #351d14;
+
+  --color-terracotta: #c85a32;
+  --color-ochre: #d99b2e;
+  
+  --font-display: var(--font-playfair);
+  --font-body: var(--font-dm-sans);
+}
+
+body {
+  background-color: var(--color-brown-50);
+  color: var(--color-brown-950);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+/* Organic border radius utility classes */
+.rounded-organic-1 {
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+}
+.rounded-organic-2 {
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+}
