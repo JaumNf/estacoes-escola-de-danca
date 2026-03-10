@@ -563,7 +563,7 @@ export default function CursosIntensivos() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-orange-800 text-center text-orange-400">
-          &copy; {new Date().getFullYear()} Estações Estúdio de Dança. Todos os direitos reservados.
+          &copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.
         </div>
       </footer>
     </main>

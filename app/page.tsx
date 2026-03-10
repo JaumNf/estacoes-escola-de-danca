@@ -347,7 +347,7 @@ export default function Home() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-brown-800 text-center text-brown-400 text-sm">
-          &copy; {new Date().getFullYear()} Estações Estúdio de Dança. Todos os direitos reservados.
+          &copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.
         </div>
       </footer>
     </main>

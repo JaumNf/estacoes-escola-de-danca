@@ -303,7 +303,7 @@ export default function BailePage() {
       {/* Footer */}
       <footer className="relative bg-[#0a0118] pt-20 pb-10 px-6 mt-auto border-t border-violet-900/30">
         <div className="max-w-7xl mx-auto text-center text-violet-400 text-sm">
-          &copy; {new Date().getFullYear()} Estações Estúdio de Dança. Todos os direitos reservados.
+          &copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.
         </div>
       </footer>
     </main>

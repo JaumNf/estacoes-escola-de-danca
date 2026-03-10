@@ -15,8 +15,8 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Estações | Estúdio de Dança',
-  description: 'Descubra a arte da dança em nosso estúdio. Aulas regulares, cursos intensivos e bailes.',
+  title: 'Escola de Dança Estações',
+  description: 'Descubra a arte da dança na Escola de Dança Estações. Aulas regulares, cursos intensivos e bailes.',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {

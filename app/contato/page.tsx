@@ -275,7 +275,7 @@ export default function Contato() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-brown-800 text-center text-brown-400">
-          &copy; {new Date().getFullYear()} Estações Estúdio de Dança. Todos os direitos reservados.
+          &copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.
         </div>
       </footer>
     </main>

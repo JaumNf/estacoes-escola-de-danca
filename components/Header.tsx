@@ -67,7 +67,7 @@ export default function Header() {
                 unoptimized
               />
             </div>
-            <span>ESTAÇÕES</span>
+            <span>ESCOLA DE DANÇA ESTAÇÕES</span>
           </Link>
 
           <nav className="hidden lg:flex items-center justify-center gap-6 xl:gap-8">
@@ -153,7 +153,7 @@ export default function Header() {
                       </div>
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-display font-bold text-brown-900 text-lg leading-none mb-1 group-hover:text-terracotta transition-colors">Estações Estúdio</span>
+                      <span className="font-display font-bold text-brown-900 text-lg leading-none mb-1 group-hover:text-terracotta transition-colors">Escola de Dança Estações</span>
                       <span className="text-brown-500 text-sm font-medium">@cursodeverao67</span>
                     </div>
                   </a>
@@ -185,7 +185,7 @@ export default function Header() {
                   transition={{ delay: 0.6 }}
                   className="mt-12 pt-8 border-t border-brown-200/60 text-center"
                 >
-                  <p className="text-brown-400 text-xs font-medium">© {new Date().getFullYear()} Estações Estúdio</p>
+                  <p className="text-brown-400 text-xs font-medium">© {new Date().getFullYear()} Escola de Dança Estações</p>
                 </motion.div>
               </div>
             </motion.div>
