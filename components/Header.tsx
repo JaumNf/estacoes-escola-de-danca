@@ -67,7 +67,7 @@ export default function Header() {
                 unoptimized
               />
             </div>
-            <span>ESCOLA DE DANÇA ESTAÇÕES</span>
+            <span>ESTAÇÕES</span>
           </Link>
 
           <nav className="hidden lg:flex items-center justify-center gap-6 xl:gap-8">
