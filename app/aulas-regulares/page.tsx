@@ -148,7 +148,7 @@ export default function AulasRegulares() {
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-orange-900">Vanera e Chamamé</h4>
-                  <p className="text-orange-700">Do zero ao baile</p>
+                  <p className="text-orange-700">Do zero</p>
                 </div>
               </div>
 
@@ -159,7 +159,7 @@ export default function AulasRegulares() {
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-orange-900">Forró</h4>
-                  <p className="text-orange-700">Do zero ao baile</p>
+                  <p className="text-orange-700">Do zero</p>
                 </div>
               </div>
             </div>
