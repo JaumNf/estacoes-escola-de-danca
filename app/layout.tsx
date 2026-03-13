@@ -19,6 +19,9 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: 'Escola de Dança Estações',
   description: 'Descubra a arte da dança na Escola de Dança Estações. Aulas regulares, cursos intensivos e bailes.',
+  verification: {
+    google: 'FzN2VszccJtpegzgYnqaZxplGVnzROU3O1gbqC1akdU',
+  },
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
