@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import WaveDivider from '@/components/WaveDivider';
 import { Mail, Phone, MapPin, Send, Instagram, Facebook, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function Contato() {
   const [name, setName] = useState('');
@@ -274,8 +275,11 @@ export default function Contato() {
             </ul>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-brown-800 text-center text-brown-400">
-          &copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.
+        <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-brown-800 flex flex-col md:flex-row items-center justify-between gap-4 text-brown-400">
+          <p>&copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.</p>
+          <Link href="/politica-de-privacidade" className="hover:text-terracotta transition-colors underline underline-offset-2">
+            Política de Privacidade
+          </Link>
         </div>
       </footer>
     </main>

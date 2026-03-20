@@ -87,7 +87,7 @@ export default function AulasRegulares() {
             Aprenda a dançar do zero ao baile com a nossa metodologia acolhedora e focada na sua evolução.
           </p>
           <button 
-            onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => document.getElementById('horarios')?.scrollIntoView({ behavior: 'smooth' })}
             className="bg-orange-600 text-orange-50 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-800 transition-colors duration-300 shadow-lg inline-flex items-center gap-2"
           >
             Quero Começar <ArrowRight size={20} />
@@ -118,6 +118,7 @@ export default function AulasRegulares() {
 
       {/* Horários Section */}
       <motion.section 
+        id="horarios"
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
@@ -141,27 +142,43 @@ export default function AulasRegulares() {
             </div>
 
             <div className="space-y-8">
-              <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+              <button 
+                onClick={() => {
+                  setUnidade('unidade1');
+                  setTurmaPrincipal('Vanera e Chamamé');
+                  document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-colors group/item"
+              >
                 <div className="flex items-center gap-3 min-w-[180px]">
                   <Clock className="text-orange-600" size={24} />
                   <span className="text-xl font-bold text-orange-600">18h20 - 19h20</span>
                 </div>
-                <div>
-                  <h4 className="text-xl font-bold text-orange-900">Vanera e Chamamé</h4>
+                <div className="flex-grow">
+                  <h4 className="text-xl font-bold text-orange-900 group-hover/item:text-orange-600 transition-colors">Vanera e Chamamé</h4>
                   <p className="text-orange-700">Do zero</p>
                 </div>
-              </div>
+                <ArrowRight className="text-orange-300 group-hover/item:text-orange-600 transition-all group-hover/item:translate-x-2" size={24} />
+              </button>
 
-              <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+              <button 
+                onClick={() => {
+                  setUnidade('unidade1');
+                  setTurmaPrincipal('Forró');
+                  document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-colors group/item"
+              >
                 <div className="flex items-center gap-3 min-w-[180px]">
                   <Clock className="text-orange-600" size={24} />
                   <span className="text-xl font-bold text-orange-600">19h30 - 20h30</span>
                 </div>
-                <div>
-                  <h4 className="text-xl font-bold text-orange-900">Forró</h4>
+                <div className="flex-grow">
+                  <h4 className="text-xl font-bold text-orange-900 group-hover/item:text-orange-600 transition-colors">Forró</h4>
                   <p className="text-orange-700">Do zero</p>
                 </div>
-              </div>
+                <ArrowRight className="text-orange-300 group-hover/item:text-orange-600 transition-all group-hover/item:translate-x-2" size={24} />
+              </button>
             </div>
           </div>
         </div>
@@ -169,6 +186,7 @@ export default function AulasRegulares() {
 
       {/* Valores Section */}
       <motion.section 
+        id="investimento"
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
@@ -190,26 +208,46 @@ export default function AulasRegulares() {
                 <h3 className="text-2xl font-display font-bold text-orange-50 mb-6 text-center">Público Geral</h3>
                 
                 <div className="space-y-5">
-                  <div className="flex justify-between items-center border-b border-orange-800 pb-3">
+                  <button 
+                    onClick={() => {
+                      setIsUniversitario(false);
+                      setTipoInscricao('individual');
+                      document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="w-full flex justify-between items-center border-b border-orange-800 pb-3 hover:bg-orange-800/30 transition-colors p-2 rounded-lg group/price"
+                  >
                     <div className="flex items-center gap-3">
                       <User className="text-orange-500" size={24} strokeWidth={1.5} />
-                      <span className="text-lg text-orange-200">Individual</span>
+                      <span className="text-lg text-orange-200 group-hover/price:text-orange-50 transition-colors">Individual</span>
                     </div>
-                    <div className="text-right">
-                      <span className="text-2xl font-bold text-orange-50">R$ 120</span>
-                      <span className="text-orange-400 text-xs">/mês</span>
+                    <div className="text-right flex items-center gap-3">
+                      <div>
+                        <span className="text-2xl font-bold text-orange-50">R$ 120</span>
+                        <span className="text-orange-400 text-xs">/mês</span>
+                      </div>
+                      <ArrowRight className="text-orange-500 opacity-0 group-hover/price:opacity-100 transition-all group-hover/price:translate-x-1" size={20} />
                     </div>
-                  </div>
-                  <div className="flex justify-between items-center pb-1">
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setIsUniversitario(false);
+                      setTipoInscricao('dupla');
+                      document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="w-full flex justify-between items-center pb-1 hover:bg-orange-800/30 transition-colors p-2 rounded-lg group/price"
+                  >
                     <div className="flex items-center gap-3">
                       <Users className="text-orange-500" size={24} strokeWidth={1.5} />
-                      <span className="text-lg text-orange-200">Em Dupla</span>
+                      <span className="text-lg text-orange-200 group-hover/price:text-orange-50 transition-colors">Em Dupla</span>
                     </div>
-                    <div className="text-right">
-                      <span className="text-2xl font-bold text-orange-50">R$ 180</span>
-                      <span className="text-orange-400 text-xs">/mês</span>
+                    <div className="text-right flex items-center gap-3">
+                      <div>
+                        <span className="text-2xl font-bold text-orange-50">R$ 180</span>
+                        <span className="text-orange-400 text-xs">/mês</span>
+                      </div>
+                      <ArrowRight className="text-orange-500 opacity-0 group-hover/price:opacity-100 transition-all group-hover/price:translate-x-1" size={20} />
                     </div>
-                  </div>
+                  </button>
                 </div>
               </div>
 
@@ -231,26 +269,46 @@ export default function AulasRegulares() {
                 <h3 className="text-2xl font-display font-bold text-orange-50 mb-6 text-center">Universitários</h3>
                 
                 <div className="space-y-5">
-                  <div className="flex justify-between items-center border-b border-orange-800 pb-3">
+                  <button 
+                    onClick={() => {
+                      setIsUniversitario(true);
+                      setTipoInscricao('individual');
+                      document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="w-full flex justify-between items-center border-b border-orange-800 pb-3 hover:bg-orange-800/30 transition-colors p-2 rounded-lg group/price"
+                  >
                     <div className="flex items-center gap-3">
                       <User className="text-orange-500" size={24} strokeWidth={1.5} />
-                      <span className="text-lg text-orange-200">Individual</span>
+                      <span className="text-lg text-orange-200 group-hover/price:text-orange-50 transition-colors">Individual</span>
                     </div>
-                    <div className="text-right">
-                      <span className="text-2xl font-bold text-orange-50">R$ 100</span>
-                      <span className="text-orange-400 text-xs">/mês</span>
+                    <div className="text-right flex items-center gap-3">
+                      <div>
+                        <span className="text-2xl font-bold text-orange-50">R$ 100</span>
+                        <span className="text-orange-400 text-xs">/mês</span>
+                      </div>
+                      <ArrowRight className="text-orange-500 opacity-0 group-hover/price:opacity-100 transition-all group-hover/price:translate-x-1" size={20} />
                     </div>
-                  </div>
-                  <div className="flex justify-between items-center pb-1">
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setIsUniversitario(true);
+                      setTipoInscricao('dupla');
+                      document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="w-full flex justify-between items-center pb-1 hover:bg-orange-800/30 transition-colors p-2 rounded-lg group/price"
+                  >
                     <div className="flex items-center gap-3">
                       <Users className="text-orange-500" size={24} strokeWidth={1.5} />
-                      <span className="text-lg text-orange-200">Em Dupla*</span>
+                      <span className="text-lg text-orange-200 group-hover/price:text-orange-50 transition-colors">Em Dupla*</span>
                     </div>
-                    <div className="text-right">
-                      <span className="text-2xl font-bold text-orange-50">R$ 150</span>
-                      <span className="text-orange-400 text-xs">/mês</span>
+                    <div className="text-right flex items-center gap-3">
+                      <div>
+                        <span className="text-2xl font-bold text-orange-50">R$ 150</span>
+                        <span className="text-orange-400 text-xs">/mês</span>
+                      </div>
+                      <ArrowRight className="text-orange-500 opacity-0 group-hover/price:opacity-100 transition-all group-hover/price:translate-x-1" size={20} />
                     </div>
-                  </div>
+                  </button>
                 </div>
               </div>
 
@@ -584,8 +642,11 @@ export default function AulasRegulares() {
             </ul>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-orange-800 text-center text-orange-400">
-          &copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.
+        <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-orange-800 flex flex-col md:flex-row items-center justify-between gap-4 text-orange-400">
+          <p>&copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.</p>
+          <Link href="/politica-de-privacidade" className="hover:text-orange-300 transition-colors underline underline-offset-2">
+            Política de Privacidade
+          </Link>
         </div>
       </footer>
     </main>

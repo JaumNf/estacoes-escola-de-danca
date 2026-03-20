@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { MapPin, Phone, Mail, Instagram, Facebook } from 'lucide-react';
 
 import EssenceCard from '@/components/EssenceCard';
+import InstagramFeed from '@/components/InstagramFeed';
 
 export default function Home() {
   const [showToast, setShowToast] = useState(false);
@@ -177,6 +178,9 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
+
+      {/* Instagram Feed Section */}
+      <InstagramFeed />
 
       {/* Locations Section */}
       <motion.section 
@@ -346,8 +350,11 @@ export default function Home() {
             </ul>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-brown-800 text-center text-brown-400 text-sm">
-          &copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.
+        <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-brown-800 flex flex-col md:flex-row items-center justify-between gap-4 text-brown-400 text-sm">
+          <p>&copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.</p>
+          <Link href="/politica-de-privacidade" className="hover:text-terracotta transition-colors underline underline-offset-2">
+            Política de Privacidade
+          </Link>
         </div>
       </footer>
     </main>

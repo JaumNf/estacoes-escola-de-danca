@@ -562,8 +562,11 @@ export default function CursosIntensivos() {
             </ul>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-orange-800 text-center text-orange-400">
-          &copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.
+        <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-orange-800 flex flex-col md:flex-row items-center justify-between gap-4 text-orange-400">
+          <p>&copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.</p>
+          <Link href="/politica-de-privacidade" className="hover:text-orange-300 transition-colors underline underline-offset-2">
+            Política de Privacidade
+          </Link>
         </div>
       </footer>
     </main>

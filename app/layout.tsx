@@ -3,6 +3,7 @@ import { Playfair_Display, DM_Sans } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css'; // Global styles
 import ShareButton from '@/components/ShareButton';
+import CookieBanner from '@/components/CookieBanner';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -28,6 +29,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="pt-BR" className={`${playfair.variable} ${dmSans.variable}`}>
       <head>
+        <Script src="https://elfsightcdn.com/platform.js" strategy="afterInteractive" />
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-BPFGLVKRPL" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
@@ -42,6 +44,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       <body suppressHydrationWarning className="antialiased selection:bg-brown-300 selection:text-brown-950">
         {children}
         <ShareButton />
+        <CookieBanner />
       </body>
     </html>
   );

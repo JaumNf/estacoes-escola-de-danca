@@ -302,8 +302,11 @@ export default function BailePage() {
 
       {/* Footer */}
       <footer className="relative bg-[#0a0118] pt-20 pb-10 px-6 mt-auto border-t border-violet-900/30">
-        <div className="max-w-7xl mx-auto text-center text-violet-400 text-sm">
-          &copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-violet-400 text-sm">
+          <p>&copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.</p>
+          <Link href="/politica-de-privacidade" className="hover:text-fuchsia-400 transition-colors underline underline-offset-2">
+            Política de Privacidade
+          </Link>
         </div>
       </footer>
     </main>
