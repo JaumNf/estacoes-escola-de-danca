@@ -235,9 +235,6 @@ export default function Contato() {
               Nossa proposta é mostrar que todo mundo pode dançar. Venha desenvolver sua consciência corporal, musicalidade e o prazer em dançar em um ambiente acolhedor.
             </p>
             <div className="flex gap-4">
-              <a href="https://www.instagram.com/cursodeverao67" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-brown-800 flex items-center justify-center text-brown-100 hover:bg-terracotta hover:text-white transition-colors">
-                <Instagram size={24} />
-              </a>
               <a href="https://chat.whatsapp.com/GleDoqpuQAh0K1Bo8fho7T" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-brown-800 flex items-center justify-center text-brown-100 hover:bg-terracotta hover:text-white transition-colors animate-pulse hover:animate-none shadow-[0_0_15px_rgba(217,119,87,0.5)]">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
@@ -250,10 +247,10 @@ export default function Contato() {
           <div>
             <h4 className="font-display font-bold text-2xl text-ochre mb-6">Links Rápidos</h4>
             <ul className="space-y-4 text-brown-200 text-lg">
-              <li><a href="/#sobre" className="hover:text-terracotta transition-colors">Sobre Nós</a></li>
-              <li><a href="/#aulas" className="hover:text-terracotta transition-colors">Nossas Aulas</a></li>
-              <li><a href="/#trabalhos" className="hover:text-terracotta transition-colors">Trabalhos</a></li>
-              <li><a href="/#unidades" className="hover:text-terracotta transition-colors">Unidades</a></li>
+              <li><Link href="/#sobre" className="hover:text-terracotta transition-colors">Sobre Nós</Link></li>
+              <li><Link href="/#aulas" className="hover:text-terracotta transition-colors">Nossas Aulas</Link></li>
+              <li><Link href="/#trabalhos" className="hover:text-terracotta transition-colors">Trabalhos</Link></li>
+              <li><Link href="/#unidades" className="hover:text-terracotta transition-colors">Unidades</Link></li>
             </ul>
           </div>
 

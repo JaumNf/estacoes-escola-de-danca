@@ -13,7 +13,7 @@ export default function BailePage() {
   const [selectedEvent, setSelectedEvent] = useState('baile-boas-vindas');
 
   const events = [
-    { id: 'baile-boas-vindas', name: 'Baile de Boas Vindas (28/03)', active: true },
+    { id: 'baile-boas-vindas', name: 'Baile de Boas Vindas (10/04)', active: true },
     { id: 'baile-unidade-2', name: 'Baile Unidade 2 (Em breve)', active: false },
   ];
 
@@ -132,8 +132,8 @@ export default function BailePage() {
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="bg-violet-50 rounded-xl p-3 text-center min-w-[70px] border border-violet-100">
-                    <span className="block text-xl font-bold text-violet-900">28</span>
-                    <span className="block text-xs font-bold text-fuchsia-500 uppercase">MAR</span>
+                    <span className="block text-xl font-bold text-violet-900">10</span>
+                    <span className="block text-xs font-bold text-fuchsia-500 uppercase">ABR</span>
                   </div>
                   <div>
                     <h4 className="text-xl font-display font-bold text-violet-900 mb-1">Baile de Boas Vindas!</h4>

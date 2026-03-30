@@ -86,16 +86,6 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center justify-end gap-6">
-            <a 
-              href="https://www.instagram.com/cursodeverao67" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 text-white shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-300`}
-              aria-label="Instagram"
-            >
-              <Instagram size={20} />
-              <span className="text-sm font-medium tracking-wide hidden xl:block">@cursodeverao67</span>
-            </a>
             <button 
               className={`lg:hidden z-50 relative ${isMobileMenuOpen ? 'text-brown-950' : (isScrolled ? 'text-brown-950' : 'text-brown-50')}`}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -141,22 +131,6 @@ export default function Header() {
                     <span className="w-4 h-[1px] bg-terracotta"></span>
                     Acompanhe nosso trabalho
                   </p>
-                  <a 
-                    href="https://www.instagram.com/cursodeverao67" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-4 group bg-white/50 p-4 rounded-2xl border border-brown-100 hover:bg-white hover:shadow-md transition-all duration-300"
-                  >
-                    <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 p-[2px] shrink-0 group-hover:scale-110 transition-transform duration-300">
-                      <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-                        <Instagram size={24} className="text-brown-900" />
-                      </div>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-display font-bold text-brown-900 text-lg leading-none mb-1 group-hover:text-terracotta transition-colors">Escola de Dança Estações</span>
-                      <span className="text-brown-500 text-sm font-medium">@cursodeverao67</span>
-                    </div>
-                  </a>
                 </motion.div>
 
                 <div className="flex flex-col gap-2 mb-auto relative z-10">

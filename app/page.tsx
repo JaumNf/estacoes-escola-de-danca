@@ -10,7 +10,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { MapPin, Phone, Mail, Instagram, Facebook } from 'lucide-react';
 
 import EssenceCard from '@/components/EssenceCard';
-import InstagramFeed from '@/components/InstagramFeed';
 
 export default function Home() {
   const [showToast, setShowToast] = useState(false);
@@ -179,9 +178,6 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* Instagram Feed Section */}
-      <InstagramFeed />
-
       {/* Locations Section */}
       <motion.section 
         id="unidades" 
@@ -310,9 +306,6 @@ export default function Home() {
               Nossa proposta é mostrar que todo mundo pode dançar. Venha desenvolver sua consciência corporal, musicalidade e o prazer em dançar em um ambiente acolhedor.
             </p>
             <div className="flex gap-3">
-              <a href="https://www.instagram.com/cursodeverao67" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-brown-800 flex items-center justify-center text-brown-100 hover:bg-terracotta hover:text-white transition-colors">
-                <Instagram size={20} />
-              </a>
               <a href="https://chat.whatsapp.com/GleDoqpuQAh0K1Bo8fho7T" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-brown-800 flex items-center justify-center text-brown-100 hover:bg-terracotta hover:text-white transition-colors animate-pulse hover:animate-none shadow-[0_0_15px_rgba(217,119,87,0.5)]">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
