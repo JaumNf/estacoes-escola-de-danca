@@ -77,7 +77,7 @@ export default function Home() {
           <div className="relative h-[350px] md:h-[500px] w-full">
             <div className="absolute inset-0 bg-ochre/20 rounded-[40px] rounded-tr-none transform translate-x-4 translate-y-4"></div>
             <Image
-              src="https://drive.google.com/uc?export=view&id=1s4pxsblj1XCqcLd02lJN4yuXz4zNRlop"
+              src="https://lh3.googleusercontent.com/d/1s4pxsblj1XCqcLd02lJN4yuXz4zNRlop"
               alt="Sobre nós"
               fill
               className="object-cover rounded-[40px] rounded-tl-none shadow-xl"
@@ -213,7 +213,7 @@ export default function Home() {
                 phone: '(67) 99263-0948',
                 whatsappLink: 'https://wa.me/5567992630948',
                 email: 'cursodeverao67@gmail.com',
-                img: 'https://drive.google.com/uc?export=view&id=1-G5rU0kTPGyQe8wOwArb756R9FX_17rc'
+                img: 'https://lh3.googleusercontent.com/d/1-G5rU0kTPGyQe8wOwArb756R9FX_17rc'
               },
               {
                 name: 'Unidade 2 - Oeste',
@@ -222,7 +222,7 @@ export default function Home() {
                 phone: '(67) 99263-0948',
                 whatsappLink: 'https://wa.me/5567992630948',
                 email: 'cursodeverao67@gmail.com',
-                img: 'https://drive.google.com/uc?export=view&id=1tj8o79FcqiMRoIdZfr1hKlLSobPCyhkK'
+                img: 'https://lh3.googleusercontent.com/d/1tj8o79FcqiMRoIdZfr1hKlLSobPCyhkK'
               }
             ].map((unit, idx) => (
               <div key={idx} className="bg-brown-950/60 rounded-[32px] overflow-hidden border border-brown-800/50 backdrop-blur-sm hover:border-brown-700 transition-colors">
@@ -272,10 +272,10 @@ export default function Home() {
           <h4 className="text-xs font-bold tracking-widest uppercase text-brown-500 mb-8">Nossos Parceiros</h4>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
             {[
-              { name: 'Estação Cultural Teatro do Mundo', img: 'https://drive.google.com/uc?export=view&id=1sT2v-sCt4aSmqeCOn4rVYRt0nrHbOz2a', link: 'https://www.instagram.com/estacaoculturalteatrodomundo' },
+              { name: 'Estação Cultural Teatro do Mundo', img: 'https://lh3.googleusercontent.com/d/1sT2v-sCt4aSmqeCOn4rVYRt0nrHbOz2a', link: 'https://www.instagram.com/estacaoculturalteatrodomundo' },
               { name: 'Movimentaê', img: 'https://lh3.googleusercontent.com/d/1lh0BSQXlSaA4I6c9RnT1OjGdHBWKHH6w', link: 'https://www.instagram.com/movimentae.ms' },
-              { name: 'Projeto Guardião Azul', img: 'https://drive.google.com/uc?export=view&id=1zvIs2-AlTr2jyuil27fq8UH-AoRYI7wu', link: 'https://www.instagram.com/guardiaoazulms' },
-              { name: 'Nambei Honganji', img: 'https://drive.google.com/uc?export=view&id=10rzNw6aAw5E6fQrov-gQEdRJZlbRtKFO', link: 'https://www.instagram.com/nambeihonganjicgr' }
+              { name: 'Projeto Guardião Azul', img: 'https://lh3.googleusercontent.com/d/1zvIs2-AlTr2jyuil27fq8UH-AoRYI7wu', link: 'https://www.instagram.com/guardiaoazulms' },
+              { name: 'Nambei Honganji', img: 'https://lh3.googleusercontent.com/d/10rzNw6aAw5E6fQrov-gQEdRJZlbRtKFO', link: 'https://www.instagram.com/nambeihonganjicgr' }
             ].map((partner, idx) => (
               <a 
                 key={idx} 

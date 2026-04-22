@@ -18,7 +18,7 @@ export default function FeedbackSection() {
       id: 1,
       name: 'Mariana Silva',
       rating: 5,
-      content: 'Ambiente maravilhoso e super acolhedor! O professor é fantástico e tem uma paciência incrível para ensinar quem está começando do zero.'
+      content: 'Ambiente maravilhoso e super acolhedor! Os professores são fantásticos e têm uma paciência incrível para ensinar quem está começando do zero.'
     },
     {
       id: 2,
@@ -30,7 +30,7 @@ export default function FeedbackSection() {
       id: 3,
       name: 'Ana Laura',
       rating: 5,
-      content: 'Fiz o curso intensivo e amei! A didática é diferente de tudo que já vi, a aula passa voando e quando você vê, já está dançando.'
+      content: 'Fiz o curso intensivo e amei! A didática dos professores é diferente de tudo que já vi, a aula passa voando e quando você vê, já está dançando.'
     }
   ];
 
@@ -155,7 +155,7 @@ export default function FeedbackSection() {
 
           {/* Formulário de Feedback */}
           <div className="bg-white p-8 md:p-10 rounded-[40px] shadow-xl border border-brown-100 sticky top-32">
-            <h3 className="text-2xl font-display font-bold text-brown-900 mb-8 text-center">Deixe sua Avaliação</h3>
+            <h3 className="text-2xl font-display font-bold text-brown-900 mb-8 text-center">Avalie Nossos Professores</h3>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
@@ -172,7 +172,7 @@ export default function FeedbackSection() {
               </div>
 
               <div>
-                <label className="block text-sm font-bold tracking-wide uppercase text-brown-800 mb-3">Avaliação geral</label>
+                <label className="block text-sm font-bold tracking-wide uppercase text-brown-800 mb-3">Avaliação das aulas e ensino</label>
                 <div className="flex gap-2 justify-center">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
@@ -193,7 +193,7 @@ export default function FeedbackSection() {
               </div>
 
               <div>
-                <label htmlFor="feedback" className="block text-sm font-bold tracking-wide uppercase text-brown-800 mb-2">Conta pra gente, o que achou?</label>
+                <label htmlFor="feedback" className="block text-sm font-bold tracking-wide uppercase text-brown-800 mb-2">Conta pra gente, o que achou dos professores?</label>
                 <textarea 
                   id="feedback" 
                   required
@@ -201,7 +201,7 @@ export default function FeedbackSection() {
                   onChange={(e) => setFeedback(e.target.value)}
                   rows={4}
                   className="w-full px-5 py-4 rounded-xl border border-brown-200 focus:outline-none focus:ring-2 focus:ring-terracotta focus:border-transparent transition-all bg-brown-50/50 resize-none"
-                  placeholder="Escreva aqui sobre sua experiência na escola..."
+                  placeholder="Escreva aqui sobre sua experiência com nossos professores e a metodologia..."
                 ></textarea>
               </div>
 
