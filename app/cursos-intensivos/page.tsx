@@ -73,6 +73,7 @@ export default function CursosIntensivos() {
             className="object-cover"
             referrerPolicy="no-referrer"
             priority
+            unoptimized
           />
         </div>
         

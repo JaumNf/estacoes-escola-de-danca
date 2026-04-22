@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Header from '@/components/Header';
 import HeroCarousel from '@/components/HeroCarousel';
 import WaveDivider from '@/components/WaveDivider';
+import FeedbackSection from '@/components/FeedbackSection';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
@@ -81,6 +82,7 @@ export default function Home() {
               fill
               className="object-cover rounded-[40px] rounded-tl-none shadow-xl"
               referrerPolicy="no-referrer"
+              unoptimized
             />
           </div>
         </div>
@@ -178,6 +180,9 @@ export default function Home() {
         </div>
       </motion.section>
 
+      {/* Feedbacks Section */}
+      <FeedbackSection />
+
       {/* Locations Section */}
       <motion.section 
         id="unidades" 
@@ -228,6 +233,7 @@ export default function Home() {
                     fill
                     className="object-cover opacity-70 mix-blend-luminosity hover:mix-blend-normal hover:opacity-100 transition-all duration-700"
                     referrerPolicy="no-referrer"
+                    unoptimized
                   />
                 </a>
                 <div className="p-6 md:p-8 space-y-4">
@@ -285,6 +291,7 @@ export default function Home() {
                     fill
                     className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                     referrerPolicy="no-referrer"
+                    unoptimized
                   />
                 </div>
                 <span className="font-display text-base font-medium text-brown-700 group-hover:text-brown-900 transition-colors text-center leading-tight">

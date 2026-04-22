@@ -128,7 +128,29 @@ export default function AulasRegulares() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-display font-bold text-orange-900 mb-6">Horários e Turmas</h2>
-            <p className="text-lg text-orange-700">Encontre a turma perfeita para a sua rotina.</p>
+            <p className="text-lg text-orange-700 max-w-2xl mx-auto mb-8">
+              Encontre a turma perfeita para a sua rotina.
+            </p>
+            
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-sm font-bold tracking-wide uppercase text-orange-800">
+              <div className="flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-orange-200 flex items-center justify-center text-orange-900 border-2 border-orange-400">1</span>
+                <span>Escolha sua Turma</span>
+              </div>
+              <ArrowRight className="hidden md:block text-orange-400" size={16} />
+              <div className="flex items-center gap-2 opacity-70">
+                <span className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">2</span>
+                <span>Selecione o Plano</span>
+              </div>
+              <ArrowRight className="hidden md:block text-orange-400" size={16} />
+              <div className="flex items-center gap-2 opacity-70">
+                <span className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">3</span>
+                <span>Finalize a Matrícula</span>
+              </div>
+            </div>
+            <p className="text-orange-600 mt-6 text-sm font-medium animate-pulse">
+              👇 Clique na turma desejada nas caixas abaixo para iniciar a sua matrícula!
+            </p>
           </div>
 
           <div className="group bg-white rounded-[40px] p-8 md:p-12 shadow-xl shadow-orange-900/5 border border-orange-100 hover:-translate-y-2 hover:shadow-2xl hover:border-fuchsia-500 transition-all duration-300">
@@ -137,7 +159,7 @@ export default function AulasRegulares() {
                 <MapPin className="text-orange-600 group-hover:text-fuchsia-500 transition-colors duration-300" size={24} />
               </div>
               <div>
-                <h3 className="text-2xl font-display font-bold text-orange-900 group-hover:text-fuchsia-600 transition-colors duration-300">UNIDADE 1 - Terça-feira</h3>
+                <h3 className="text-2xl font-display font-bold text-orange-900 group-hover:text-fuchsia-600 transition-colors duration-300">UNIDADE 1: Teatro do Mundo - Terça-feira</h3>
               </div>
             </div>
 
@@ -181,6 +203,58 @@ export default function AulasRegulares() {
               </button>
             </div>
           </div>
+
+          <div className="group bg-white rounded-[40px] p-8 md:p-12 shadow-xl shadow-orange-900/5 border border-orange-100 hover:-translate-y-2 hover:shadow-2xl hover:border-fuchsia-500 transition-all duration-300 mt-8 relative">
+            <div className="absolute -top-4 -right-4 bg-fuchsia-500 text-white font-bold text-sm px-4 py-1.5 rounded-full shadow-lg transform rotate-12 z-10">NOVIDADE!</div>
+            <div className="flex items-center gap-4 mb-8 border-b border-orange-100 pb-6">
+              <div className="w-12 h-12 rounded-full border-2 border-orange-600 group-hover:border-fuchsia-500 flex items-center justify-center shrink-0 transition-colors duration-300">
+                <MapPin className="text-orange-600 group-hover:text-fuchsia-500 transition-colors duration-300" size={24} />
+              </div>
+              <div>
+                <h3 className="text-2xl font-display font-bold text-orange-900 group-hover:text-fuchsia-600 transition-colors duration-300">UNIDADE 2: Templo Nambei - Quinta-feira</h3>
+              </div>
+            </div>
+
+            <div className="space-y-8">
+              <button 
+                onClick={() => {
+                  setUnidade('unidade2');
+                  setTurmaPrincipal('Dança de Salão em Geral');
+                  document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-colors group/item"
+              >
+                <div className="flex items-center gap-3 min-w-[180px]">
+                  <Clock className="text-orange-600" size={24} />
+                  <span className="text-xl font-bold text-orange-600">18h20 - 19h20</span>
+                </div>
+                <div className="flex-grow">
+                  <h4 className="text-xl font-bold text-orange-900 group-hover/item:text-orange-600 transition-colors">Dança de Salão em Geral</h4>
+                  <p className="text-orange-700">Vanera, Chamamé, Bolero, etc.</p>
+                </div>
+                <ArrowRight className="text-orange-300 group-hover/item:text-orange-600 transition-all group-hover/item:translate-x-2" size={24} />
+              </button>
+
+              <button 
+                onClick={() => {
+                  setUnidade('unidade2');
+                  setTurmaPrincipal('Forró');
+                  document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-colors group/item"
+              >
+                <div className="flex items-center gap-3 min-w-[180px]">
+                  <Clock className="text-orange-600" size={24} />
+                  <span className="text-xl font-bold text-orange-600">19h30 - 20h30</span>
+                </div>
+                <div className="flex-grow">
+                  <h4 className="text-xl font-bold text-orange-900 group-hover/item:text-orange-600 transition-colors">Forró</h4>
+                  <p className="text-orange-700">Do zero</p>
+                </div>
+                <ArrowRight className="text-orange-300 group-hover/item:text-orange-600 transition-all group-hover/item:translate-x-2" size={24} />
+              </button>
+            </div>
+          </div>
         </div>
       </motion.section>
 
@@ -196,9 +270,19 @@ export default function AulasRegulares() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-display font-bold text-orange-50 mb-6">Investimento</h2>
-            <p className="text-lg text-orange-200 max-w-2xl mx-auto">
+            <p className="text-lg text-orange-200 max-w-2xl mx-auto mb-8">
               Escolha a melhor opção para você. A matrícula já está inclusa no valor de todas as mensalidades.
             </p>
+
+            <div className="flex justify-center mb-8">
+              <div className="inline-flex items-center gap-3 bg-orange-900/50 border border-orange-800 px-6 py-3 rounded-full text-orange-200 text-sm font-medium">
+                <span className="flex h-3 w-3 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+                </span>
+                Passo 2: Clique em um dos planos abaixo para avançar
+              </div>
+            </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
@@ -351,6 +435,12 @@ export default function AulasRegulares() {
           <div className="bg-white p-6 md:p-8 rounded-[32px] shadow-xl shadow-orange-900/5 border border-orange-100">
             <div className="text-center mb-8">
               <h2 className="text-2xl md:text-3xl font-display font-bold text-orange-900 mb-2">Faça sua Matrícula</h2>
+              <div className="inline-block mt-4 bg-orange-100 text-orange-800 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-widest">
+                Passo Final
+              </div>
+              <p className="text-orange-700 mt-4 text-sm max-w-lg mx-auto">
+                Preencha seus dados abaixo. As opções selecionadas nos passos anteriores já foram preenchidas para você!
+              </p>
             </div>
 
             <form onSubmit={handleWhatsAppRedirect} className="space-y-6">
@@ -408,9 +498,17 @@ export default function AulasRegulares() {
                     <option value="Forró">Forró</option>
                   </select>
                 ) : (
-                  <div className="w-full px-4 py-3 rounded-xl border border-orange-200 bg-orange-50/50 text-sm text-orange-600 italic">
-                    Nenhuma turma disponível nesta unidade no momento.
-                  </div>
+                  <select 
+                    id="turmaPrincipal" 
+                    required
+                    value={turmaPrincipal}
+                    onChange={(e) => setTurmaPrincipal(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent transition-all bg-orange-50/50 text-sm text-orange-900"
+                  >
+                    <option value="" disabled>Selecione a turma principal...</option>
+                    <option value="Dança de Salão em Geral">Dança de Salão em Geral</option>
+                    <option value="Forró">Forró</option>
+                  </select>
                 )}
               </div>
 
@@ -519,9 +617,18 @@ export default function AulasRegulares() {
                           ))}
                         </select>
                       ) : (
-                        <div className="w-full px-4 py-3 rounded-xl border border-orange-200 bg-orange-50/50 text-sm text-orange-600 italic">
-                          Nenhuma turma adicional disponível nesta unidade no momento.
-                        </div>
+                        <select 
+                          id="segundaTurma" 
+                          required={querSegundaTurma}
+                          value={segundaTurma}
+                          onChange={(e) => setSegundaTurma(e.target.value)}
+                          className="w-full px-4 py-3 rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent transition-all bg-orange-50/50 text-sm text-orange-900"
+                        >
+                          <option value="" disabled>Selecione uma turma...</option>
+                          {['Dança de Salão em Geral', 'Forró'].filter(t => t !== turmaPrincipal).map(t => (
+                            <option key={t} value={t}>{t}</option>
+                          ))}
+                        </select>
                       )}
                     </motion.div>
                   )}
@@ -574,7 +681,7 @@ export default function AulasRegulares() {
               <div className="space-y-3">
                 <button 
                   type="submit"
-                  disabled={unidade === 'unidade2' || (unidade === 'unidade1' && !turmaPrincipal)}
+                  disabled={!turmaPrincipal}
                   className="w-full bg-[#25D366] text-white py-4 rounded-full font-bold tracking-wide text-base hover:bg-[#128C7E] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300 flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/20"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
