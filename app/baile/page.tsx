@@ -10,10 +10,10 @@ import { motion } from 'motion/react';
 
 export default function BailePage() {
   const [ticketType, setTicketType] = useState<'individual' | 'dupla'>('individual');
-  const [selectedEvent, setSelectedEvent] = useState('baile-boas-vindas');
+  const [selectedEvent, setSelectedEvent] = useState('baile-encerramento');
 
   const events = [
-    { id: 'baile-boas-vindas', name: 'Baile de Boas Vindas (10/04)', active: true },
+    { id: 'baile-encerramento', name: 'Baile de Encerramento (23/05)', active: true },
     { id: 'baile-unidade-2', name: 'Baile Unidade 2 (Em breve)', active: false },
   ];
 
@@ -132,15 +132,15 @@ export default function BailePage() {
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="bg-violet-50 rounded-xl p-3 text-center min-w-[70px] border border-violet-100">
-                    <span className="block text-xl font-bold text-violet-900">10</span>
-                    <span className="block text-xs font-bold text-fuchsia-500 uppercase">ABR</span>
+                    <span className="block text-xl font-bold text-violet-900">23</span>
+                    <span className="block text-xs font-bold text-fuchsia-500 uppercase">MAI</span>
                   </div>
                   <div>
-                    <h4 className="text-xl font-display font-bold text-violet-900 mb-1">Baile de Boas Vindas!</h4>
-                    <p className="text-violet-600 text-sm mb-2">Venha celebrar o início de um novo ciclo com muita dança.</p>
+                    <h4 className="text-xl font-display font-bold text-violet-900 mb-1">Baile de Encerramento!</h4>
+                    <p className="text-violet-600 text-sm mb-2">Venha celebrar o fim de um ciclo incrível com muita dança.</p>
                     <div className="flex items-center gap-2 text-xs text-violet-500">
                       <Clock size={14} />
-                      <span>A partir das 20h</span>
+                      <span>Das 19h às 00h</span>
                     </div>
                   </div>
                 </div>
@@ -184,7 +184,7 @@ export default function BailePage() {
                 <span className="text-fuchsia-400 font-bold tracking-widest uppercase text-sm mb-2 block">Venda Antecipada</span>
                 <h2 className="text-4xl md:text-5xl font-display font-bold text-violet-50 mb-4">Garanta seu Ingresso</h2>
                 <p className="text-violet-200 text-lg leading-relaxed">
-                  Compre antecipado e garanta o melhor valor para curtir o Baile de Boas Vindas.
+                  Compre antecipado e garanta o melhor valor para curtir o Baile de Encerramento.
                 </p>
               </div>
 

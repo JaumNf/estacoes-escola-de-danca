@@ -4,6 +4,7 @@ import Script from 'next/script';
 import './globals.css'; // Global styles
 import ShareButton from '@/components/ShareButton';
 import CookieBanner from '@/components/CookieBanner';
+import Chatbot from '@/components/Chatbot';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -45,6 +46,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         {children}
         <ShareButton />
         <CookieBanner />
+        <Chatbot />
       </body>
     </html>
   );

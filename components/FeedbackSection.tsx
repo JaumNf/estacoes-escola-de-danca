@@ -11,7 +11,8 @@ export default function FeedbackSection() {
   const [feedback, setFeedback] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [currentFeedbackIndex, setCurrentFeedbackIndex] = useState(0);
+  
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   const feedbacks = [
     {
@@ -31,19 +32,54 @@ export default function FeedbackSection() {
       name: 'Ana Laura',
       rating: 5,
       content: 'Fiz o curso intensivo e amei! A didática dos professores é diferente de tudo que já vi, a aula passa voando e quando você vê, já está dançando.'
+    },
+    {
+      id: 4,
+      name: 'Carlos Mendes',
+      rating: 5,
+      content: 'As aulas são muito divertidas e a turma é super animada. Já recomendei para todos os meus amigos e familiares!'
+    },
+    {
+      id: 5,
+      name: 'Beatriz Costa',
+      rating: 4,
+      content: 'Ótima escola! Os professores são muito atenciosos e ajustam o ensino ao ritmo de cada aluno, sem pressão.'
+    },
+    {
+      id: 6,
+      name: 'Fernando Oliveira',
+      rating: 5,
+      content: 'A melhor escola de dança da cidade! A infraestrutura é excelente e a paciência dos instrutores é maravilhosa.'
     }
   ];
 
-  // Auto-advance carousel
+  const scrollLeft = () => {
+    if (carouselRef.current) {
+      const scrollAmount = carouselRef.current.clientWidth / (window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3);
+      carouselRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (carouselRef.current) {
+      const scrollAmount = carouselRef.current.clientWidth / (window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3);
+      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentFeedbackIndex((prev) => (prev + 1) % feedbacks.length);
+      if (carouselRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+        if (scrollLeft + clientWidth >= scrollWidth - 10) {
+          carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          scrollRight();
+        }
+      }
     }, 6000);
     return () => clearInterval(timer);
-  }, [feedbacks.length]);
-
-  const nextFeedback = () => setCurrentFeedbackIndex((prev) => (prev + 1) % feedbacks.length);
-  const prevFeedback = () => setCurrentFeedbackIndex((prev) => (prev - 1 + feedbacks.length) % feedbacks.length);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,7 +127,7 @@ export default function FeedbackSection() {
   };
 
   return (
-    <section className="py-24 px-6 bg-brown-50">
+    <section className="py-16 md:py-24 px-4 md:px-6 bg-brown-50">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-display font-bold text-brown-900 mb-6">O que dizem sobre nós</h2>
@@ -100,121 +136,110 @@ export default function FeedbackSection() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
-          {/* Feedbacks Exibidos */}
-          <div className="space-y-6 flex flex-col h-full justify-center">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-2xl font-display font-bold text-brown-900 border-b-2 border-terracotta inline-block pb-2">Feedbacks Recentes</h3>
-              <div className="flex gap-2">
-                <button onClick={prevFeedback} className="p-2 rounded-full bg-white border border-brown-200 text-brown-700 hover:bg-brown-100 transition-colors">
-                  <ChevronLeft size={20} />
-                </button>
-                <button onClick={nextFeedback} className="p-2 rounded-full bg-white border border-brown-200 text-brown-700 hover:bg-brown-100 transition-colors">
-                  <ChevronRight size={20} />
-                </button>
-              </div>
+        {/* Carousel de Feedbacks */}
+        <div className="mb-24">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-2xl font-display font-bold text-brown-900 border-b-2 border-terracotta inline-block pb-2">Feedbacks Recentes</h3>
+            <div className="flex gap-2">
+              <button onClick={scrollLeft} className="p-2 rounded-full bg-white border border-brown-200 text-brown-700 hover:bg-brown-100 transition-colors">
+                <ChevronLeft size={20} />
+              </button>
+              <button onClick={scrollRight} className="p-2 rounded-full bg-white border border-brown-200 text-brown-700 hover:bg-brown-100 transition-colors">
+                <ChevronRight size={20} />
+              </button>
             </div>
-            
-            <div className="relative min-h-[300px] flex items-center">
-              <AnimatePresence mode="wait">
-                <motion.div 
-                  key={currentFeedbackIndex}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
-                  className="bg-white p-8 md:p-10 rounded-3xl shadow-lg border border-brown-100 flex flex-col gap-6 w-full"
-                >
-                  <div className="flex justify-between items-start">
-                    <span className="font-display font-bold text-2xl text-brown-900">{feedbacks[currentFeedbackIndex].name}</span>
-                    <div className="flex gap-1">
+          </div>
+          
+          <div 
+            ref={carouselRef}
+            className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          >
+            {feedbacks.map((fb) => (
+              <div 
+                key={fb.id}
+                className="snap-start shrink-0 w-[85%] md:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
+              >
+                <div className="bg-white p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-lg border border-brown-100 flex flex-col gap-3 md:gap-5 h-full hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+                  <div className="flex justify-between items-start gap-2">
+                    <span className="font-display font-bold text-lg md:text-xl text-brown-900 leading-tight">{fb.name}</span>
+                    <div className="flex gap-0.5 shrink-0 mt-0.5 md:mt-1">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star 
                           key={star} 
-                          size={20} 
-                          className={star <= feedbacks[currentFeedbackIndex].rating ? "fill-ochre text-ochre" : "text-brown-200"} 
+                          size={14} 
+                          className={star <= fb.rating ? "fill-ochre text-ochre" : "text-brown-200"} 
                         />
                       ))}
                     </div>
                   </div>
-                  <p className="text-brown-700 text-lg leading-relaxed italic">&quot;{feedbacks[currentFeedbackIndex].content}&quot;</p>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-            
-            <div className="flex justify-center gap-2 mt-4">
-              {feedbacks.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setCurrentFeedbackIndex(idx)}
-                  className={`w-2.5 h-2.5 rounded-full transition-colors ${idx === currentFeedbackIndex ? 'bg-terracotta' : 'bg-brown-200'}`}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Formulário de Feedback */}
-          <div className="bg-white p-8 md:p-10 rounded-[40px] shadow-xl border border-brown-100 sticky top-32">
-            <h3 className="text-2xl font-display font-bold text-brown-900 mb-8 text-center">Avalie Nossos Professores</h3>
-            
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-bold tracking-wide uppercase text-brown-800 mb-2">Seu Nome</label>
-                <input 
-                  type="text" 
-                  id="name" 
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full px-5 py-4 rounded-xl border border-brown-200 focus:outline-none focus:ring-2 focus:ring-terracotta focus:border-transparent transition-all bg-brown-50/50"
-                  placeholder="Como gostaria de ser chamado?"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold tracking-wide uppercase text-brown-800 mb-3">Avaliação das aulas e ensino</label>
-                <div className="flex gap-2 justify-center">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      onClick={() => setRating(star)}
-                      onMouseEnter={() => setHoveredRating(star)}
-                      onMouseLeave={() => setHoveredRating(0)}
-                      className="p-2 transition-transform hover:scale-110 focus:outline-none"
-                    >
-                      <Star 
-                        size={32} 
-                        className={`transition-colors ${(hoveredRating ? star <= hoveredRating : star <= rating) ? "fill-ochre text-ochre" : "text-brown-200"}`} 
-                      />
-                    </button>
-                  ))}
+                  <p className="text-brown-700 text-sm md:text-base leading-relaxed italic">&quot;{fb.content}&quot;</p>
                 </div>
               </div>
-
-              <div>
-                <label htmlFor="feedback" className="block text-sm font-bold tracking-wide uppercase text-brown-800 mb-2">Conta pra gente, o que achou dos professores?</label>
-                <textarea 
-                  id="feedback" 
-                  required
-                  value={feedback}
-                  onChange={(e) => setFeedback(e.target.value)}
-                  rows={4}
-                  className="w-full px-5 py-4 rounded-xl border border-brown-200 focus:outline-none focus:ring-2 focus:ring-terracotta focus:border-transparent transition-all bg-brown-50/50 resize-none"
-                  placeholder="Escreva aqui sobre sua experiência com nossos professores e a metodologia..."
-                ></textarea>
-              </div>
-
-              <button 
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-brown-900 text-brown-50 py-4 rounded-xl font-bold tracking-wide text-lg hover:bg-terracotta transition-colors duration-300 flex items-center justify-center gap-3 shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                <span>{isSubmitting ? 'Enviando...' : 'Enviar Feedback'}</span>
-                {!isSubmitting && <Send size={20} />}
-              </button>
-            </form>
+            ))}
           </div>
+        </div>
+
+        {/* Formulário de Feedback */}
+        <div className="max-w-3xl mx-auto bg-white p-6 md:p-10 rounded-3xl md:rounded-[40px] shadow-xl border border-brown-100 relative">
+          <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-terracotta/5 rounded-bl-[40px] pointer-events-none" />
+          <h3 className="text-xl md:text-2xl font-display font-bold text-brown-900 mb-6 md:mb-8 text-center relative z-10">Avalie Nossos Professores</h3>
+          
+          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 relative z-10">
+            <div>
+              <label htmlFor="name" className="block text-xs md:text-sm font-bold tracking-wide uppercase text-brown-800 mb-1.5 md:mb-2">Seu Nome</label>
+              <input 
+                type="text" 
+                id="name" 
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-3 md:px-5 md:py-4 text-sm md:text-base rounded-xl border border-brown-200 focus:outline-none focus:ring-2 focus:ring-terracotta focus:border-transparent transition-all bg-brown-50/50"
+                placeholder="Como gostaria de ser chamado?"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs md:text-sm font-bold tracking-wide uppercase text-brown-800 mb-2 md:mb-3">Avaliação das aulas e ensino</label>
+              <div className="flex gap-1 md:gap-2 justify-center">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setRating(star)}
+                    onMouseEnter={() => setHoveredRating(star)}
+                    onMouseLeave={() => setHoveredRating(0)}
+                    className="p-1 p-1 md:p-2 transition-transform hover:scale-110 focus:outline-none"
+                  >
+                    <Star 
+                      className={`w-8 h-8 md:w-10 md:h-10 transition-colors ${(hoveredRating ? star <= hoveredRating : star <= rating) ? "fill-ochre text-ochre" : "text-brown-200"}`} 
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="feedback" className="block text-xs md:text-sm font-bold tracking-wide uppercase text-brown-800 mb-1.5 md:mb-2">Conta pra gente, o que achou dos professores?</label>
+              <textarea 
+                id="feedback" 
+                required
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                rows={3}
+                className="w-full px-4 py-3 md:px-5 md:py-4 text-sm md:text-base rounded-xl border border-brown-200 focus:outline-none focus:ring-2 focus:ring-terracotta focus:border-transparent transition-all bg-brown-50/50 resize-none"
+                placeholder="Escreva aqui sua experiência..."
+              ></textarea>
+            </div>
+
+            <button 
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-brown-900 text-brown-50 py-3.5 md:py-4 rounded-xl font-bold tracking-wide text-base md:text-lg hover:bg-terracotta transition-colors duration-300 flex items-center justify-center gap-2 md:gap-3 shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              <span>{isSubmitting ? 'Enviando...' : 'Enviar Feedback'}</span>
+              {!isSubmitting && <Send size={18} className="md:w-5 md:h-5 w-4 h-4" />}
+            </button>
+          </form>
         </div>
       </div>
 

@@ -12,11 +12,54 @@ export default function Contato() {
   const [phone, setPhone] = useState('');
   const [reason, setReason] = useState('');
   const [message, setMessage] = useState('');
+  
+  const [touched, setTouched] = useState({ name: false, email: false, phone: false, reason: false, message: false });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  const validateName = (val: string) => {
+    if (!val.trim()) return 'Nome é obrigatório';
+    if (val.trim().split(' ').length < 2) return 'Digite seu nome completo';
+    return '';
+  };
+
+  const validateEmail = (val: string) => {
+    if (!val.trim()) return 'E-mail é obrigatório';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return 'E-mail inválido';
+    return '';
+  };
+
+  const validatePhone = (val: string) => {
+    if (!val.trim()) return 'Telefone é obrigatório';
+    if (val.replace(/\D/g, '').length < 10) return 'Telefone inválido';
+    return '';
+  };
+
+  const validateReason = (val: string) => {
+    if (!val) return 'Selecione um motivo';
+    return '';
+  };
+
+  const validateMessage = (val: string) => {
+    if (!val.trim()) return 'Mensagem é obrigatória';
+    if (val.trim().length < 10) return 'A mensagem deve ter pelo menos 10 caracteres';
+    return '';
+  };
+
+  const errors = {
+    name: touched.name ? validateName(name) : '',
+    email: touched.email ? validateEmail(email) : '',
+    phone: touched.phone ? validatePhone(phone) : '',
+    reason: touched.reason ? validateReason(reason) : '',
+    message: touched.message ? validateMessage(message) : '',
+  };
+
+  const isFormValid = !validateName(name) && !validateEmail(email) && !validatePhone(phone) && !validateReason(reason) && !validateMessage(message);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isFormValid) return;
+    
     setIsSubmitting(true);
 
     try {
@@ -137,9 +180,13 @@ export default function Contato() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-5 py-4 rounded-2xl border border-brown-200 focus:outline-none focus:ring-2 focus:ring-terracotta focus:border-transparent transition-all bg-brown-50/50"
+                  onBlur={() => setTouched({ ...touched, name: true })}
+                  className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-all bg-brown-50/50 ${
+                    errors.name ? 'border-red-400 focus:ring-red-400' : 'border-brown-200 focus:ring-terracotta'
+                  }`}
                   placeholder="Seu nome"
                 />
+                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
               </div>
               
               <div>
@@ -150,9 +197,13 @@ export default function Contato() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-5 py-4 rounded-2xl border border-brown-200 focus:outline-none focus:ring-2 focus:ring-terracotta focus:border-transparent transition-all bg-brown-50/50"
+                  onBlur={() => setTouched({ ...touched, email: true })}
+                  className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-all bg-brown-50/50 ${
+                    errors.email ? 'border-red-400 focus:ring-red-400' : 'border-brown-200 focus:ring-terracotta'
+                  }`}
                   placeholder="seu@email.com"
                 />
+                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
               </div>
 
               <div>
@@ -163,9 +214,13 @@ export default function Contato() {
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-5 py-4 rounded-2xl border border-brown-200 focus:outline-none focus:ring-2 focus:ring-terracotta focus:border-transparent transition-all bg-brown-50/50"
+                  onBlur={() => setTouched({ ...touched, phone: true })}
+                  className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-all bg-brown-50/50 ${
+                    errors.phone ? 'border-red-400 focus:ring-red-400' : 'border-brown-200 focus:ring-terracotta'
+                  }`}
                   placeholder="(00) 00000-0000"
                 />
+                {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
               </div>
 
               <div>
@@ -176,7 +231,10 @@ export default function Contato() {
                     required
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
-                    className="w-full px-5 py-4 rounded-2xl border border-brown-200 focus:outline-none focus:ring-2 focus:ring-terracotta focus:border-transparent transition-all bg-brown-50/50 appearance-none text-brown-800"
+                    onBlur={() => setTouched({ ...touched, reason: true })}
+                    className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-all bg-brown-50/50 appearance-none text-brown-800 ${
+                      errors.reason ? 'border-red-400 focus:ring-red-400' : 'border-brown-200 focus:ring-terracotta'
+                    }`}
                   >
                     <option value="" disabled>Selecione um motivo...</option>
                     <option value="Aulas Regulares">Aulas Regulares</option>
@@ -189,6 +247,7 @@ export default function Contato() {
                     <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                   </div>
                 </div>
+                {errors.reason && <p className="text-red-500 text-sm mt-1">{errors.reason}</p>}
               </div>
 
               <div>
@@ -198,15 +257,19 @@ export default function Contato() {
                   required
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
+                  onBlur={() => setTouched({ ...touched, message: true })}
                   rows={5}
-                  className="w-full px-5 py-4 rounded-2xl border border-brown-200 focus:outline-none focus:ring-2 focus:ring-terracotta focus:border-transparent transition-all bg-brown-50/50 resize-none"
+                  className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-all bg-brown-50/50 resize-none ${
+                    errors.message ? 'border-red-400 focus:ring-red-400' : 'border-brown-200 focus:ring-terracotta'
+                  }`}
                   placeholder="Como podemos te ajudar?"
                 ></textarea>
+                {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
               </div>
 
               <button 
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || (!isFormValid && Object.values(touched).some(Boolean))}
                 className="w-full bg-brown-900 text-brown-50 py-5 rounded-2xl font-bold tracking-wide text-lg hover:bg-terracotta transition-colors duration-300 flex items-center justify-center gap-3 shadow-lg shadow-brown-900/20 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 <span>{isSubmitting ? 'Enviando...' : 'Enviar Mensagem'}</span>

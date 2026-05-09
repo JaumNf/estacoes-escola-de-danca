@@ -8,6 +8,7 @@ import { Calendar, MapPin, Clock, ArrowRight, Check, CheckCircle, Instagram, Fac
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
+import BackToTop from '@/components/BackToTop';
 
 export default function AulasRegulares() {
   const [unidade, setUnidade] = useState<'unidade1' | 'unidade2'>('unidade1');
@@ -170,7 +171,7 @@ export default function AulasRegulares() {
                   setTurmaPrincipal('Vanera e Chamamé');
                   document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-colors group/item"
+                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-all duration-200 active:scale-[0.98] group/item"
               >
                 <div className="flex items-center gap-3 min-w-[180px]">
                   <Clock className="text-orange-600" size={24} />
@@ -189,7 +190,7 @@ export default function AulasRegulares() {
                   setTurmaPrincipal('Forró');
                   document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-colors group/item"
+                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-all duration-200 active:scale-[0.98] group/item"
               >
                 <div className="flex items-center gap-3 min-w-[180px]">
                   <Clock className="text-orange-600" size={24} />
@@ -222,7 +223,7 @@ export default function AulasRegulares() {
                   setTurmaPrincipal('Dança de Salão em Geral');
                   document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-colors group/item"
+                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-all duration-200 active:scale-[0.98] group/item"
               >
                 <div className="flex items-center gap-3 min-w-[180px]">
                   <Clock className="text-orange-600" size={24} />
@@ -241,7 +242,7 @@ export default function AulasRegulares() {
                   setTurmaPrincipal('Forró');
                   document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-colors group/item"
+                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-all duration-200 active:scale-[0.98] group/item"
               >
                 <div className="flex items-center gap-3 min-w-[180px]">
                   <Clock className="text-orange-600" size={24} />
@@ -753,6 +754,7 @@ export default function AulasRegulares() {
           </Link>
         </div>
       </footer>
+      <BackToTop />
     </main>
   );
 }

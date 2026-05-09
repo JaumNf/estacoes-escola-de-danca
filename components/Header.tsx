@@ -31,18 +31,13 @@ export default function Header() {
   }, [isMobileMenuOpen]);
 
   const handleLinkClick = (e: React.MouseEvent, label: string) => {
-    if (label === 'Cursos intensivos') {
-      e.preventDefault();
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
-    }
     setIsMobileMenuOpen(false);
   };
 
   const navItems = [
     { label: 'Sobre nós', href: '/#sobre' },
     { label: 'Aulas regulares', href: '/aulas-regulares' },
-    { label: 'Cursos intensivos', href: '/#trabalhos' },
+    { label: 'Cursos intensivos', href: '/cursos-intensivos' },
     { label: 'Baile', href: '/baile' },
     { label: 'Endereço', href: '/#unidades' },
     { label: 'Contato', href: '/contato' },
@@ -52,7 +47,7 @@ export default function Header() {
     <>
       <header 
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-          isScrolled ? 'bg-brown-50/95 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'
+          isScrolled ? 'bg-brown-50/80 backdrop-blur-lg shadow-md py-4' : 'bg-transparent py-6'
         }`}
       >
         <div className="container mx-auto px-6 flex items-center justify-between">
@@ -85,7 +80,19 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center justify-end gap-6">
+          <div className="flex items-center justify-end gap-2 md:gap-4 lg:gap-6">
+            <a 
+              href="https://chat.whatsapp.com/GleDoqpuQAh0K1Bo8fho7T" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={`flex items-center justify-center rounded-full p-2 hover:bg-black/10 transition-colors ${isScrolled ? 'text-[#25D366]' : 'text-[#25D366] bg-white/10'}`}
+              aria-label="Comunidade WhatsApp"
+              title="Entrar na Comunidade WhatsApp"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.996 0A12 12 0 0 0 0 12a11.96 11.96 0 0 0 1.602 6.015L0 24l6.15-1.614A11.96 11.96 0 0 0 11.996 24C18.625 24 24 18.625 24 12C24 5.375 18.625 0 11.996 0zm0 21.984c-1.896 0-3.774-.533-5.385-1.503l-.403-.244-4.041 1.059 1.077-3.921-.258-.415A9.97 9.97 0 0 1 1.996 12C1.996 6.48 6.476 2 11.996 2c5.52 0 10 4.48 10 10 0 5.52-4.48 10-10 10zm5.495-7.51c-.302-.15-1.785-.882-2.062-.983-.277-.1-.478-.15-.679.15-.201.301-.78 .983-.956 1.183-.176.201-.352.226-.654.075-2.083-1.04-3.567-2.613-4.225-3.754-.176-.301.176-.276.478-.882.1-.2.05-.376-.025-.526-.075-.15-.679-1.631-.93-2.233-.251-.577-.502-.502-.679-.502h-.577c-.201 0-.528.075-.805.376-.277.301-1.056 1.03-1.056 2.51 0 1.48 1.082 2.91 1.233 3.111.15.2 2.122 3.238 5.14 4.542.718.31 1.278.496 1.713.635.72.23 1.378.197 1.895.12.576-.086 1.785-.728 2.036-1.433.251-.705.251-1.307.176-1.433-.075-.126-.277-.201-.578-.352z"/>
+              </svg>
+            </a>
             <button 
               className={`lg:hidden z-50 relative ${isMobileMenuOpen ? 'text-brown-950' : (isScrolled ? 'text-brown-950' : 'text-brown-50')}`}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
