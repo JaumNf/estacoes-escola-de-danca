@@ -159,7 +159,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
   };
 
   return (
-    <div id="matricula" className="max-w-4xl mx-auto my-12 relative px-4 md:px-0">
+    <div id="matricula" className="max-w-5xl mx-auto my-12 relative px-4 md:px-0">
       {submitted && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-stone-900/80 backdrop-blur-sm animate-fade-in" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
             <div className="bg-white rounded-[2rem] p-8 max-w-md w-full text-center shadow-2xl relative border-4 border-[#fff1e7]">
@@ -381,7 +381,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
-              className="p-4 md:p-10"
+              className="p-4 md:p-6"
             >
               <button 
                 onClick={() => {
@@ -393,28 +393,28 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                      }
                   }, 50);
                 }}
-                className="flex items-center gap-2 text-[#a04e22] font-semibold mb-6 md:mb-8 hover:text-[#682c0b] transition-colors group"
+                className="flex items-center gap-2 text-[#a04e22] text-sm font-semibold mb-4 hover:text-[#682c0b] transition-colors group"
               >
-                <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform"/> Voltar para turmas
+                <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform"/> Voltar para turmas
               </button>
 
-              <div className="bg-[#fffdf0] border border-[#e8c09a] rounded-2xl md:rounded-3xl p-4 md:p-6 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-sm">
+              <div className="bg-[#fffdf0] border border-[#e8c09a] rounded-xl p-3 md:p-4 mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 shadow-sm">
                  <div>
-                   <p className="text-[#a04e22] text-xs md:text-sm font-bold uppercase tracking-wide mb-1">Resumo do Pedido</p>
-                   <h3 className="text-xl md:text-2xl font-display font-bold text-[#682c0b]">
+                   <p className="text-[#a04e22] text-[10px] md:text-xs font-bold uppercase tracking-wide mb-0.5">Resumo do Pedido</p>
+                   <h3 className="text-lg md:text-xl font-display font-bold text-[#682c0b]">
                      {cursosSelecionados.length} turma{cursosSelecionados.length !== 1 && 's'} ({tipoInscricao})
                    </h3>
                  </div>
                  <div className="text-left sm:text-right">
-                   <p className="text-2xl md:text-3xl font-display font-bold text-[#ea5d35]">R$ {finalValue.toFixed(2).replace('.', ',')}</p>
+                   <p className="text-xl md:text-2xl font-display font-bold text-[#ea5d35]">R$ {finalValue.toFixed(2).replace('.', ',')}</p>
                    {selectedDaysCount === 2 && (
-                     <p className="text-green-600 text-xs font-bold w-full uppercase mt-1">✨ Baile Incluso</p>
+                     <p className="text-green-600 text-[10px] font-bold w-full uppercase mt-0.5">✨ Baile Incluso</p>
                    )}
                  </div>
               </div>
 
               <form 
-                className="space-y-6 md:space-y-8 bg-white p-4 sm:p-6 md:p-8 rounded-[20px] md:rounded-[32px] shadow-sm border border-gray-100" 
+                className="space-y-3 sm:space-y-4 bg-white p-3 sm:p-5 rounded-[16px] md:rounded-[20px] shadow-sm border border-gray-100" 
                 onSubmit={handleSubmit}
                 noValidate
               >
@@ -431,59 +431,58 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                   <input type="hidden" name="Autorização de Imagem" value={autorizacao ? 'Sim' : 'Não'} />
 
                   {/* Dados da inscrição */}
-                <div className="space-y-5">
-                  <h3 className="text-xl font-bold text-[#682c0b] flex items-center gap-2 border-b border-gray-100 pb-3">
-                    <User size={20} className="text-[#ea5d35]" /> Dados do Participante
+                <div className="space-y-3">
+                  <h3 className="text-base md:text-lg font-bold text-[#682c0b] flex items-center gap-2 border-b border-gray-100 pb-1.5">
+                    <User size={16} className="text-[#ea5d35]" /> Dados do Participante
                   </h3>
                   
-                  <div>
-                    <label className="block text-sm font-bold text-[#645c58] mb-1">Nome Completo</label>
-                    <input 
-                       type="text" 
-                       name="Nome"
-                       value={nome}
-                       onChange={e => setNome(e.target.value)}
-                       onBlur={() => setTouched(p => ({...p, nome: true}))}
-                       className={`w-full px-4 py-3 rounded-xl border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.nome && errors.nome ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
-                       placeholder="Seu nome completo"
-                     />
-                     {touched.nome && errors.nome && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12}/>{errors.nome}</p>}
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid md:grid-cols-3 gap-2 sm:gap-3">
                     <div>
-                      <label className="block text-sm font-bold text-[#645c58] mb-1">E-mail</label>
+                      <label className="block text-xs font-bold text-[#645c58] mb-1">Nome Completo</label>
+                      <input 
+                         type="text" 
+                         name="Nome"
+                         value={nome}
+                         onChange={e => setNome(e.target.value)}
+                         onBlur={() => setTouched(p => ({...p, nome: true}))}
+                         className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.nome && errors.nome ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
+                         placeholder="Seu nome completo"
+                       />
+                       {touched.nome && errors.nome && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.nome}</p>}
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-[#645c58] mb-1">E-mail</label>
                       <input 
                         type="email" 
                         name="Email"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         onBlur={() => setTouched(p => ({...p, email: true}))}
-                        className={`w-full px-4 py-3 rounded-xl border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.email && errors.email ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
+                        className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.email && errors.email ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
                         placeholder="seu@email.com"
                       />
-                      {touched.email && errors.email && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12}/>{errors.email}</p>}
+                      {touched.email && errors.email && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.email}</p>}
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-[#645c58] mb-1">WhatsApp</label>
+                      <label className="block text-xs font-bold text-[#645c58] mb-1">WhatsApp</label>
                       <input 
                         type="tel" 
                         name="WhatsApp"
                         value={whatsapp}
                         onChange={e => setWhatsapp(e.target.value)}
                         onBlur={() => setTouched(p => ({...p, whatsapp: true}))}
-                        className={`w-full px-4 py-3 rounded-xl border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.whatsapp && errors.whatsapp ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
+                        className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.whatsapp && errors.whatsapp ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
                         placeholder="(00) 00000-0000"
                       />
-                      {touched.whatsapp && errors.whatsapp && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12}/>{errors.whatsapp}</p>}
+                      {touched.whatsapp && errors.whatsapp && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.whatsapp}</p>}
                     </div>
                   </div>
                 </div>
 
                 {/* Como conheceu */}
-                <div className="space-y-4">
-                  <label className="block text-sm font-bold text-[#645c58] mb-2">Como conheceu os intensivos?</label>
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="space-y-2">
+                  <label className="block text-xs font-bold text-[#645c58] mb-1">Como conheceu os intensivos?</label>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5">
                     {['Instagram', 'WhatsApp', 'Indicação', 'Outro'].map((op) => (
                       <button
                         key={op}
@@ -492,162 +491,164 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                           setComoConheceu(op);
                           setTouched(p => ({...p, comoConheceu: true}));
                         }}
-                        className={`min-h-[44px] py-3 px-2 rounded-xl text-sm font-bold transition-all border ${comoConheceu === op ? 'bg-[#fae8d4] border-[#ea5d35] text-[#682c0b]' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}
+                        className={`py-1.5 px-2 rounded-lg text-xs font-bold transition-all border ${comoConheceu === op ? 'bg-[#fae8d4] border-[#ea5d35] text-[#682c0b]' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}
                       >
                         {op}
                       </button>
                     ))}
                   </div>
-                  {touched.comoConheceu && errors.comoConheceu && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12}/>{errors.comoConheceu}</p>}
+                  {touched.comoConheceu && errors.comoConheceu && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.comoConheceu}</p>}
 
                   {comoConheceu === 'Indicação' && (
-                    <motion.div initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}} className="pt-2">
-                       <p className="text-sm font-medium text-gray-500 mb-2">Qual promoter indicou você?</p>
-                       <div className="flex gap-2 flex-wrap">
+                    <motion.div initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}} className="pt-1.5">
+                       <p className="text-xs font-medium text-gray-500 mb-1.5">Qual promoter indicou você?</p>
+                       <div className="flex gap-1.5 flex-wrap">
                          {['Manu', 'Ana Laura', 'João', 'Felipe', 'Bia'].map(nm => (
                            <button
                              key={nm}
                              type="button"
                              onClick={() => setPromoter(nm)}
-                             className={`min-h-[44px] px-5 py-2 rounded-full text-sm font-bold transition-all border ${promoter === nm ? 'bg-[#682c0b] text-white border-[#682c0b]' : 'bg-gray-100 text-gray-600 border-transparent hover:bg-gray-200'}`}
+                             className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${promoter === nm ? 'bg-[#682c0b] text-white border-[#682c0b]' : 'bg-gray-100 text-gray-600 border-transparent hover:bg-gray-200'}`}
                            >
                              {nm}
                            </button>
                          ))}
                        </div>
-                       {touched.comoConheceu && errors.promoter && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12}/>{errors.promoter}</p>}
+                       {touched.comoConheceu && errors.promoter && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.promoter}</p>}
                     </motion.div>
                   )}
                 </div>
 
-                {/* Pagamento PIX */}
-                <div className="bg-gray-50 rounded-2xl md:rounded-3xl p-4 md:p-6 border border-gray-200 space-y-6">
-                  <h3 className="text-lg md:text-xl font-bold text-[#682c0b] flex items-center gap-2 mb-2">
-                    <Smartphone size={20} className="text-[#ea5d35]" /> Realize o Pagamento via PIX
-                  </h3>
-                  
-                  <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 bg-white p-4 rounded-xl md:rounded-2xl border border-gray-100">
-                    <div className="w-24 h-24 md:w-32 md:h-32 bg-gray-200 rounded-lg flex items-center justify-center shrink-0">
-                      {/* Fake QR CODE placeholder */}
-                      <div className="w-20 h-20 md:w-24 md:h-24 bg-gray-400 pattern-dots" /> 
+                <div className="grid md:grid-cols-2 gap-4">
+                  {/* Pagamento PIX */}
+                  <div className="bg-gray-50 rounded-xl p-3 md:p-4 border border-gray-200 flex flex-col justify-between space-y-3">
+                    <div>
+                      <h3 className="text-sm md:text-base font-bold text-[#682c0b] flex items-center gap-1.5 mb-2">
+                        <Smartphone size={16} className="text-[#ea5d35]" /> Pagamento via PIX
+                      </h3>
+                      
+                      <div className="flex flex-col items-center gap-2 bg-white p-2.5 rounded-lg border border-gray-100">
+                        <div className="flex-1 space-y-1.5 w-full text-center sm:text-left">
+                          <p className="text-xs text-gray-600">Copie a chave PIX (E-mail) para transferir <strong>R$ {finalValue.toFixed(2).replace('.', ',')}</strong>.</p>
+                          <div className="flex flex-col sm:flex-row rounded-md overflow-hidden border border-gray-200 bg-gray-50 p-1 gap-1">
+                            <input type="text" readOnly value="cursodeverao67@gmail.com" className="bg-transparent px-2 py-1 flex-1 text-xs font-mono font-medium outline-none text-gray-700 min-w-0 text-center sm:text-left selection:bg-orange-200" />
+                            <button type="button" onClick={handleCopyPix} className="px-2.5 py-1 bg-white border border-gray-200 rounded text-[10px] font-bold text-[#ea5d35] hover:bg-orange-50 transition-colors flex items-center justify-center gap-1 whitespace-nowrap">
+                              {copied ? <Check size={12} /> : <Copy size={12} />} 
+                              {copied ? 'Copiada!' : 'Copiar'}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex-1 space-y-4 w-full">
-                      <p className="text-sm text-gray-600 text-center md:text-left">Copie a chave PIX (E-mail) abaixo para realizar a transferência de <strong>R$ {finalValue.toFixed(2).replace('.', ',')}</strong>.</p>
-                      <div className="flex flex-col sm:flex-row rounded-xl overflow-hidden border border-gray-200 bg-gray-50 p-1 gap-1">
-                        <input type="text" readOnly value="cursodeverao67@gmail.com" className="bg-transparent px-3 py-2 flex-1 text-sm font-mono font-medium outline-none text-gray-700 min-w-0 text-center sm:text-left selection:bg-orange-200" />
-                        <button type="button" onClick={handleCopyPix} className="px-4 py-3 sm:py-2 bg-white border border-gray-200 rounded-lg text-sm font-bold text-[#ea5d35] hover:bg-orange-50 transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
-                          {copied ? <Check size={16} /> : <Copy size={16} />} 
-                          {copied ? 'Copiada!' : 'Copiar'}
-                        </button>
+
+                    <div className="pt-2 border-t border-gray-200 mt-2">
+                      <div className="flex flex-col sm:flex-row gap-1.5">
+                        <a href="#" className="flex-1 py-1.5 px-2 bg-white border border-gray-200 rounded text-center text-[10px] font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-1 transition-colors">
+                          <CreditCard size={12} className="text-[#ea5d35]" /> Crédito à Vista
+                        </a>
+                        <a href="#" className="flex-1 py-1.5 px-2 bg-white border border-gray-200 rounded text-center text-[10px] font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-1 transition-colors">
+                          <CreditCard size={12} className="text-[#ea5d35]" /> Crédito Parcelado
+                        </a>
                       </div>
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-gray-200">
-                    <p className="text-sm font-medium text-gray-500 mb-3 text-center">Prefere pagar no Cartão de Crédito? (Acréscimo de taxas)</p>
-                    <div className="flex flex-col sm:flex-row gap-3">
-                      <a href="#" className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl text-center text-sm font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-2 transition-colors">
-                        <CreditCard size={16} className="text-[#ea5d35]" /> Crédito à Vista
-                      </a>
-                      <a href="#" className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl text-center text-sm font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-2 transition-colors">
-                        <CreditCard size={16} className="text-[#ea5d35]" /> Crédito Parcelado
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Comprovante Upload */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-bold text-[#682c0b] mb-2 flex items-center gap-2">
-                     <Upload size={18} className="text-[#ea5d35]"/> Anexe o comprovante
-                  </h3>
-                  
-                  <div 
-                    onClick={() => !arquivo && fileInputRef.current?.click()}
-                    className={`border-2 border-dashed rounded-3xl p-8 flex flex-col items-center justify-center transition-all ${
-                      arquivo 
-                      ? 'border-green-400 bg-green-50 cursor-default' 
-                      : touched.nome && errors.arquivo 
-                        ? 'border-red-400 bg-red-50 hover:bg-red-100 cursor-pointer' 
-                        : 'border-[#e8c09a] bg-orange-50/50 hover:bg-orange-50 cursor-pointer'
-                    }`}
-                  >
-                    <input 
-                      type="file" 
-                      name="attachment"
-                      className="hidden" 
-                      ref={fileInputRef} 
-                      onChange={handleFileChange} 
-                      accept="image/png, image/jpeg, application/pdf"
-                    />
+                  {/* Comprovante Upload */}
+                  <div className="space-y-1.5 flex flex-col h-full">
+                    <h3 className="text-sm md:text-base font-bold text-[#682c0b] mb-1 flex items-center gap-1.5">
+                       <Upload size={16} className="text-[#ea5d35]"/> Comprovante de Pagamento
+                    </h3>
                     
-                    {arquivo ? (
-                      <div className="flex flex-col items-center text-center">
-                        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-3">
-                          <CheckCircle className="text-green-600" size={24} />
+                    <div 
+                      onClick={() => !arquivo && fileInputRef.current?.click()}
+                      className={`border border-dashed rounded-xl p-3 flex flex-col items-center justify-center transition-all flex-1 h-full min-h-[140px] ${
+                        arquivo 
+                        ? 'border-green-400 bg-green-50 cursor-default' 
+                        : touched.nome && errors.arquivo 
+                          ? 'border-red-400 bg-red-50 hover:bg-red-100 cursor-pointer' 
+                          : 'border-[#e8c09a] bg-orange-50/50 hover:bg-orange-50 cursor-pointer'
+                      }`}
+                    >
+                      <input 
+                        type="file" 
+                        name="attachment"
+                        className="hidden" 
+                        ref={fileInputRef} 
+                        onChange={handleFileChange} 
+                        accept="image/png, image/jpeg, application/pdf"
+                      />
+                      
+                      {arquivo ? (
+                        <div className="flex flex-col items-center text-center">
+                          <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mb-1.5">
+                            <CheckCircle className="text-green-600" size={16} />
+                          </div>
+                          <p className="font-bold text-green-800 text-[10px] mb-0.5">{arquivo.name}</p>
+                          <button 
+                            type="button" 
+                            onClick={(e) => {
+                               e.stopPropagation();
+                               setArquivo(null);
+                            }} 
+                            className="text-[10px] text-red-500 font-bold hover:underline flex items-center gap-1 mt-1"
+                          >
+                            <X size={10}/> Remover arquivo
+                          </button>
                         </div>
-                        <p className="font-bold text-green-800 text-sm mb-1">{arquivo.name}</p>
-                        <button 
-                          type="button" 
-                          onClick={(e) => {
-                             e.stopPropagation();
-                             setArquivo(null);
-                          }} 
-                          className="text-xs text-red-500 font-bold hover:underline flex items-center gap-1 mt-2"
-                        >
-                          <X size={12}/> Remover arquivo
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center text-center">
-                        <div className="w-12 h-12 bg-white border border-[#e8c09a] rounded-full flex items-center justify-center mb-3 shadow-sm text-[#b58b1a]">
-                          <Upload size={20} />
+                      ) : (
+                        <div className="flex flex-col items-center text-center">
+                          <div className="w-8 h-8 bg-white border border-[#e8c09a] rounded-full flex items-center justify-center mb-1.5 shadow-sm text-[#b58b1a]">
+                            <Upload size={14} />
+                          </div>
+                          <p className="font-bold text-[#682c0b] text-[10px] mb-0.5">Clique para buscar o arquivo</p>
+                          <p className="text-[10px] text-gray-500 font-medium max-w-xs">Aceitamos PNG, JPEG ou PDF. Max 5MB.</p>
                         </div>
-                        <p className="font-bold text-[#682c0b] mb-1">Clique para buscar o arquivo</p>
-                        <p className="text-xs text-gray-500 font-medium max-w-xs">Aceitamos PNG, JPEG ou PDF. Tamanho máximo 5MB.</p>
-                      </div>
-                    )}
+                      )}
+                    </div>
+                    {touched.nome && errors.arquivo && <p className="text-red-500 text-[10px] text-center"><AlertCircle className="inline mr-1" size={10}/>{errors.arquivo}</p>}
                   </div>
-                  {touched.nome && errors.arquivo && <p className="text-red-500 text-xs text-center"><AlertCircle className="inline mr-1" size={12}/>{errors.arquivo}</p>}
                 </div>
 
                 {/* Termos */}
-                <label className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer">
-                  <div className="pt-1">
+                <label className="flex items-start gap-2 p-2 bg-gray-50 rounded-lg border border-gray-100 cursor-pointer">
+                  <div className="pt-0.5">
                     <input 
                       type="checkbox" 
                       checked={autorizacao} 
                       onChange={(e) => setAutorizacao(e.target.checked)}
-                      className="w-5 h-5 rounded border-gray-300 text-[#ea5d35] focus:ring-[#ea5d35]" 
+                      className="w-4 h-4 rounded border-gray-300 text-[#ea5d35] focus:ring-[#ea5d35]" 
                     />
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-800 text-sm mb-1">Autorização OBRIGATÓRIA de Imagem</h4>
-                    <p className="text-xs text-gray-600 leading-relaxed">
-                      Concordo e autorizo o uso da minha imagem e voz, de forma gratuita, em fotos e vídeos captados durante os Cursos Intensivos, para uso exclusivo da Escola de Dança Estações em suas redes sociais e materiais promocionais.
+                    <h4 className="font-bold text-gray-800 text-[10px] mb-0.5">Autorização OBRIGATÓRIA de Imagem</h4>
+                    <p className="text-[10px] text-gray-600 leading-tight">
+                      Autorizo o uso da minha imagem e voz de forma gratuita.
                     </p>
                   </div>
                 </label>
-                {touched.nome && errors.autorizacao && <p className="text-red-500 text-xs mt-1"><AlertCircle className="inline mr-1" size={12}/>{errors.autorizacao}</p>}
+                {touched.nome && errors.autorizacao && <p className="text-red-500 text-[10px] mt-0.5"><AlertCircle className="inline mr-1" size={10}/>{errors.autorizacao}</p>}
 
                 {/* Botão Final */}
-                <div className="pt-6">
+                <div className="pt-1">
                   {Object.keys(touched).length > 0 && !isValid && (
-                     <p className="text-red-500 text-sm font-bold text-center mb-4 flex justify-center items-center gap-2">
-                       <AlertCircle size={16} /> Preencha todos os campos obrigatórios acima.
+                     <p className="text-red-500 text-[10px] font-bold text-center mb-2 flex justify-center items-center gap-1">
+                       <AlertCircle size={10} /> Preencha todos os campos obrigatórios acima.
                      </p>
                   )}
                   <button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className={`w-full py-5 rounded-full font-bold tracking-widest text-lg transition-all shadow-xl flex items-center justify-center gap-2 ${
+                    className={`w-full py-2.5 rounded-full font-bold tracking-widest text-sm transition-all shadow-md flex items-center justify-center gap-2 ${
                       isSubmitting 
                       ? 'bg-gray-400 text-white cursor-wait' 
-                      : 'bg-[#ea5d35] text-white hover:bg-[#c44e2b] hover:shadow-2xl hover:-translate-y-1'
+                      : 'bg-[#ea5d35] text-white hover:bg-[#c44e2b] hover:shadow-lg hover:-translate-y-0.5'
                     }`}
                   >
                     {isSubmitting ? 'ENVIANDO...' : 'ENVIAR COMPROVANTE'}
                   </button>
+                  <p className="text-center text-[10px] text-gray-400 mt-2 font-medium flex items-center justify-center gap-1">
+                    <Check size={10}/> Seus dados estão seguros
+                  </p>
                 </div>
               </form>
             </motion.div>

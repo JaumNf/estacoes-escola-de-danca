@@ -12,7 +12,7 @@ import Autoplay from 'embla-carousel-autoplay';
 import BookingFlow from './BookingFlow';
 import Countdown from './Countdown';
 import Footer from '@/components/Footer';
-import BackToTop from '@/components/BackToTop';
+
 
 const RITMOS_OPCOES = [
   { id: 'vanera_zero', nome: 'Vanera', nivel: 'Iniciante', dia: '22 de Maio', hora: '18h30 às 19h40' },
@@ -215,7 +215,10 @@ export default function CursosIntensivos() {
                 <div className="flex flex-col gap-3 flex-1">
                   
                   {/* Class 1 */}
-                  <div className="bg-white/80 rounded-[20px] p-4 shadow-sm border border-white">
+                  <button 
+                    onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="w-full text-left bg-white/80 rounded-[20px] p-4 shadow-sm border border-white cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                  >
                     <div className="flex items-center gap-2 text-[#a04e22] text-xs font-bold mb-1">
                       <Clock size={14} />
                       <span>18:30 às 19:40</span>
@@ -224,10 +227,13 @@ export default function CursosIntensivos() {
                     <div className="inline-block px-3 py-1 bg-[#dbeafe] text-[#2563eb] text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm">
                       Iniciante
                     </div>
-                  </div>
+                  </button>
 
                   {/* Class 2 */}
-                  <div className="bg-white/80 rounded-[20px] p-4 shadow-sm border border-white">
+                  <button 
+                    onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="w-full text-left bg-white/80 rounded-[20px] p-4 shadow-sm border border-white cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                  >
                     <div className="flex items-center gap-2 text-[#a04e22] text-xs font-bold mb-1">
                       <Clock size={14} />
                       <span>19:40 às 20:50</span>
@@ -236,10 +242,13 @@ export default function CursosIntensivos() {
                     <div className="inline-block px-3 py-1 bg-[#dcfce7] text-[#16a34a] text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm">
                       Do Zero
                     </div>
-                  </div>
+                  </button>
 
                   {/* Class 3 */}
-                  <div className="bg-white/80 rounded-[20px] p-4 shadow-sm border border-white">
+                  <button 
+                    onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="w-full text-left bg-white/80 rounded-[20px] p-4 shadow-sm border border-white cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                  >
                     <div className="flex items-center gap-2 text-[#a04e22] text-xs font-bold mb-1">
                       <Clock size={14} />
                       <span>20:50 às 22:00</span>
@@ -248,7 +257,7 @@ export default function CursosIntensivos() {
                     <div className="inline-block px-3 py-1 bg-[#dcfce7] text-[#16a34a] text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm">
                       Do Zero
                     </div>
-                  </div>
+                  </button>
 
                 </div>
               </div>
@@ -267,7 +276,10 @@ export default function CursosIntensivos() {
                 <div className="flex flex-col gap-3 flex-1">
                   
                   {/* Class 1 */}
-                  <div className="bg-white/80 rounded-[20px] p-4 shadow-sm border border-white">
+                  <button 
+                    onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="w-full text-left bg-white/80 rounded-[20px] p-4 shadow-sm border border-white cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                  >
                     <div className="flex items-center gap-2 text-[#8c8511] text-xs font-bold mb-1">
                       <Clock size={14} />
                       <span>14:30 às 15:40</span>
@@ -276,10 +288,13 @@ export default function CursosIntensivos() {
                     <div className="inline-block px-3 py-1 bg-[#dcfce7] text-[#16a34a] text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm">
                       Do Zero
                     </div>
-                  </div>
+                  </button>
 
                   {/* Class 2 */}
-                  <div className="bg-white/80 rounded-[20px] p-4 shadow-sm border border-white">
+                  <button 
+                    onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="w-full text-left bg-white/80 rounded-[20px] p-4 shadow-sm border border-white cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                  >
                     <div className="flex items-center gap-2 text-[#8c8511] text-xs font-bold mb-1">
                       <Clock size={14} />
                       <span>15:40 às 16:50</span>
@@ -288,10 +303,13 @@ export default function CursosIntensivos() {
                     <div className="inline-block px-3 py-1 bg-[#dbeafe] text-[#2563eb] text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm">
                       Iniciante
                     </div>
-                  </div>
+                  </button>
 
                   {/* Class 3 */}
-                  <div className="bg-white/80 rounded-[20px] p-4 shadow-sm border border-white">
+                  <button 
+                    onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="w-full text-left bg-white/80 rounded-[20px] p-4 shadow-sm border border-white cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                  >
                     <div className="flex items-center gap-2 text-[#8c8511] text-xs font-bold mb-1">
                       <Clock size={14} />
                       <span>16:50 às 18:00</span>
@@ -300,7 +318,7 @@ export default function CursosIntensivos() {
                     <div className="inline-block px-3 py-1 bg-[#f3e8ff] text-[#9333ea] text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm">
                       Livre
                     </div>
-                  </div>
+                  </button>
 
                   {/* Class 4 Removed */}
 
@@ -463,7 +481,7 @@ export default function CursosIntensivos() {
       {/* Footer Minimal */}
       <Footer />
       
-      <BackToTop />
+
 
     </main>
   );
