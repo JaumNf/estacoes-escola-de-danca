@@ -399,7 +399,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
               </button>
 
               <form 
-                className="flex flex-col lg:flex-row-reverse gap-4 md:gap-6" 
+                className="flex flex-col-reverse lg:flex-row-reverse gap-4 md:gap-6" 
                 onSubmit={handleSubmit}
                 noValidate
               >
