@@ -106,7 +106,7 @@ export default function Chatbot() {
       promptContext += `Usuário: ${userMessage}\nAssistente:`;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash-preview',
         contents: promptContext,
         config: {
           systemInstruction: SYSTEM_INSTRUCTION,
