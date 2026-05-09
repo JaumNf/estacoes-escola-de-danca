@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
-import { User, Users, Check, ArrowRight, ArrowLeft, Info, Copy, Upload, X, AlertCircle, CreditCard, Smartphone, CheckCircle } from 'lucide-react';
+import { User, Users, Check, ArrowRight, ArrowLeft, Info, Copy, Upload, X, AlertCircle, CreditCard, Smartphone, CheckCircle, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export interface Ritmo {
@@ -20,12 +21,6 @@ interface BookingFlowProps {
 export default function BookingFlow({ ritmos }: BookingFlowProps) {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
-  
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.location.search.includes('success=true')) {
-      setSubmitted(true);
-    }
-  }, []);
   
   const [tipoInscricao, setTipoInscricao] = useState<'individual' | 'dupla'>('individual');
   const [cursosSelecionados, setCursosSelecionados] = useState<string[]>([]);
@@ -147,7 +142,6 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
       if (response.ok) {
         setIsSubmitting(false);
         setSubmitted(true);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         setIsSubmitting(false);
         alert("Ocorreu um erro ao enviar. Por favor, tente novamente ou nos chame no WhatsApp.");
@@ -159,39 +153,52 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
     }
   };
 
-  if (submitted) {
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="flex flex-col items-center justify-center p-8 md:p-12 text-center bg-[#fffdf0] rounded-3xl shadow-2xl max-w-lg w-full relative"
-        >
-          <div className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6 shadow-inner">
-            <Check size={48} className="stroke-[3]" />
-          </div>
-          <h3 className="text-3xl md:text-4xl font-display font-bold text-[#682c0b] mb-4">Inscrição Confirmada!</h3>
-          <p className="text-[#a04e22] text-lg mb-8 leading-relaxed">
-            Recebemos seus dados e o comprovante. Sua vaga está garantida!
-          </p>
-          <a 
-            href="https://chat.whatsapp.com/JAC5pq1CG141OZaziUXoM7" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="bg-[#25D366] hover:bg-[#1ebd5c] text-white font-bold py-4 w-full rounded-full shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 flex items-center justify-center gap-2 mb-4"
-          >
-            Entrar no grupo do WhatsApp
-          </a>
-          <Link href="/" className="text-[#a04e22] underline font-medium hover:text-[#ea5d35]">
-            Voltar para a página inicial
-          </Link>
-        </motion.div>
-      </div>
-    );
-  }
+  const handleClose = () => {
+      setSubmitted(false);
+      setStep(1);
+  };
 
   return (
-    <div className="max-w-4xl mx-auto my-12 relative px-4 md:px-0">
+    <div id="matricula" className="max-w-4xl mx-auto my-12 relative px-4 md:px-0">
+      {submitted && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-stone-900/80 backdrop-blur-sm animate-fade-in" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
+            <div className="bg-white rounded-[2rem] p-8 max-w-md w-full text-center shadow-2xl relative border-4 border-[#fff1e7]">
+                <button 
+                    onClick={handleClose} 
+                    className="absolute top-4 right-4 p-2 bg-stone-100 rounded-full text-stone-400 hover:text-stone-600 hover:bg-stone-200 transition-colors"
+                >
+                    <X size={20} />
+                </button>
+                
+                <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Check size={48} className="text-green-600" />
+                </div>
+                
+                <h3 className="font-display text-3xl text-[#5c2409] mb-2 font-bold tracking-tight">Inscrição Recebida!</h3>
+                <p className="text-stone-500 mb-8 leading-relaxed font-medium">
+                    Tudo certo com o envio do seu comprovante. Agora, entre no grupo VIP para receber os avisos.
+                </p>
+                
+                <a 
+                    href="https://chat.whatsapp.com/JAC5pq1CG141OZaziUXoM7" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-4 rounded-xl shadow-lg shadow-green-200/50 transform transition hover:-translate-y-1 hover:scale-[1.02] flex items-center justify-center gap-3 uppercase tracking-wide text-sm"
+                >
+                    <MessageCircle size={24} className="fill-current text-[#25D366] bg-white rounded-full p-0.5" />
+                    ENTRAR NO GRUPO VIP
+                </a>
+                <button 
+                    onClick={handleClose}
+                    className="mt-4 text-stone-400 text-sm font-bold hover:text-stone-600 transition-colors"
+                >
+                    Fechar e continuar no site
+                </button>
+            </div>
+        </div>,
+        document.body
+      )}
+
       <Link href="/" className="inline-flex items-center gap-2 mb-6 text-[#a04e22] font-semibold hover:text-[#682c0b] transition-colors group">
         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform"/> Voltar para o início
       </Link>
@@ -346,7 +353,15 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                 <div className="relative z-10 w-full md:w-auto mt-2 md:mt-0">
                    <button 
                       disabled={cursosSelecionados.length === 0}
-                      onClick={() => setStep(2)}
+                      onClick={() => {
+                        setStep(2);
+                        setTimeout(() => {
+                           const el = document.getElementById('matricula');
+                           if (el) {
+                             window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+                           }
+                        }, 50);
+                      }}
                       className={`px-6 md:px-8 py-3 md:py-4 rounded-full font-bold tracking-wide flex items-center justify-center gap-2 transition-all shrink-0 w-full md:w-auto h-fit min-h-[44px] ${
                         cursosSelecionados.length > 0 
                         ? 'bg-[#ea5d35] hover:bg-[#c44e2b] text-white shadow-[0_4px_14px_rgba(234,93,53,0.3)]' 
@@ -369,7 +384,15 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
               className="p-4 md:p-10"
             >
               <button 
-                onClick={() => setStep(1)}
+                onClick={() => {
+                  setStep(1);
+                  setTimeout(() => {
+                     const el = document.getElementById('matricula');
+                     if (el) {
+                       window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+                     }
+                  }, 50);
+                }}
                 className="flex items-center gap-2 text-[#a04e22] font-semibold mb-6 md:mb-8 hover:text-[#682c0b] transition-colors group"
               >
                 <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform"/> Voltar para turmas
@@ -393,6 +416,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
               <form 
                 className="space-y-6 md:space-y-8 bg-white p-4 sm:p-6 md:p-8 rounded-[20px] md:rounded-[32px] shadow-sm border border-gray-100" 
                 onSubmit={handleSubmit}
+                noValidate
               >
                   {/* Hidden inputs para o FormSubmit */}
                   <input type="hidden" name="_captcha" value="false" />
@@ -550,7 +574,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                   >
                     <input 
                       type="file" 
-                      name="Comprovante"
+                      name="attachment"
                       className="hidden" 
                       ref={fileInputRef} 
                       onChange={handleFileChange} 
