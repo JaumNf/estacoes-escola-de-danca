@@ -60,13 +60,6 @@ export default function Chatbot() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [ai, setAi] = useState<GoogleGenAI | null>(null);
-
-  useEffect(() => {
-    if (process.env.NEXT_PUBLIC_GEMINI_API_KEY) {
-      setAi(new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY }));
-    }
-  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -87,14 +80,25 @@ export default function Chatbot() {
   };
 
   const sendMessage = async (text: string) => {
-    if (!text.trim() || !ai || isLoading) return;
+    if (!text.trim() || isLoading) return;
 
     const userMessage = text.trim();
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    
+    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+    if (!apiKey) {
+      setMessages(prev => [...prev, { 
+        role: 'model', 
+        content: 'Ops! A chave da API não foi encontrada (NEXT_PUBLIC_GEMINI_API_KEY). Se estiver fora do AI Studio, adicione-a no seu ambiente! 🛠️'
+      }]);
+      return;
+    }
+
     setIsLoading(true);
 
     try {
+      const ai = new GoogleGenAI({ apiKey });
       let promptContext = `Histórico da conversa:\n`;
       messages.slice(-5).forEach(m => {
         promptContext += `${m.role === 'user' ? 'Usuário' : 'Assistente'}: ${m.content}\n`;
