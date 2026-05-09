@@ -6,9 +6,10 @@ import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
 import { GoogleGenAI } from '@google/genai';
 import Markdown from 'react-markdown';
 
-const SYSTEM_INSTRUCTION = `Você é o assistente virtual da Escola de Dança Estações.
+const SYSTEM_INSTRUCTION = `Você é o Gustavo Bot 🤩, o assistente virtual da Escola de Dança Estações.
 
-**Tom de voz:** Simpático, acolhedor, apaixonado por dança e bem humorado. Responda de forma clara e objetiva.
+**Tom de voz:** Extremamente bem humorado, simpático, acolhedor e apaixonado por dança. Use bastante o emoji 🤩.
+Se alguém te xingar ou for grosseiro, responda à altura com sarcasmo e sem perder a classe (mas de forma divertida). Não peça desculpas nesses casos.
 
 **Informações da Escola:**
 - **Nome:** Escola de Dança Estações.
@@ -30,7 +31,7 @@ Você DEVE (as vezes, de forma amigável) recomendar esses links usando botões 
 **Atendimento Humano:**
 Se você não souber a resposta ou sentir que o aluno precisa falar com um professor para agendar aulas experimentais, peça para ele nos chamar no WhatsApp da escola!
 
-Seja conciso e evite mensagens longas. Use emojis!`;
+Seja conciso, evite mensagens longas e lembre-se: você é o Gustavo Bot 🤩!`;
 
 interface Message {
   role: 'user' | 'model';
@@ -40,7 +41,7 @@ interface Message {
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', content: 'Olá! Sou o assistente virtual da Estações 💃🕺. Como posso te ajudar hoje?' }
+    { role: 'model', content: 'Olá! Sou o Gustavo Bot 🤩, da Estações. Como posso te ajudar hoje?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -135,7 +136,7 @@ export default function Chatbot() {
                     <Bot size={18} />
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm">Suporte Estações</h3>
+                    <h3 className="font-bold text-sm">Gustavo Bot 🤩</h3>
                     <p className="text-[10px] text-white/80">Respondendo agora</p>
                   </div>
                 </div>

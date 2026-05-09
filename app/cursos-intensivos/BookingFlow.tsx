@@ -159,7 +159,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
   };
 
   return (
-    <div id="matricula" className="max-w-5xl mx-auto my-12 relative px-4 md:px-0">
+    <div id="matricula" className="max-w-6xl mx-auto my-12 relative px-4 md:px-0">
       {submitted && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-stone-900/80 backdrop-blur-sm animate-fade-in" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
             <div className="bg-white rounded-[2rem] p-8 max-w-md w-full text-center shadow-2xl relative border-4 border-[#fff1e7]">
@@ -398,23 +398,8 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform"/> Voltar para turmas
               </button>
 
-              <div className="bg-[#fffdf0] border border-[#e8c09a] rounded-xl p-3 md:p-4 mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 shadow-sm">
-                 <div>
-                   <p className="text-[#a04e22] text-[10px] md:text-xs font-bold uppercase tracking-wide mb-0.5">Resumo do Pedido</p>
-                   <h3 className="text-lg md:text-xl font-display font-bold text-[#682c0b]">
-                     {cursosSelecionados.length} turma{cursosSelecionados.length !== 1 && 's'} ({tipoInscricao})
-                   </h3>
-                 </div>
-                 <div className="text-left sm:text-right">
-                   <p className="text-xl md:text-2xl font-display font-bold text-[#ea5d35]">R$ {finalValue.toFixed(2).replace('.', ',')}</p>
-                   {selectedDaysCount === 2 && (
-                     <p className="text-green-600 text-[10px] font-bold w-full uppercase mt-0.5">✨ Baile Incluso</p>
-                   )}
-                 </div>
-              </div>
-
               <form 
-                className="space-y-3 sm:space-y-4 bg-white p-3 sm:p-5 rounded-[16px] md:rounded-[20px] shadow-sm border border-gray-100" 
+                className="flex flex-col lg:flex-row-reverse gap-4 md:gap-6" 
                 onSubmit={handleSubmit}
                 noValidate
               >
@@ -430,7 +415,74 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                   {comoConheceu === 'Indicação' && promoter && <input type="hidden" name="Promoter" value={promoter} />}
                   <input type="hidden" name="Autorização de Imagem" value={autorizacao ? 'Sim' : 'Não'} />
 
-                  {/* Dados da inscrição */}
+                  {/* Right Column / Top on Mobile - Summary, Terms & Submit */}
+                  <div className="w-full lg:w-[35%] flex flex-col gap-4">
+                     <div className="bg-[#fffdf0] border border-[#e8c09a] rounded-xl p-4 flex flex-col gap-3 shadow-sm">
+                        <div>
+                          <p className="text-[#a04e22] text-xs font-bold uppercase tracking-wide mb-1">Resumo do Pedido</p>
+                          <h3 className="text-xl font-display font-bold text-[#682c0b] leading-tight">
+                            {cursosSelecionados.length} turma{cursosSelecionados.length !== 1 && 's'} ({tipoInscricao})
+                          </h3>
+                        </div>
+                        <div className="pt-3 border-t border-[#e8c09a]/30">
+                          <p className="text-2xl font-display font-bold text-[#ea5d35]">R$ {finalValue.toFixed(2).replace('.', ',')}</p>
+                          {selectedDaysCount === 2 && (
+                            <p className="text-green-600 text-xs font-bold uppercase mt-1">✨ Baile Incluso</p>
+                          )}
+                        </div>
+                     </div>
+
+                     <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col gap-4">
+                        {/* Termos */}
+                        <div>
+                          <label className="flex items-start gap-2 p-3 bg-gray-50 rounded-lg border border-gray-100 cursor-pointer">
+                            <div className="pt-0.5">
+                              <input 
+                                type="checkbox" 
+                                checked={autorizacao} 
+                                onChange={(e) => setAutorizacao(e.target.checked)}
+                                className="w-4 h-4 rounded border-gray-300 text-[#ea5d35] focus:ring-[#ea5d35]" 
+                              />
+                            </div>
+                            <div>
+                              <h4 className="font-bold text-gray-800 text-xs mb-0.5">Autorização OBRIGATÓRIA de Imagem</h4>
+                              <p className="text-[10px] text-gray-600 leading-tight">
+                                Autorizo o uso da minha imagem e voz de forma gratuita.
+                              </p>
+                            </div>
+                          </label>
+                          {touched.nome && errors.autorizacao && <p className="text-red-500 text-[10px] mt-1"><AlertCircle className="inline mr-1" size={10}/>{errors.autorizacao}</p>}
+                        </div>
+
+                        {/* Botão Final */}
+                        <div>
+                          {Object.keys(touched).length > 0 && !isValid && (
+                             <p className="text-red-500 text-xs font-bold text-center mb-2 flex justify-center items-center gap-1">
+                               <AlertCircle size={12} /> Preencha todos os campos obrigatórios.
+                             </p>
+                          )}
+                          <button 
+                            type="submit" 
+                            disabled={isSubmitting}
+                            className={`w-full py-3 rounded-full font-bold tracking-widest text-sm transition-all shadow-md flex items-center justify-center gap-2 ${
+                              isSubmitting 
+                              ? 'bg-gray-400 text-white cursor-wait' 
+                              : 'bg-[#ea5d35] text-white hover:bg-[#c44e2b] hover:shadow-lg hover:-translate-y-0.5'
+                            }`}
+                          >
+                            {isSubmitting ? 'ENVIANDO...' : 'ENVIAR COMPROVANTE'}
+                          </button>
+                          <p className="text-center text-[10px] text-gray-400 mt-2 font-medium flex items-center justify-center gap-1">
+                            <Check size={10}/> Seus dados estão seguros
+                          </p>
+                        </div>
+                     </div>
+                  </div>
+
+                  {/* Left Column / Bottom on Mobile - Personal Info and Payment */}
+                  <div className="w-full lg:w-[65%] space-y-4 bg-white p-4 sm:p-6 rounded-[16px] md:rounded-[20px] shadow-sm border border-gray-100">
+                    {/* Dados da inscrição */}
+
                 <div className="space-y-3">
                   <h3 className="text-base md:text-lg font-bold text-[#682c0b] flex items-center gap-2 border-b border-gray-100 pb-1.5">
                     <User size={16} className="text-[#ea5d35]" /> Dados do Participante
@@ -607,49 +659,8 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                     </div>
                     {touched.nome && errors.arquivo && <p className="text-red-500 text-[10px] text-center"><AlertCircle className="inline mr-1" size={10}/>{errors.arquivo}</p>}
                   </div>
-                </div>
-
-                {/* Termos */}
-                <label className="flex items-start gap-2 p-2 bg-gray-50 rounded-lg border border-gray-100 cursor-pointer">
-                  <div className="pt-0.5">
-                    <input 
-                      type="checkbox" 
-                      checked={autorizacao} 
-                      onChange={(e) => setAutorizacao(e.target.checked)}
-                      className="w-4 h-4 rounded border-gray-300 text-[#ea5d35] focus:ring-[#ea5d35]" 
-                    />
                   </div>
-                  <div>
-                    <h4 className="font-bold text-gray-800 text-[10px] mb-0.5">Autorização OBRIGATÓRIA de Imagem</h4>
-                    <p className="text-[10px] text-gray-600 leading-tight">
-                      Autorizo o uso da minha imagem e voz de forma gratuita.
-                    </p>
                   </div>
-                </label>
-                {touched.nome && errors.autorizacao && <p className="text-red-500 text-[10px] mt-0.5"><AlertCircle className="inline mr-1" size={10}/>{errors.autorizacao}</p>}
-
-                {/* Botão Final */}
-                <div className="pt-1">
-                  {Object.keys(touched).length > 0 && !isValid && (
-                     <p className="text-red-500 text-[10px] font-bold text-center mb-2 flex justify-center items-center gap-1">
-                       <AlertCircle size={10} /> Preencha todos os campos obrigatórios acima.
-                     </p>
-                  )}
-                  <button 
-                    type="submit" 
-                    disabled={isSubmitting}
-                    className={`w-full py-2.5 rounded-full font-bold tracking-widest text-sm transition-all shadow-md flex items-center justify-center gap-2 ${
-                      isSubmitting 
-                      ? 'bg-gray-400 text-white cursor-wait' 
-                      : 'bg-[#ea5d35] text-white hover:bg-[#c44e2b] hover:shadow-lg hover:-translate-y-0.5'
-                    }`}
-                  >
-                    {isSubmitting ? 'ENVIANDO...' : 'ENVIAR COMPROVANTE'}
-                  </button>
-                  <p className="text-center text-[10px] text-gray-400 mt-2 font-medium flex items-center justify-center gap-1">
-                    <Check size={10}/> Seus dados estão seguros
-                  </p>
-                </div>
               </form>
             </motion.div>
           )}
