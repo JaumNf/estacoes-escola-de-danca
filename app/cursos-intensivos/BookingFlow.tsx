@@ -131,6 +131,10 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
       const form = e.currentTarget;
       const formData = new FormData(form);
       
+      if (arquivo) {
+         formData.set("attachment", arquivo);
+      }
+      
       const response = await fetch("https://formsubmit.co/ajax/cursodeverao67@gmail.com", {
         method: "POST",
         body: formData,
@@ -401,6 +405,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
               <form 
                 className="flex flex-col-reverse lg:flex-row-reverse gap-4 md:gap-6" 
                 onSubmit={handleSubmit}
+                encType="multipart/form-data"
                 noValidate
               >
                   {/* Hidden inputs para o FormSubmit */}
@@ -408,7 +413,10 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                   <input type="hidden" name="_subject" value={`Nova Inscrição - ${nome || 'Novo Aluno'}`} />
                   <input type="hidden" name="_next" value={typeof window !== 'undefined' ? window.location.href.split('?')[0] + '?success=true' : ''} />
                   <input type="hidden" name="Tipo de Inscrição" value={tipoInscricao} />
-                  <input type="hidden" name="Turmas Selecionadas" value={cursosSelecionados.map(c => ritmos.find(r => r.id === c)?.nome).join(', ')} />
+                  <input type="hidden" name="Turmas Selecionadas" value={cursosSelecionados.map(c => {
+                    const r = ritmos.find(r => r.id === c);
+                    return r ? `${r.nome} (${r.nivel})` : '';
+                  }).filter(Boolean).join(', ')} />
                   <input type="hidden" name="Dias Selecionados" value={`${selectedDaysCount} dia(s)`} />
                   <input type="hidden" name="Valor Final" value={`R$ ${finalValue.toFixed(2).replace('.', ',')}`} />
                   <input type="hidden" name="Como Conheceu" value={comoConheceu} />
