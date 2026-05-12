@@ -82,12 +82,20 @@ export default function HeroCarousel() {
             <p className="text-xl md:text-2xl text-white font-body max-w-2xl drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] mb-10 font-medium">
               {images[currentIndex].subtitle}
             </p>
-            <a 
-              href="#trabalhos"
-              className="pointer-events-auto bg-terracotta text-brown-50 px-8 py-4 rounded-full font-medium tracking-wide hover:bg-brown-800 transition-colors duration-300 shadow-lg"
-            >
-              Saiba Mais
-            </a>
+            <div className="pointer-events-auto flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <a 
+                href="/cursos-intensivos"
+                className="bg-[#ea5d35] text-brown-50 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-[#c44e2b] transition-colors shadow-lg animate-[pulse_2s_ease-in-out_infinite]"
+              >
+                Cursos Intensivos de Verão
+              </a>
+              <a 
+                href="#trabalhos"
+                className="bg-transparent border border-white/50 text-white px-8 py-4 rounded-full font-medium tracking-wide hover:bg-white/10 transition-colors shadow-lg backdrop-blur-sm"
+              >
+                Conheça a Escola
+              </a>
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>

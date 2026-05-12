@@ -51,6 +51,22 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
     setCursosSelecionados(prev => prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]);
   };
 
+  const getWhatsAppCreditText = (parcelado: boolean) => {
+    const coursenames = cursosSelecionados.map(c => {
+      const r = ritmos.find(r => r.id === c);
+      return r ? `${r.nome} (${r.nivel})` : '';
+    }).filter(Boolean).join(', ');
+
+    const txt = `Olá! Gostaria de pagar meu Curso Intensivo no Cartão de Crédito ${parcelado ? 'Parcelado' : 'à vista'}.
+
+*Nome:* ${nome.trim() || '*não preenchido*'}
+*Tipo de Inscrição:* ${tipoInscricao === 'dupla' ? 'Casal/Dupla' : 'Individual'}
+*Cursos Selecionados:* ${coursenames}
+*Valor Total:* R$ ${finalValue.toFixed(2).replace('.', ',')}`;
+
+    return `https://wa.me/5567992630948?text=${encodeURIComponent(txt)}`;
+  };
+
   const { finalValue, selectedDaysCount } = useMemo(() => {
     if (cursosSelecionados.length === 0) return { finalValue: 0, selectedDaysCount: 0 };
     
@@ -602,11 +618,14 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                     </div>
 
                     <div className="pt-2 border-t border-gray-200 mt-2">
+                      <p className="text-[10px] text-orange-600 font-bold mb-1.5 text-center sm:text-left">
+                        *Aviso: Compras no crédito possuem acréscimo de taxa da maquininha.
+                      </p>
                       <div className="flex flex-col sm:flex-row gap-1.5">
-                        <a href="https://wa.me/5567992630948?text=Ol%C3%A1%21%20Gostaria%20de%20pagar%20meu%20Curso%20Intensivo%20no%20Cart%C3%A3o%20de%20Cr%C3%A9dito%20%C3%A0%20vista." target="_blank" rel="noopener noreferrer" className="flex-1 py-1.5 px-2 bg-white border border-gray-200 rounded text-center text-[10px] font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-1 transition-colors">
+                        <a href={getWhatsAppCreditText(false)} target="_blank" rel="noopener noreferrer" className="flex-1 py-1.5 px-2 bg-white border border-gray-200 rounded text-center text-[10px] font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-1 transition-colors">
                           <CreditCard size={12} className="text-[#ea5d35]" /> Crédito à Vista
                         </a>
-                        <a href="https://wa.me/5567992630948?text=Ol%C3%A1%21%20Gostaria%20de%20pagar%20meu%20Curso%20Intensivo%20no%20Cart%C3%A3o%20de%20Cr%C3%A9dito%20Parcelado." target="_blank" rel="noopener noreferrer" className="flex-1 py-1.5 px-2 bg-white border border-gray-200 rounded text-center text-[10px] font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-1 transition-colors">
+                        <a href={getWhatsAppCreditText(true)} target="_blank" rel="noopener noreferrer" className="flex-1 py-1.5 px-2 bg-white border border-gray-200 rounded text-center text-[10px] font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-1 transition-colors">
                           <CreditCard size={12} className="text-[#ea5d35]" /> Crédito Parcelado
                         </a>
                       </div>
