@@ -439,7 +439,7 @@ export default function CursosIntensivos() {
 
               <div className="mt-4 pt-4 border-t border-gray-100 flex flex-col items-center shrink-0">
                 <a 
-                  href="https://wa.me/5567992630948" 
+                  href="https://wa.me/5567992630948?text=Ol%C3%A1%21%20Tenho%20uma%20d%C3%BAvida%20sobre%20os%20Cursos%20Intensivos." 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="px-6 py-2 rounded-full border-2 border-green-200 text-green-600 font-bold hover:bg-green-50 transition-colors text-sm"

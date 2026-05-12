@@ -603,10 +603,10 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
 
                     <div className="pt-2 border-t border-gray-200 mt-2">
                       <div className="flex flex-col sm:flex-row gap-1.5">
-                        <a href="#" className="flex-1 py-1.5 px-2 bg-white border border-gray-200 rounded text-center text-[10px] font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-1 transition-colors">
+                        <a href="https://wa.me/5567992630948?text=Ol%C3%A1%21%20Gostaria%20de%20pagar%20meu%20Curso%20Intensivo%20no%20Cart%C3%A3o%20de%20Cr%C3%A9dito%20%C3%A0%20vista." target="_blank" rel="noopener noreferrer" className="flex-1 py-1.5 px-2 bg-white border border-gray-200 rounded text-center text-[10px] font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-1 transition-colors">
                           <CreditCard size={12} className="text-[#ea5d35]" /> Crédito à Vista
                         </a>
-                        <a href="#" className="flex-1 py-1.5 px-2 bg-white border border-gray-200 rounded text-center text-[10px] font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-1 transition-colors">
+                        <a href="https://wa.me/5567992630948?text=Ol%C3%A1%21%20Gostaria%20de%20pagar%20meu%20Curso%20Intensivo%20no%20Cart%C3%A3o%20de%20Cr%C3%A9dito%20Parcelado." target="_blank" rel="noopener noreferrer" className="flex-1 py-1.5 px-2 bg-white border border-gray-200 rounded text-center text-[10px] font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-1 transition-colors">
                           <CreditCard size={12} className="text-[#ea5d35]" /> Crédito Parcelado
                         </a>
                       </div>
