@@ -87,7 +87,7 @@ export default function HeroCarousel() {
                 href="/cursos-intensivos"
                 className="bg-[#ea5d35] text-brown-50 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-[#c44e2b] transition-colors shadow-lg animate-[pulse_2s_ease-in-out_infinite]"
               >
-                Cursos Intensivos de Verão
+                Cursos Intensivos de Outono
               </a>
               <a 
                 href="#trabalhos"

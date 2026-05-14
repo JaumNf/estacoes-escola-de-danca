@@ -12,6 +12,7 @@ export interface Ritmo {
   nivel: string;
   dia: string;
   hora: string;
+  popular?: boolean;
 }
 
 interface BookingFlowProps {
@@ -29,7 +30,6 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
   const [email, setEmail] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [comoConheceu, setComoConheceu] = useState('');
-  const [promoter, setPromoter] = useState('');
   const [arquivo, setArquivo] = useState<File | null>(null);
   const [autorizacao, setAutorizacao] = useState(false);
 
@@ -43,6 +43,8 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
     email: false,
     whatsapp: false,
     comoConheceu: false,
+    arquivo: false,
+    autorizacao: false,
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -101,11 +103,10 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = 'E-mail inválido.';
     if (!whatsapp.trim() || whatsapp.replace(/\D/g, '').length < 10) errs.whatsapp = 'WhatsApp inválido.';
     if (!comoConheceu) errs.comoConheceu = 'Selecione uma opção.';
-    if (comoConheceu === 'Indicação' && !promoter) errs.promoter = 'Selecione um promoter.';
     if (!arquivo) errs.arquivo = 'Anexe o comprovante.';
     if (!autorizacao) errs.autorizacao = 'Aceite os termos obrigatórios.';
     return errs;
-  }, [nome, email, whatsapp, comoConheceu, promoter, arquivo, autorizacao]);
+  }, [nome, email, whatsapp, comoConheceu, arquivo, autorizacao]);
 
   const isValid = Object.keys(errors).length === 0;
 
@@ -125,6 +126,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
         alert('Formato inválido. Envie PDF, PNG ou JPEG.');
       }
     }
+    setTouched(p => ({...p, arquivo: true}));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -134,6 +136,8 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
       email: true,
       whatsapp: true,
       comoConheceu: true,
+      autorizacao: true,
+      arquivo: true,
     });
     
     if (!isValid) {
@@ -144,28 +148,12 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
     setIsSubmitting(true);
     
     try {
-      const form = e.currentTarget;
-      const formData = new FormData(form);
+      // The form will naturally submit to hidden_iframe_cursos
       
-      if (arquivo) {
-         formData.set("attachment", arquivo);
-      }
-      
-      const response = await fetch("https://formsubmit.co/ajax/cursodeverao67@gmail.com", {
-        method: "POST",
-        body: formData,
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
-
-      if (response.ok) {
+      setTimeout(() => {
         setIsSubmitting(false);
         setSubmitted(true);
-      } else {
-        setIsSubmitting(false);
-        alert("Ocorreu um erro ao enviar. Por favor, tente novamente ou nos chame no WhatsApp.");
-      }
+      }, 2500);
     } catch (error) {
       console.error(error);
       setIsSubmitting(false);
@@ -336,9 +324,22 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                       className={`relative p-5 rounded-2xl text-left border-2 transition-all duration-300 ${
                         isSelected 
                         ? 'border-[#ea5d35] bg-[#fff5f2] shadow-md -translate-y-1' 
-                        : 'border-gray-100 bg-white hover:border-orange-200 hover:bg-orange-50/50'
+                        : ritmo.popular 
+                          ? 'border-orange-300 bg-orange-50/30 hover:border-orange-400 hover:bg-orange-50/60'
+                          : 'border-gray-100 bg-white hover:border-orange-200 hover:bg-orange-50/50'
                       }`}
                     >
+                      {ritmo.popular && (
+                        <div className="absolute -top-3 left-4 bg-gradient-to-r from-[#ea5d35] to-[#c44e2b] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm shadow-orange-500/20 uppercase tracking-widest whitespace-nowrap animate-pulse border border-white z-10 hidden md:block">
+                          🔥 Mais Procurado
+                        </div>
+                      )}
+                      {ritmo.popular && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#ea5d35] to-[#c44e2b] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm shadow-orange-500/20 uppercase tracking-widest whitespace-nowrap animate-pulse border border-white z-10 md:hidden">
+                          🔥 Mais Procurado
+                        </div>
+                      )}
+                      
                       <div className={`absolute top-5 right-5 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-[#ea5d35] bg-white' : 'border-gray-300'}`}>
                         {isSelected && <div className="w-3 h-3 rounded-full bg-[#ea5d35]" />}
                       </div>
@@ -418,9 +419,13 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform"/> Voltar para turmas
               </button>
 
+              <iframe name="hidden_iframe_cursos" id="hidden_iframe_cursos" style={{ display: 'none' }} />
               <form 
                 className="flex flex-col-reverse lg:flex-row-reverse gap-4 md:gap-6" 
                 onSubmit={handleSubmit}
+                action="https://formsubmit.co/cursodeverao67@gmail.com"
+                method="POST"
+                target="hidden_iframe_cursos"
                 encType="multipart/form-data"
                 noValidate
               >
@@ -436,7 +441,6 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                   <input type="hidden" name="Dias Selecionados" value={`${selectedDaysCount} dia(s)`} />
                   <input type="hidden" name="Valor Final" value={`R$ ${finalValue.toFixed(2).replace('.', ',')}`} />
                   <input type="hidden" name="Como Conheceu" value={comoConheceu} />
-                  {comoConheceu === 'Indicação' && promoter && <input type="hidden" name="Promoter" value={promoter} />}
                   <input type="hidden" name="Autorização de Imagem" value={autorizacao ? 'Sim' : 'Não'} />
 
                   {/* Right Column / Top on Mobile - Summary, Terms & Submit */}
@@ -464,7 +468,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                               <input 
                                 type="checkbox" 
                                 checked={autorizacao} 
-                                onChange={(e) => setAutorizacao(e.target.checked)}
+                                onChange={(e) => { setAutorizacao(e.target.checked); setTouched(p => ({...p, autorizacao: true})); }}
                                 className="w-4 h-4 rounded border-gray-300 text-[#ea5d35] focus:ring-[#ea5d35]" 
                               />
                             </div>
@@ -475,7 +479,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                               </p>
                             </div>
                           </label>
-                          {touched.nome && errors.autorizacao && <p className="text-red-500 text-[10px] mt-1"><AlertCircle className="inline mr-1" size={10}/>{errors.autorizacao}</p>}
+                          {touched.autorizacao && errors.autorizacao && <p className="text-red-500 text-[10px] mt-1"><AlertCircle className="inline mr-1" size={10}/>{errors.autorizacao}</p>}
                         </div>
 
                         {/* Botão Final */}
@@ -519,7 +523,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                          type="text" 
                          name="Nome"
                          value={nome}
-                         onChange={e => setNome(e.target.value)}
+                         onChange={e => { setNome(e.target.value); setTouched(p => ({...p, nome: true})); }}
                          onBlur={() => setTouched(p => ({...p, nome: true}))}
                          className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.nome && errors.nome ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
                          placeholder="Seu nome completo"
@@ -532,7 +536,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                         type="email" 
                         name="Email"
                         value={email}
-                        onChange={e => setEmail(e.target.value)}
+                        onChange={e => { setEmail(e.target.value); setTouched(p => ({...p, email: true})); }}
                         onBlur={() => setTouched(p => ({...p, email: true}))}
                         className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.email && errors.email ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
                         placeholder="seu@email.com"
@@ -545,7 +549,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                         type="tel" 
                         name="WhatsApp"
                         value={whatsapp}
-                        onChange={e => setWhatsapp(e.target.value)}
+                        onChange={e => { setWhatsapp(e.target.value); setTouched(p => ({...p, whatsapp: true})); }}
                         onBlur={() => setTouched(p => ({...p, whatsapp: true}))}
                         className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.whatsapp && errors.whatsapp ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
                         placeholder="(00) 00000-0000"
@@ -574,25 +578,6 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                     ))}
                   </div>
                   {touched.comoConheceu && errors.comoConheceu && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.comoConheceu}</p>}
-
-                  {comoConheceu === 'Indicação' && (
-                    <motion.div initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}} className="pt-1.5">
-                       <p className="text-xs font-medium text-gray-500 mb-1.5">Qual promoter indicou você?</p>
-                       <div className="flex gap-1.5 flex-wrap">
-                         {['Manu', 'Ana Laura', 'João', 'Felipe', 'Bia'].map(nm => (
-                           <button
-                             key={nm}
-                             type="button"
-                             onClick={() => setPromoter(nm)}
-                             className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${promoter === nm ? 'bg-[#682c0b] text-white border-[#682c0b]' : 'bg-gray-100 text-gray-600 border-transparent hover:bg-gray-200'}`}
-                           >
-                             {nm}
-                           </button>
-                         ))}
-                       </div>
-                       {touched.comoConheceu && errors.promoter && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.promoter}</p>}
-                    </motion.div>
-                  )}
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4">
@@ -643,7 +628,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                       className={`border border-dashed rounded-xl p-3 flex flex-col items-center justify-center transition-all flex-1 h-full min-h-[140px] ${
                         arquivo 
                         ? 'border-green-400 bg-green-50 cursor-default' 
-                        : touched.nome && errors.arquivo 
+                        : touched.arquivo && errors.arquivo 
                           ? 'border-red-400 bg-red-50 hover:bg-red-100 cursor-pointer' 
                           : 'border-[#e8c09a] bg-orange-50/50 hover:bg-orange-50 cursor-pointer'
                       }`}
@@ -684,7 +669,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                         </div>
                       )}
                     </div>
-                    {touched.nome && errors.arquivo && <p className="text-red-500 text-[10px] text-center"><AlertCircle className="inline mr-1" size={10}/>{errors.arquivo}</p>}
+                    {touched.arquivo && errors.arquivo && <p className="text-red-500 text-[10px] text-center"><AlertCircle className="inline mr-1" size={10}/>{errors.arquivo}</p>}
                   </div>
                   </div>
                   </div>

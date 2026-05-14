@@ -18,7 +18,7 @@ const RITMOS_OPCOES = [
   { id: 'vanera_zero', nome: 'Vanera', nivel: 'Iniciante', dia: '22 de Maio', hora: '18h30 às 19h40' },
   { id: 'bachata_zero', nome: 'Bachata', nivel: 'Do zero', dia: '22 de Maio', hora: '19h40 às 20h50' },
   { id: 'zouk_zero', nome: 'Zouk', nivel: 'Do zero', dia: '22 de Maio', hora: '20h50 às 22h00' },
-  { id: 'forro_zero', nome: 'Forró', nivel: 'Do zero', dia: '23 de Maio', hora: '14h30 às 15h40' },
+  { id: 'forro_zero', nome: 'Forró', nivel: 'Do zero', dia: '23 de Maio', hora: '14h30 às 15h40', popular: true },
   { id: 'forro_iniciante', nome: 'Forró', nivel: 'Iniciante', dia: '23 de Maio', hora: '15h40 às 16h50' },
   { id: 'samba_zero', nome: 'Musicalidade e possibilidades na dança', nivel: 'Livre', dia: '23 de Maio', hora: '16h50 às 18h00' },
 ];
@@ -278,8 +278,11 @@ export default function CursosIntensivos() {
                   {/* Class 1 */}
                   <button 
                     onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="w-full text-left bg-white/80 rounded-[20px] p-4 shadow-sm border border-white cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                    className="relative w-full text-left bg-orange-50/80 rounded-[20px] p-4 shadow-sm border-2 border-orange-300 cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all hover:bg-orange-100"
                   >
+                    <div className="absolute -top-3 right-4 bg-gradient-to-r from-[#ea5d35] to-[#c44e2b] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-widest whitespace-nowrap animate-pulse border border-white z-10">
+                      🔥 Mais Procurado
+                    </div>
                     <div className="flex items-center gap-2 text-[#8c8511] text-xs font-bold mb-1">
                       <Clock size={14} />
                       <span>14:30 às 15:40</span>

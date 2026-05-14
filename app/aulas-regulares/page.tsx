@@ -4,11 +4,21 @@ import { useState } from 'react';
 import Header from '@/components/Header';
 import WaveDivider from '@/components/WaveDivider';
 import Tooltip from '@/components/Tooltip';
-import { Calendar, MapPin, Clock, ArrowRight, Check, CheckCircle, Instagram, Facebook, User, Users } from 'lucide-react';
+import { Calendar, MapPin, Clock, ArrowRight, Check, CheckCircle, Instagram, Facebook, User, Users, AlertCircle, Navigation } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import BackToTop from '@/components/BackToTop';
+import dynamic from 'next/dynamic';
+
+const MapComponent = dynamic(() => import('@/components/MapComponent'), { 
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-96 bg-orange-100/50 rounded-xl animate-pulse flex items-center justify-center">
+      <span className="text-orange-400 font-bold">Carregando mapa...</span>
+    </div>
+  )
+});
 
 export default function AulasRegulares() {
   const [unidade, setUnidade] = useState<'unidade1' | 'unidade2'>('unidade1');
@@ -19,6 +29,24 @@ export default function AulasRegulares() {
   const [segundaTurma, setSegundaTurma] = useState('');
   const [nome, setNome] = useState('');
   const [nomeDupla, setNomeDupla] = useState('');
+  
+  const [touched, setTouched] = useState({
+    nome: false,
+    nomeDupla: false,
+    turmaPrincipal: false,
+    segundaTurma: false,
+  });
+
+  const errors = (() => {
+    let errs: any = {};
+    if (!turmaPrincipal) errs.turmaPrincipal = 'Selecione uma turma principal.';
+    if (querSegundaTurma && !segundaTurma) errs.segundaTurma = 'Selecione a turma adicional.';
+    if (tipoInscricao === 'individual' && !nome.trim()) errs.nome = 'Preencha o seu nome.';
+    if (tipoInscricao === 'dupla' && !nomeDupla.trim()) errs.nomeDupla = 'Preencha o nome da dupla.';
+    return errs;
+  })();
+
+  const isValid = Object.keys(errors).length === 0;
 
   const calcularValor = () => {
     let valorBase = 0;
@@ -38,6 +66,15 @@ export default function AulasRegulares() {
 
   const handleWhatsAppRedirect = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    setTouched({
+      nome: true,
+      nomeDupla: true,
+      turmaPrincipal: true,
+      segundaTurma: true,
+    });
+
+    if (!isValid) return;
     
     let mensagem = `Olá! Gostaria de me matricular nas aulas regulares.%0A%0A`;
     mensagem += `*Unidade:* ${unidade === 'unidade1' ? 'Unidade 1 - Teatro do Mundo' : 'Unidade 2 - Templo'}%0A`;
@@ -109,7 +146,15 @@ export default function AulasRegulares() {
         className="py-24 px-6"
       >
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-orange-900">Nossa Filosofia</h2>
+          <motion.h2 
+            initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
+            whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+            viewport={{ once: true }}
+            transition={{ type: "spring", bounce: 0.5, duration: 1 }}
+            className="text-4xl md:text-5xl font-display font-bold text-orange-900"
+          >
+            Nossa Filosofia
+          </motion.h2>
           <div className="w-24 h-1.5 bg-orange-600 mx-auto rounded-full"></div>
           <p className="text-lg md:text-xl text-orange-800 leading-relaxed">
             Acreditamos que todo mundo nasceu para dançar. Nossas aulas regulares são construídas para que você desenvolva sua consciência corporal, musicalidade e, acima de tudo, o prazer em dançar. Não importa se você nunca deu um passo de dança na vida ou se já tem alguma experiência, nosso ambiente é livre de julgamentos, acolhedor e focado em fazer você se sentir confiante no salão.
@@ -399,8 +444,8 @@ export default function AulasRegulares() {
 
               <div className="mt-6 bg-orange-800/30 rounded-xl p-3 flex items-start gap-3 border border-orange-800">
                 <CheckCircle className="text-orange-500 shrink-0 mt-0.5" size={18} />
-                <Tooltip content="É necessário apresentar comprovante de matrícula atualizado de ambos os alunos.">
-                  <span className="text-orange-300 text-xs border-b border-dashed border-orange-600 cursor-help">*O valor promocional em dupla só é válido se <strong className="text-orange-100">ambos</strong> forem universitários.</span>
+                <Tooltip content="É necessário apresentar comprovante de matrícula atualizado de ambos os alunos. Caso apenas um seja universitário, a inscrição deverá ser feita via Inscrição Individual para cada um.">
+                  <span className="text-orange-300 text-xs border-b border-dashed border-orange-600 cursor-help">*O valor promocional em dupla só é válido se <strong className="text-orange-100">ambos</strong> forem universitários. Se apenas um for universitário, deverão realizar inscrições individuais (um com desconto, outro sem).</span>
                 </Tooltip>
               </div>
             </div>
@@ -442,6 +487,11 @@ export default function AulasRegulares() {
               <p className="text-orange-700 mt-4 text-sm max-w-lg mx-auto">
                 Preencha seus dados abaixo. As opções selecionadas nos passos anteriores já foram preenchidas para você!
               </p>
+            </div>
+            
+            <div className="mb-10">
+              <h3 className="font-bold text-orange-900 mb-4 text-center">Localização das Unidades</h3>
+              <MapComponent selectedUnidade={unidade} />
             </div>
 
             <form onSubmit={handleWhatsAppRedirect} className="space-y-6">
@@ -492,7 +542,10 @@ export default function AulasRegulares() {
                     required
                     value={turmaPrincipal}
                     onChange={(e) => setTurmaPrincipal(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent transition-all bg-orange-50/50 text-sm text-orange-900"
+                    onBlur={() => setTouched(prev => ({ ...prev, turmaPrincipal: true }))}
+                    className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all bg-orange-50/50 text-sm text-orange-900 ${
+                      touched.turmaPrincipal && errors.turmaPrincipal ? 'border-red-500 bg-red-50' : 'border-orange-200 focus:border-transparent'
+                    }`}
                   >
                     <option value="" disabled>Selecione a turma principal...</option>
                     <option value="Vanera e Chamamé">Vanera e Chamamé</option>
@@ -504,12 +557,20 @@ export default function AulasRegulares() {
                     required
                     value={turmaPrincipal}
                     onChange={(e) => setTurmaPrincipal(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent transition-all bg-orange-50/50 text-sm text-orange-900"
+                    onBlur={() => setTouched(prev => ({ ...prev, turmaPrincipal: true }))}
+                    className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all bg-orange-50/50 text-sm text-orange-900 ${
+                      touched.turmaPrincipal && errors.turmaPrincipal ? 'border-red-500 bg-red-50' : 'border-orange-200 focus:border-transparent'
+                    }`}
                   >
                     <option value="" disabled>Selecione a turma principal...</option>
                     <option value="Dança de Salão em Geral">Dança de Salão em Geral</option>
                     <option value="Forró">Forró</option>
                   </select>
+                )}
+                {touched.turmaPrincipal && errors.turmaPrincipal && (
+                  <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle size={12} /> {errors.turmaPrincipal}
+                  </motion.p>
                 )}
               </div>
 
@@ -598,19 +659,23 @@ export default function AulasRegulares() {
                 <AnimatePresence>
                   {querSegundaTurma && (
                     <motion.div 
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
+                      initial={{ opacity: 0, height: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, height: 'auto', scale: 1 }}
+                      exit={{ opacity: 0, height: 0, scale: 0.95 }}
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
                       className="overflow-hidden"
                     >
-                      <label htmlFor="segundaTurma" className="block text-xs font-bold tracking-wide uppercase text-orange-800 mb-2 mt-2">Qual será a turma adicional?</label>
+                      <label htmlFor="segundaTurma" className="block text-xs font-bold tracking-wide uppercase text-orange-800 mb-2 mt-4">Qual será a turma adicional?</label>
                       {unidade === 'unidade1' ? (
                         <select 
                           id="segundaTurma" 
                           required={querSegundaTurma}
                           value={segundaTurma}
                           onChange={(e) => setSegundaTurma(e.target.value)}
-                          className="w-full px-4 py-3 rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent transition-all bg-orange-50/50 text-sm text-orange-900"
+                          onBlur={() => setTouched(prev => ({ ...prev, segundaTurma: true }))}
+                          className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all bg-orange-50/50 text-sm text-orange-900 ${
+                            touched.segundaTurma && errors.segundaTurma ? 'border-red-500 bg-red-50' : 'border-orange-200 focus:border-transparent'
+                          }`}
                         >
                           <option value="" disabled>Selecione uma turma...</option>
                           {['Vanera e Chamamé', 'Forró'].filter(t => t !== turmaPrincipal).map(t => (
@@ -623,13 +688,21 @@ export default function AulasRegulares() {
                           required={querSegundaTurma}
                           value={segundaTurma}
                           onChange={(e) => setSegundaTurma(e.target.value)}
-                          className="w-full px-4 py-3 rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent transition-all bg-orange-50/50 text-sm text-orange-900"
+                          onBlur={() => setTouched(prev => ({ ...prev, segundaTurma: true }))}
+                          className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all bg-orange-50/50 text-sm text-orange-900 ${
+                            touched.segundaTurma && errors.segundaTurma ? 'border-red-500 bg-red-50' : 'border-orange-200 focus:border-transparent'
+                          }`}
                         >
                           <option value="" disabled>Selecione uma turma...</option>
                           {['Dança de Salão em Geral', 'Forró'].filter(t => t !== turmaPrincipal).map(t => (
                             <option key={t} value={t}>{t}</option>
                           ))}
                         </select>
+                      )}
+                      {touched.segundaTurma && errors.segundaTurma && (
+                        <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-xs mt-1 flex items-center gap-1 mb-2">
+                          <AlertCircle size={12} /> {errors.segundaTurma}
+                        </motion.p>
                       )}
                     </motion.div>
                   )}
@@ -647,9 +720,17 @@ export default function AulasRegulares() {
                       required
                       value={nome}
                       onChange={(e) => setNome(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent transition-all bg-orange-50/50 text-sm"
+                      onBlur={() => setTouched(prev => ({ ...prev, nome: true }))}
+                      className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all bg-orange-50/50 text-sm ${
+                        touched.nome && errors.nome ? 'border-red-500 bg-red-50' : 'border-orange-200 focus:border-transparent'
+                      }`}
                       placeholder="Como você gostaria de ser chamado?"
                     />
+                    {touched.nome && errors.nome && (
+                      <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-xs mt-1 flex items-center gap-1 mb-2">
+                        <AlertCircle size={12} /> {errors.nome}
+                      </motion.p>
+                    )}
                   </div>
                 ) : (
                   <div>
@@ -660,23 +741,56 @@ export default function AulasRegulares() {
                       required
                       value={nomeDupla}
                       onChange={(e) => setNomeDupla(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent transition-all bg-orange-50/50 text-sm"
+                      onBlur={() => setTouched(prev => ({ ...prev, nomeDupla: true }))}
+                      className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all bg-orange-50/50 text-sm ${
+                        touched.nomeDupla && errors.nomeDupla ? 'border-red-500 bg-red-50' : 'border-orange-200 focus:border-transparent'
+                      }`}
                       placeholder="Nomes das duas pessoas"
                     />
+                    {touched.nomeDupla && errors.nomeDupla && (
+                      <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-xs mt-1 flex items-center gap-1 mb-2">
+                        <AlertCircle size={12} /> {errors.nomeDupla}
+                      </motion.p>
+                    )}
                   </div>
                 )}
               </div>
 
-              <div className="pt-6 border-t border-orange-900 flex items-center justify-between">
-                <span className="text-orange-600 text-base">Valor da Mensalidade:</span>
-                <motion.span 
-                  key={calcularValor()}
-                  initial={{ opacity: 0, scale: 0.8, y: -10 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  className="text-3xl font-display font-bold text-orange-900"
-                >
-                  R$ {calcularValor()}
-                </motion.span>
+              <div className="pt-6 border-t border-orange-200">
+                <div className="bg-[#fffdfa] border border-orange-100 rounded-2xl p-5 shadow-sm mb-6">
+                  <h4 className="font-bold text-orange-900 mb-4 border-b border-orange-100 pb-2">Resumo da Inscrição</h4>
+                  <ul className="space-y-3 text-sm">
+                    <li className="flex justify-between items-start gap-4">
+                      <span className="text-orange-600 font-medium">Unidade:</span>
+                      <span className="text-orange-900 text-right">{unidade === 'unidade1' ? 'Unidade 1 - Centro' : 'Unidade 2 - Templo'}</span>
+                    </li>
+                    <li className="flex justify-between items-start gap-4">
+                      <span className="text-orange-600 font-medium">Modalidade:</span>
+                      <span className="text-orange-900 text-right">{tipoInscricao === 'individual' ? 'Individual' : 'Em Dupla'} {isUniversitario ? '(Universitário)' : ''}</span>
+                    </li>
+                    <li className="flex justify-between items-start gap-4">
+                      <span className="text-orange-600 font-medium">Turma Principal:</span>
+                      <span className="text-orange-900 text-right font-medium">{turmaPrincipal || '-'}</span>
+                    </li>
+                    {querSegundaTurma && (
+                      <li className="flex justify-between items-start gap-4">
+                        <span className="text-orange-600 font-medium">Segunda Turma (50% OFF):</span>
+                        <span className="text-orange-900 text-right font-medium">{segundaTurma || '-'}</span>
+                      </li>
+                    )}
+                    <li className="flex justify-between items-start gap-4 pt-3 border-t border-orange-100 mt-1">
+                      <span className="text-orange-900 font-bold">Total Mensal:</span>
+                      <motion.span 
+                        key={calcularValor()}
+                        initial={{ opacity: 0, scale: 0.8, y: -5 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        className="text-2xl font-display font-bold text-[#ea5d35]"
+                      >
+                        R$ {calcularValor()}
+                      </motion.span>
+                    </li>
+                  </ul>
+                </div>
               </div>
 
               <div className="space-y-3">
@@ -745,6 +859,14 @@ export default function AulasRegulares() {
               <li>Seg - Sex: 08h às 22h</li>
               <li>Sáb: 09h às 14h</li>
             </ul>
+            <div className="flex gap-4 mt-6">
+              <a href="https://www.instagram.com/dancaestacoes/" target="_blank" rel="noopener noreferrer" className="text-orange-200 hover:text-orange-400 transition-colors">
+                <Instagram size={28} />
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-orange-200 hover:text-orange-400 transition-colors">
+                <Facebook size={28} />
+              </a>
+            </div>
           </div>
         </div>
         <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-orange-800 flex flex-col md:flex-row items-center justify-between gap-4 text-orange-400">

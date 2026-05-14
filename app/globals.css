@@ -63,3 +63,26 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg) scale(1.02); }
+  50% { transform: rotate(3deg) scale(0.98); }
+}
+
+/* Accessibility */
+.high-contrast {
+  filter: contrast(150%) saturate(120%);
+  background-color: #000 !important;
+  color: #fff !important;
+}
+.high-contrast * {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+
+.font-dyslexic * {
+  font-family: 'Comic Sans MS', 'OpenDyslexic', sans-serif !important;
+  letter-spacing: 0.05em !important;
+  word-spacing: 0.1em !important;
+}
+

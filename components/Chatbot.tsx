@@ -60,6 +60,7 @@ export default function Chatbot() {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isDancing, setIsDancing] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -80,6 +81,34 @@ export default function Chatbot() {
     sendMessage(text);
   };
 
+  const triggerDance = () => {
+    setIsDancing(true);
+    setTimeout(() => setIsDancing(false), 2000);
+  };
+
+  const checkEasterEggs = (text: string) => {
+    const lower = text.toLowerCase();
+    if (lower.includes("faz o quadradinho")) {
+      triggerDance();
+      return "Eita! Segura esse quadradinho! 🟩💃🕺 Tuts tuts tuts!";
+    }
+    if (lower.includes("bora dançar") || lower.includes("vamos dançar")) {
+      triggerDance();
+      return "Eu já nasci pronto! Pega na minha mão virtual e vem! 🪩✨";
+    }
+    if (lower.includes("toca raça negra")) {
+      triggerDance();
+      return "Dididi dididi iê! 🎵❤️ Só não garanto que não vou chorar aqui...";
+    }
+    if (lower.includes("quem é o melhor dançarino") || lower.includes("quem dança melhor")) {
+      return "Com certeza sou eu, o Gustavo Bot! Modéstia à parte, meu molejo em código binário é imbatível! 😎🤖";
+    }
+    if (lower.includes("o gustavo e a isa") || lower.includes("gustavo e isa")) {
+      return "Ai, o Gustavo e a Isa? Eles são LINDES! A melhor dupla, diva, sem defeitos! ✨👑";
+    }
+    return null;
+  };
+
   const sendMessage = async (text: string) => {
     if (!text.trim() || isLoading) return;
 
@@ -87,6 +116,15 @@ export default function Chatbot() {
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     
+    // Check for easter eggs
+    const easterEggResponse = checkEasterEggs(userMessage);
+    if (easterEggResponse) {
+      setTimeout(() => {
+        setMessages(prev => [...prev, { role: 'model', content: easterEggResponse }]);
+      }, 500);
+      return;
+    }
+
     const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
     if (!apiKey) {
       setMessages(prev => [...prev, { 
@@ -145,7 +183,7 @@ export default function Chatbot() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.9 }}
               transition={{ duration: 0.2 }}
-              className="mb-4 bg-white rounded-2xl shadow-2xl border border-orange-100 overflow-hidden flex flex-col"
+              className={`mb-4 bg-white rounded-2xl shadow-2xl border border-orange-100 overflow-hidden flex flex-col ${isDancing ? 'animate-[wiggle_0.3s_ease-in-out_infinite]' : ''}`}
               style={{ width: 'calc(100vw - 48px)', maxWidth: '380px', height: '500px', maxHeight: 'calc(100vh - 120px)' }}
             >
               {/* Header */}
