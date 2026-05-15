@@ -78,15 +78,15 @@ export default function BailePage() {
         </div>
         
         {/* Overlays */}
-        <div className="absolute inset-0 bg-black/30 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0118]/80 via-black/20 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-black/60 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0118]/90 via-black/50 to-transparent pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto text-center relative z-10 px-6">
+        <div className="max-w-7xl mx-auto text-center relative z-10 px-6 mt-16">
           <motion.h1 
             initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ type: "spring", bounce: 0.7, duration: 1.2 }}
-            className="text-5xl md:text-6xl lg:text-8xl font-display font-black italic tracking-tight mb-6 drop-shadow-xl text-fuchsia-100"
+            className="text-5xl md:text-6xl lg:text-7xl font-display font-bold mb-6 drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)] text-white"
           >
             Nossos Bailes
           </motion.h1>
@@ -94,7 +94,7 @@ export default function BailePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-xl text-violet-100 max-w-2xl mx-auto mb-10 drop-shadow-md"
+            className="text-xl text-violet-50 max-w-2xl mx-auto mb-10 drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] font-medium"
           >
             A prática faz o dançarino. Venha se divertir, conhecer gente nova e colocar em prática tudo o que você aprendeu em aula.
           </motion.p>
@@ -212,7 +212,7 @@ export default function BailePage() {
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="grid md:grid-cols-2 gap-12 items-start">
             
-            <div className="space-y-8 sticky top-32">
+            <div className="space-y-8 md:sticky md:top-32">
               <div>
                 <span className="text-fuchsia-400 font-bold tracking-widest uppercase text-sm mb-2 block">Venda Antecipada</span>
                 <h2 className="text-4xl md:text-5xl font-display font-bold text-violet-50 mb-4">Garanta seu Ingresso</h2>
