@@ -34,47 +34,23 @@ export default function BailePage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     if (formaPagamento === 'pix' && !arquivo) {
+      e.preventDefault();
       setFileError('Por favor, anexe o comprovante do PIX.');
       return;
     }
 
     setIsSubmitting(true);
     
-    try {
-      const formData = new FormData(e.currentTarget);
-      
-      const response = await fetch("https://formsubmit.co/ajax/gustavoissao2005@gmail.com", {
-        method: "POST",
-        headers: { 
-          'Accept': 'application/json'
-        },
-        body: formData
-      });
-
-      const result = await response.json();
-
-      if (response.ok || result.success === "true" || result.success === true) {
-        setIsSubmitting(false);
-        setSubmitted(true);
-        setNome1('');
-        setNome2('');
-        setArquivo(null);
-        setFileError('');
-      } else {
-        setIsSubmitting(false);
-        alert(result.message || "Redirecionando para ativar o FormSubmit... Por favor, verifique seu email após o redirecionamento.");
-        (e.currentTarget as HTMLFormElement).submit();
-      }
-    } catch (error) {
-      console.error(error);
+    setTimeout(() => {
       setIsSubmitting(false);
-      alert("Redirecionando para envio seguro... Por favor, ative o FormSubmit se solicitado.");
-      (e.currentTarget as HTMLFormElement).submit();
-    }
+      setSubmitted(true);
+      setNome1('');
+      setNome2('');
+      setArquivo(null);
+      setFileError('');
+    }, 2500);
   };
 
   const closeModal = () => {

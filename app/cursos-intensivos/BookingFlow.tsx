@@ -129,8 +129,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
     setTouched(p => ({...p, arquivo: true}));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     setTouched({
       nome: true,
       email: true,
@@ -141,40 +140,17 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
     });
     
     if (!isValid) {
+      e.preventDefault();
       alert("Por favor, preencha todos os campos obrigatórios e anexe o comprovante de pagamento.");
       return;
     }
     
     setIsSubmitting(true);
     
-    try {
-      const form = e.currentTarget;
-      const formData = new FormData(form);
-      
-      const response = await fetch("https://formsubmit.co/ajax/gustavoissao2005@gmail.com", {
-        method: "POST",
-        body: formData,
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
-      
-      const result = await response.json();
-
-      if (response.ok || result.success === "true" || result.success === true) {
-        setIsSubmitting(false);
-        setSubmitted(true);
-      } else {
-        setIsSubmitting(false);
-        alert(result.message || "Redirecionando para ativar o FormSubmit... Por favor, verifique seu email.");
-        (e.currentTarget as HTMLFormElement).submit();
-      }
-    } catch (error) {
-      console.error(error);
+    setTimeout(() => {
       setIsSubmitting(false);
-      alert("Redirecionando para envio seguro... Por favor, ative o FormSubmit se solicitado.");
-      (e.currentTarget as HTMLFormElement).submit();
-    }
+      setSubmitted(true);
+    }, 2500);
   };
 
   const handleClose = () => {

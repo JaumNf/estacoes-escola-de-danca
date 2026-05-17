@@ -56,52 +56,25 @@ export default function Contato() {
 
   const isFormValid = !validateName(name) && !validateEmail(email) && !validatePhone(phone) && !validateReason(reason) && !validateMessage(message);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isFormValid) return;
+  const handleSubmit = (e: React.FormEvent) => {
+    if (!isFormValid) {
+      e.preventDefault();
+      return;
+    }
     
     setIsSubmitting(true);
 
-    try {
-      const response = await fetch('https://formsubmit.co/ajax/gustavoissao2005@gmail.com', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          Nome: name,
-          Email: email,
-          Telefone: phone,
-          Motivo: reason,
-          Mensagem: message,
-          _subject: `Novo contato pelo site: ${reason}`,
-          _captcha: "false"
-        })
-      });
-
-      const result = await response.json();
-
-      if (response.ok || result.success === "true" || result.success === true) {
-        setSuccess(true);
-        setName('');
-        setEmail('');
-        setPhone('');
-        setReason('');
-        setMessage('');
-        
-        setTimeout(() => setSuccess(false), 5000);
-      } else {
-        alert(result.message || "Redirecionando para ativar o FormSubmit... Por favor, verifique seu email.");
-        (e.currentTarget as HTMLFormElement).submit();
-      }
-    } catch (error: any) {
-      console.error('Erro completo:', error);
-      alert('Redirecionando para envio seguro... Por favor, ative o FormSubmit se solicitado.');
-      (e.currentTarget as HTMLFormElement).submit();
-    } finally {
+    setTimeout(() => {
       setIsSubmitting(false);
-    }
+      setSuccess(true);
+      setName('');
+      setEmail('');
+      setPhone('');
+      setReason('');
+      setMessage('');
+      
+      setTimeout(() => setSuccess(false), 5000);
+    }, 2000);
   };
 
   return (

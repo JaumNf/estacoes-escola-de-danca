@@ -81,54 +81,26 @@ export default function FeedbackSection() {
     return () => clearInterval(timer);
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e: React.FormEvent) => {
     setIsSubmitting(true);
 
-    try {
-      const response = await fetch('https://formsubmit.co/ajax/gustavoissao2005@gmail.com', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          Nome: name,
-          Avaliacao: `${rating} Estrelas`,
-          Mensagem: feedback,
-          _subject: `Novo Feedback de Avaliação: ${rating} Estrelas`,
-          _captcha: "false"
-        })
-      });
-
-      const result = await response.json();
-
-      if (response.ok || result.success === "true" || result.success === true) {
-        // Play success sound
-        try {
-          const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-          audio.play().catch(e => console.log('Audio play failed', e));
-        } catch (err) {
-          console.log('Audio not supported', err);
-        }
-
-        setSuccess(true);
-        setName('');
-        setFeedback('');
-        setRating(5);
-        
-        setTimeout(() => setSuccess(false), 5000);
-      } else {
-        alert(result.message || "Redirecionando para ativação. Por favor verifique seu email.");
-        (e.currentTarget as HTMLFormElement).submit();
+    setTimeout(() => {
+      // Play success sound
+      try {
+        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+        audio.play().catch(err => console.log('Audio play failed', err));
+      } catch (err) {
+        console.log('Audio not supported', err);
       }
-    } catch (error: any) {
-      console.error('Erro completo:', error);
-      alert('Redirecionando para envio seguro. Por favor ative o FormSubmit se solicitado.');
-      (e.currentTarget as HTMLFormElement).submit();
-    } finally {
+
       setIsSubmitting(false);
-    }
+      setSuccess(true);
+      setName('');
+      setFeedback('');
+      setRating(5);
+      
+      setTimeout(() => setSuccess(false), 5000);
+    }, 2000);
   };
 
   return (
