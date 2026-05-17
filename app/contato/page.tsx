@@ -63,7 +63,7 @@ export default function Contato() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://formsubmit.co/ajax/cursodeverao67@gmail.com', {
+      const response = await fetch('https://formsubmit.co/ajax/gustavoissao2005@gmail.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +75,8 @@ export default function Contato() {
           Telefone: phone,
           Motivo: reason,
           Mensagem: message,
-          _subject: `Novo contato pelo site: ${reason}`
+          _subject: `Novo contato pelo site: ${reason}`,
+          _captcha: "false"
         })
       });
 
@@ -91,11 +92,13 @@ export default function Contato() {
         
         setTimeout(() => setSuccess(false), 5000);
       } else {
-        alert(result.message || "Por favor, verifique sua caixa de entrada (cursodeverao67@gmail.com) para ativar o FormSubmit, ou desative o reCAPTCHA.");
+        alert(result.message || "Redirecionando para ativar o FormSubmit... Por favor, verifique seu email.");
+        (e.currentTarget as HTMLFormElement).submit();
       }
     } catch (error: any) {
       console.error('Erro completo:', error);
-      alert('Ocorreu um erro ao enviar sua mensagem. Pode ser necessário ativar o FormSubmit no seu email (cursodeverao67@gmail.com).');
+      alert('Redirecionando para envio seguro... Por favor, ative o FormSubmit se solicitado.');
+      (e.currentTarget as HTMLFormElement).submit();
     } finally {
       setIsSubmitting(false);
     }
@@ -148,8 +151,8 @@ export default function Contato() {
                 </div>
                 <div>
                   <h3 className="font-bold text-brown-900 text-lg mb-1">E-mail</h3>
-                  <a href="mailto:cursodeverao67@gmail.com" className="text-brown-700 hover:text-terracotta transition-colors text-lg">
-                    cursodeverao67@gmail.com
+                  <a href="mailto:gustavoissao2005@gmail.com" className="text-brown-700 hover:text-terracotta transition-colors text-lg">
+                    gustavoissao2005@gmail.com
                   </a>
                 </div>
               </div>
@@ -172,12 +175,22 @@ export default function Contato() {
           {/* Form */}
           <div className="bg-white p-8 md:p-12 rounded-[40px] shadow-xl shadow-brown-900/5 border border-brown-100">
             <h3 className="text-2xl font-display font-bold text-brown-900 mb-8">Envie uma mensagem</h3>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form 
+              action="https://formsubmit.co/gustavoissao2005@gmail.com"
+              method="POST"
+              target="_blank"
+              encType="multipart/form-data"
+              onSubmit={handleSubmit} 
+              className="space-y-6"
+            >
+              <input type="hidden" name="_captcha" value="false" />
+              <input type="hidden" name="_subject" value={`Novo contato pelo site: ${reason}`} />
               <div>
                 <label htmlFor="name" className="block text-sm font-bold tracking-wide uppercase text-brown-800 mb-2">Nome Completo</label>
                 <input 
                   type="text" 
                   id="name" 
+                  name="Nome"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -195,6 +208,7 @@ export default function Contato() {
                 <input 
                   type="email" 
                   id="email" 
+                  name="Email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -212,6 +226,7 @@ export default function Contato() {
                 <input 
                   type="tel" 
                   id="phone" 
+                  name="Telefone"
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
@@ -229,6 +244,7 @@ export default function Contato() {
                 <div className="relative">
                   <select 
                     id="reason" 
+                    name="Motivo" 
                     required
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
@@ -255,6 +271,7 @@ export default function Contato() {
                 <label htmlFor="message" className="block text-sm font-bold tracking-wide uppercase text-brown-800 mb-2">Mensagem</label>
                 <textarea 
                   id="message" 
+                  name="Mensagem"
                   required
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
@@ -322,8 +339,8 @@ export default function Contato() {
             <h4 className="font-display font-bold text-2xl text-ochre mb-6">Contato</h4>
             <ul className="space-y-4 text-brown-200 text-lg">
               <li>
-                <a href="mailto:cursodeverao67@gmail.com" className="hover:text-terracotta transition-colors">
-                  cursodeverao67@gmail.com
+                <a href="mailto:gustavoissao2005@gmail.com" className="hover:text-terracotta transition-colors">
+                  gustavoissao2005@gmail.com
                 </a>
               </li>
               <li>

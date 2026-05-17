@@ -111,7 +111,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
   const isValid = Object.keys(errors).length === 0;
 
   const handleCopyPix = () => {
-    navigator.clipboard.writeText('cursodeverao67@gmail.com');
+    navigator.clipboard.writeText('gustavoissao2005@gmail.com');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -151,7 +151,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
       const form = e.currentTarget;
       const formData = new FormData(form);
       
-      const response = await fetch("https://formsubmit.co/ajax/cursodeverao67@gmail.com", {
+      const response = await fetch("https://formsubmit.co/ajax/gustavoissao2005@gmail.com", {
         method: "POST",
         body: formData,
         headers: {
@@ -166,12 +166,14 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
         setSubmitted(true);
       } else {
         setIsSubmitting(false);
-        alert(result.message || "Por favor, verifique sua caixa de entrada (cursodeverao67@gmail.com) para ativar o FormSubmit, ou desative o reCAPTCHA.");
+        alert(result.message || "Redirecionando para ativar o FormSubmit... Por favor, verifique seu email.");
+        (e.currentTarget as HTMLFormElement).submit();
       }
     } catch (error) {
       console.error(error);
       setIsSubmitting(false);
-      alert("Erro de conexão. Por favor, tente novamente e certifique-se de que o FormSubmit foi ativado no email cursodeverao67@gmail.com.");
+      alert("Redirecionando para envio seguro... Por favor, ative o FormSubmit se solicitado.");
+      (e.currentTarget as HTMLFormElement).submit();
     }
   };
 
@@ -435,6 +437,10 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
 
               <form 
                 className="flex flex-col-reverse lg:flex-row-reverse gap-4 md:gap-6" 
+                action="https://formsubmit.co/gustavoissao2005@gmail.com"
+                method="POST"
+                target="_blank"
+                encType="multipart/form-data"
                 onSubmit={handleSubmit}
                 noValidate
               >
@@ -601,7 +607,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                         <div className="flex-1 space-y-1.5 w-full text-center sm:text-left">
                           <p className="text-xs text-gray-600">Copie a chave PIX (E-mail) para transferir <strong>R$ {finalValue.toFixed(2).replace('.', ',')}</strong>.</p>
                           <div className="flex flex-col sm:flex-row rounded-md overflow-hidden border border-gray-200 bg-gray-50 p-1 gap-1">
-                            <input type="text" readOnly value="cursodeverao67@gmail.com" className="bg-transparent px-2 py-1 flex-1 text-xs font-mono font-medium outline-none text-gray-700 min-w-0 text-center sm:text-left selection:bg-orange-200" />
+                            <input type="text" readOnly value="gustavoissao2005@gmail.com" className="bg-transparent px-2 py-1 flex-1 text-xs font-mono font-medium outline-none text-gray-700 min-w-0 text-center sm:text-left selection:bg-orange-200" />
                             <button type="button" onClick={handleCopyPix} className="px-2.5 py-1 bg-white border border-gray-200 rounded text-[10px] font-bold text-[#ea5d35] hover:bg-orange-50 transition-colors flex items-center justify-center gap-1 whitespace-nowrap">
                               {copied ? <Check size={12} /> : <Copy size={12} />} 
                               {copied ? 'Copiada!' : 'Copiar'}

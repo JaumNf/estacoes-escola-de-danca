@@ -146,7 +146,7 @@ export default function Home() {
                 mapLink: 'https://maps.app.goo.gl/vXB9ezPd49HmbC9eA',
                 phone: '(67) 99263-0948',
                 whatsappLink: 'https://wa.me/5567992630948',
-                email: 'cursodeverao67@gmail.com',
+                email: 'gustavoissao2005@gmail.com',
                 img: 'https://lh3.googleusercontent.com/d/1-G5rU0kTPGyQe8wOwArb756R9FX_17rc'
               },
               {
@@ -155,7 +155,7 @@ export default function Home() {
                 mapLink: 'https://maps.app.goo.gl/dtnrdk3MXYSwZsdc8',
                 phone: '(67) 99263-0948',
                 whatsappLink: 'https://wa.me/5567992630948',
-                email: 'cursodeverao67@gmail.com',
+                email: 'gustavoissao2005@gmail.com',
                 img: 'https://lh3.googleusercontent.com/d/1tj8o79FcqiMRoIdZfr1hKlLSobPCyhkK'
               }
             ].map((unit, idx) => (

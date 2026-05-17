@@ -37,8 +37,8 @@ export default function Footer() {
           <h4 className="font-display font-bold text-xl text-ochre mb-4">Contato</h4>
           <ul className="space-y-3 text-brown-200 text-base">
             <li>
-              <a href="mailto:cursodeverao67@gmail.com" className="hover:text-terracotta transition-colors">
-                cursodeverao67@gmail.com
+              <a href="mailto:gustavoissao2005@gmail.com" className="hover:text-terracotta transition-colors">
+                gustavoissao2005@gmail.com
               </a>
             </li>
             <li>

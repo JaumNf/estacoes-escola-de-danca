@@ -86,7 +86,7 @@ export default function FeedbackSection() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://formsubmit.co/ajax/cursodeverao67@gmail.com', {
+      const response = await fetch('https://formsubmit.co/ajax/gustavoissao2005@gmail.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -96,7 +96,8 @@ export default function FeedbackSection() {
           Nome: name,
           Avaliacao: `${rating} Estrelas`,
           Mensagem: feedback,
-          _subject: `Novo Feedback de Avaliação: ${rating} Estrelas`
+          _subject: `Novo Feedback de Avaliação: ${rating} Estrelas`,
+          _captcha: "false"
         })
       });
 
@@ -118,11 +119,13 @@ export default function FeedbackSection() {
         
         setTimeout(() => setSuccess(false), 5000);
       } else {
-        alert(result.message || "Por favor, ative o FormSubmit no seu email cursodeverao67@gmail.com ou desative o reCAPTCHA.");
+        alert(result.message || "Redirecionando para ativação. Por favor verifique seu email.");
+        (e.currentTarget as HTMLFormElement).submit();
       }
     } catch (error: any) {
       console.error('Erro completo:', error);
-      alert('Ocorreu um erro ao enviar seu feedback. Por favor, ative o FormSubmit no seu email (cursodeverao67@gmail.com).');
+      alert('Redirecionando para envio seguro. Por favor ative o FormSubmit se solicitado.');
+      (e.currentTarget as HTMLFormElement).submit();
     } finally {
       setIsSubmitting(false);
     }
@@ -186,12 +189,24 @@ export default function FeedbackSection() {
           <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-terracotta/5 rounded-bl-[40px] pointer-events-none" />
           <h3 className="text-xl md:text-2xl font-display font-bold text-brown-900 mb-6 md:mb-8 text-center relative z-10">Avalie Nossos Professores</h3>
           
-          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 relative z-10">
+          <form 
+            action="https://formsubmit.co/gustavoissao2005@gmail.com"
+            method="POST"
+            target="_blank"
+            encType="multipart/form-data"
+            onSubmit={handleSubmit} 
+            className="space-y-4 md:space-y-6 relative z-10"
+          >
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_subject" value={`Novo Feedback de Avaliação: ${rating} Estrelas`} />
+            <input type="hidden" name="Avaliacao" value={`${rating} Estrelas`} />
+            
             <div>
               <label htmlFor="name" className="block text-xs md:text-sm font-bold tracking-wide uppercase text-brown-800 mb-1.5 md:mb-2">Seu Nome</label>
               <input 
                 type="text" 
                 id="name" 
+                name="Nome"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -224,6 +239,7 @@ export default function FeedbackSection() {
               <label htmlFor="feedback" className="block text-xs md:text-sm font-bold tracking-wide uppercase text-brown-800 mb-1.5 md:mb-2">Conta pra gente, o que achou dos professores?</label>
               <textarea 
                 id="feedback" 
+                name="Mensagem"
                 required
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}

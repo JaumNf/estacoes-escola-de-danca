@@ -29,7 +29,7 @@ export default function BailePage() {
   ];
 
   const handleCopyPix = () => {
-    navigator.clipboard.writeText('cursodeverao67@gmail.com');
+    navigator.clipboard.writeText('gustavoissao2005@gmail.com');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -47,7 +47,7 @@ export default function BailePage() {
     try {
       const formData = new FormData(e.currentTarget);
       
-      const response = await fetch("https://formsubmit.co/ajax/cursodeverao67@gmail.com", {
+      const response = await fetch("https://formsubmit.co/ajax/gustavoissao2005@gmail.com", {
         method: "POST",
         headers: { 
           'Accept': 'application/json'
@@ -66,12 +66,14 @@ export default function BailePage() {
         setFileError('');
       } else {
         setIsSubmitting(false);
-        alert(result.message || "Por favor, verifique sua caixa de entrada (cursodeverao67@gmail.com) para ativar o FormSubmit, ou desative o reCAPTCHA.");
+        alert(result.message || "Redirecionando para ativar o FormSubmit... Por favor, verifique seu email após o redirecionamento.");
+        (e.currentTarget as HTMLFormElement).submit();
       }
     } catch (error) {
       console.error(error);
       setIsSubmitting(false);
-      alert("Ocorreu um erro ao enviar. Pode ser necessário ativar o FormSubmit no seu email cursodeverao67@gmail.com");
+      alert("Redirecionando para envio seguro... Por favor, ative o FormSubmit se solicitado.");
+      (e.currentTarget as HTMLFormElement).submit();
     }
   };
 
@@ -261,6 +263,10 @@ export default function BailePage() {
               <h3 className="text-2xl font-display font-bold mb-6 text-center">Selecione seu Ingresso</h3>
               
               <form 
+                action="https://formsubmit.co/gustavoissao2005@gmail.com" 
+                method="POST" 
+                encType="multipart/form-data" 
+                target="_blank"
                 onSubmit={handleSubmit} 
                 className="space-y-6 mb-2"
               >
@@ -419,7 +425,7 @@ export default function BailePage() {
                         <div>
                           <p className="text-xs text-violet-800 mb-2">Copie a chave PIX (E-mail) para transferir o valor do ingresso.</p>
                           <div className="flex items-center bg-white rounded-lg border border-violet-200 p-1">
-                            <input type="text" readOnly value="cursodeverao67@gmail.com" className="bg-transparent px-3 py-2 flex-1 text-sm font-mono font-medium outline-none text-violet-900 w-full" />
+                            <input type="text" readOnly value="gustavoissao2005@gmail.com" className="bg-transparent px-3 py-2 flex-1 text-sm font-mono font-medium outline-none text-violet-900 w-full" />
                             <button 
                               type="button" 
                               onClick={handleCopyPix} 
