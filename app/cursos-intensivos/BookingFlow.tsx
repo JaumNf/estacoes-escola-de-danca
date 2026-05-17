@@ -148,16 +148,30 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
     setIsSubmitting(true);
     
     try {
-      // The form will naturally submit to hidden_iframe_cursos
+      const form = e.currentTarget;
+      const formData = new FormData(form);
       
-      setTimeout(() => {
+      const response = await fetch("https://formsubmit.co/ajax/cursodeverao67@gmail.com", {
+        method: "POST",
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      const result = await response.json();
+
+      if (response.ok || result.success === "true" || result.success === true) {
         setIsSubmitting(false);
         setSubmitted(true);
-      }, 2500);
+      } else {
+        setIsSubmitting(false);
+        alert(result.message || "Por favor, verifique sua caixa de entrada (cursodeverao67@gmail.com) para ativar o FormSubmit, ou desative o reCAPTCHA.");
+      }
     } catch (error) {
       console.error(error);
       setIsSubmitting(false);
-      alert("Erro de conexão. Por favor, tente novamente.");
+      alert("Erro de conexão. Por favor, tente novamente e certifique-se de que o FormSubmit foi ativado no email cursodeverao67@gmail.com.");
     }
   };
 
@@ -419,14 +433,9 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform"/> Voltar para turmas
               </button>
 
-              <iframe name="hidden_iframe_cursos" id="hidden_iframe_cursos" style={{ display: 'none' }} />
               <form 
                 className="flex flex-col-reverse lg:flex-row-reverse gap-4 md:gap-6" 
                 onSubmit={handleSubmit}
-                action="https://formsubmit.co/cursodeverao67@gmail.com"
-                method="POST"
-                target="hidden_iframe_cursos"
-                encType="multipart/form-data"
                 noValidate
               >
                   {/* Hidden inputs para o FormSubmit */}

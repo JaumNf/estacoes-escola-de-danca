@@ -79,22 +79,23 @@ export default function Contato() {
         })
       });
 
-      if (!response.ok) {
-        throw new Error('Falha ao enviar a mensagem');
-      }
+      const result = await response.json();
 
-      setSuccess(true);
-      setName('');
-      setEmail('');
-      setPhone('');
-      setReason('');
-      setMessage('');
-      
-      // Esconde a mensagem de sucesso após 5 segundos
-      setTimeout(() => setSuccess(false), 5000);
+      if (response.ok || result.success === "true" || result.success === true) {
+        setSuccess(true);
+        setName('');
+        setEmail('');
+        setPhone('');
+        setReason('');
+        setMessage('');
+        
+        setTimeout(() => setSuccess(false), 5000);
+      } else {
+        alert(result.message || "Por favor, verifique sua caixa de entrada (cursodeverao67@gmail.com) para ativar o FormSubmit, ou desative o reCAPTCHA.");
+      }
     } catch (error: any) {
       console.error('Erro completo:', error);
-      alert('Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente ou entre em contato diretamente pelo WhatsApp.');
+      alert('Ocorreu um erro ao enviar sua mensagem. Pode ser necessário ativar o FormSubmit no seu email (cursodeverao67@gmail.com).');
     } finally {
       setIsSubmitting(false);
     }

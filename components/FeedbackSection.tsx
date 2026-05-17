@@ -100,27 +100,29 @@ export default function FeedbackSection() {
         })
       });
 
-      if (!response.ok) {
-        throw new Error('Falha ao enviar o feedback');
-      }
+      const result = await response.json();
 
-      // Play success sound
-      try {
-        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-        audio.play().catch(e => console.log('Audio play failed', e));
-      } catch (err) {
-        console.log('Audio not supported', err);
-      }
+      if (response.ok || result.success === "true" || result.success === true) {
+        // Play success sound
+        try {
+          const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+          audio.play().catch(e => console.log('Audio play failed', e));
+        } catch (err) {
+          console.log('Audio not supported', err);
+        }
 
-      setSuccess(true);
-      setName('');
-      setFeedback('');
-      setRating(5);
-      
-      setTimeout(() => setSuccess(false), 5000);
+        setSuccess(true);
+        setName('');
+        setFeedback('');
+        setRating(5);
+        
+        setTimeout(() => setSuccess(false), 5000);
+      } else {
+        alert(result.message || "Por favor, ative o FormSubmit no seu email cursodeverao67@gmail.com ou desative o reCAPTCHA.");
+      }
     } catch (error: any) {
       console.error('Erro completo:', error);
-      alert('Ocorreu um erro ao enviar seu feedback. Por favor, tente novamente mais tarde.');
+      alert('Ocorreu um erro ao enviar seu feedback. Por favor, ative o FormSubmit no seu email (cursodeverao67@gmail.com).');
     } finally {
       setIsSubmitting(false);
     }

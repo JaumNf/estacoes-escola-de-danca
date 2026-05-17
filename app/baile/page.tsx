@@ -34,24 +34,45 @@ export default function BailePage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     if (formaPagamento === 'pix' && !arquivo) {
-      e.preventDefault();
       setFileError('Por favor, anexe o comprovante do PIX.');
       return;
     }
 
     setIsSubmitting(true);
     
-    // Deixa o formulário ser enviado para o iframe invisível
-    setTimeout(() => {
+    try {
+      const formData = new FormData(e.currentTarget);
+      
+      const response = await fetch("https://formsubmit.co/ajax/cursodeverao67@gmail.com", {
+        method: "POST",
+        headers: { 
+          'Accept': 'application/json'
+        },
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (response.ok || result.success === "true" || result.success === true) {
+        setIsSubmitting(false);
+        setSubmitted(true);
+        setNome1('');
+        setNome2('');
+        setArquivo(null);
+        setFileError('');
+      } else {
+        setIsSubmitting(false);
+        alert(result.message || "Por favor, verifique sua caixa de entrada (cursodeverao67@gmail.com) para ativar o FormSubmit, ou desative o reCAPTCHA.");
+      }
+    } catch (error) {
+      console.error(error);
       setIsSubmitting(false);
-      setSubmitted(true);
-      setNome1('');
-      setNome2('');
-      setArquivo(null);
-      setFileError('');
-    }, 2500);
+      alert("Ocorreu um erro ao enviar. Pode ser necessário ativar o FormSubmit no seu email cursodeverao67@gmail.com");
+    }
   };
 
   const closeModal = () => {
@@ -239,12 +260,7 @@ export default function BailePage() {
             <div className="bg-white rounded-[32px] p-8 text-violet-900 shadow-2xl shadow-black/20">
               <h3 className="text-2xl font-display font-bold mb-6 text-center">Selecione seu Ingresso</h3>
               
-              <iframe name="hidden_iframe_baile" id="hidden_iframe_baile" style={{ display: 'none' }} />
               <form 
-                action="https://formsubmit.co/cursodeverao67@gmail.com" 
-                method="POST" 
-                encType="multipart/form-data" 
-                target="hidden_iframe_baile"
                 onSubmit={handleSubmit} 
                 className="space-y-6 mb-2"
               >
