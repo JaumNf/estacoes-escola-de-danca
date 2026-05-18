@@ -1,0 +1,74 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function incoming() { return request.resource.data; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+
+    function isValidIngressoBaile(data) {
+      return data.keys().hasAll(['evento', 'tipoIngresso', 'formaPagamento', 'nome1', 'tel1', 'createdAt']) &&
+             data.evento is string && data.evento.size() <= 100 &&
+             data.tipoIngresso in ['Individual', 'Dupla'] &&
+             data.formaPagamento in ['Pix', 'Cartão de Crédito (Link)'] &&
+             data.nome1 is string && data.nome1.size() <= 100 &&
+             data.tel1 is string && data.tel1.size() <= 20 &&
+             (data.get('nome2', null) == null || (data.nome2 is string && data.nome2.size() <= 100)) &&
+             (data.get('tel2', null) == null || (data.tel2 is string && data.tel2.size() <= 20)) &&
+             (data.get('comprovanteUrl', '') == null || (data.comprovanteUrl is string && data.comprovanteUrl.size() <= 1000)) &&
+             data.createdAt == request.time;
+    }
+
+    match /ingressos_baile/{ingressoId} {
+      allow create: if isValidId(ingressoId) && isValidIngressoBaile(incoming());
+    }
+
+    function isValidContato(data) {
+      return data.keys().hasAll(['name', 'email', 'phone', 'reason', 'message', 'createdAt']) &&
+             data.name is string && data.name.size() <= 100 &&
+             data.email is string && data.email.size() <= 100 &&
+             data.phone is string && data.phone.size() <= 20 &&
+             data.reason is string && data.reason.size() <= 100 &&
+             data.message is string && data.message.size() <= 2000 &&
+             data.createdAt == request.time;
+    }
+
+    match /contatos/{contatoId} {
+      allow create: if isValidId(contatoId) && isValidContato(incoming());
+    }
+
+    function isValidInscricaoIntensivo(data) {
+      return data.keys().hasAll(['tipoInscricao', 'turmasSelecionadas', 'diasSelecionados', 'valorFinal', 'comoConheceu', 'autorizacaoImagem', 'nome', 'email', 'whatsapp', 'createdAt']) &&
+             data.tipoInscricao is string && data.tipoInscricao.size() <= 100 &&
+             data.turmasSelecionadas is string && data.turmasSelecionadas.size() <= 500 &&
+             data.diasSelecionados is string && data.diasSelecionados.size() <= 50 &&
+             data.valorFinal is string && data.valorFinal.size() <= 50 &&
+             data.comoConheceu is string && data.comoConheceu.size() <= 200 &&
+             data.autorizacaoImagem is string && data.autorizacaoImagem.size() <= 10 &&
+             data.nome is string && data.nome.size() <= 100 &&
+             data.email is string && data.email.size() <= 100 &&
+             data.whatsapp is string && data.whatsapp.size() <= 20 &&
+             (data.get('comprovanteUrl', '') == null || (data.comprovanteUrl is string && data.comprovanteUrl.size() <= 1000)) &&
+             data.createdAt == request.time;
+    }
+
+    match /inscricoes_intensivo/{inscricaoId} {
+      allow create: if isValidId(inscricaoId) && isValidInscricaoIntensivo(incoming());
+    }
+
+    function isValidFeedback(data) {
+      return data.keys().hasAll(['name', 'rating', 'content', 'createdAt']) &&
+             data.name is string && data.name.size() <= 100 &&
+             data.rating is number && data.rating >= 1 && data.rating <= 5 &&
+             data.content is string && data.content.size() <= 2000 &&
+             data.createdAt == request.time;
+    }
+
+    match /feedbacks/{feedbackId} {
+      allow create: if isValidId(feedbackId) && isValidFeedback(incoming());
+    }
+  }
+}

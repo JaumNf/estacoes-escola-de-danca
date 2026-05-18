@@ -8,6 +8,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import { createPortal } from 'react-dom';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '@/lib/firebase';
 
 export default function BailePage() {
   const [ticketType, setTicketType] = useState<'individual' | 'dupla'>('individual');
@@ -15,6 +18,8 @@ export default function BailePage() {
 
   const [nome1, setNome1] = useState('');
   const [nome2, setNome2] = useState('');
+  const [tel1, setTel1] = useState('');
+  const [tel2, setTel2] = useState('');
   const [formaPagamento, setFormaPagamento] = useState<'pix' | 'credito'>('pix');
   const [copied, setCopied] = useState(false);
   const [arquivo, setArquivo] = useState<File | null>(null);
@@ -34,23 +39,48 @@ export default function BailePage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (formaPagamento === 'pix' && !arquivo) {
-      e.preventDefault();
       setFileError('Por favor, anexe o comprovante do PIX.');
       return;
     }
 
     setIsSubmitting(true);
     
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      let comprovanteUrl = '';
+      if (formaPagamento === 'pix' && arquivo) {
+        const storageRef = ref(storage, `comprovantes_baile/${Date.now()}_${arquivo.name}`);
+        const snapshot = await uploadBytes(storageRef, arquivo);
+        comprovanteUrl = await getDownloadURL(snapshot.ref);
+      }
+
+      await addDoc(collection(db, 'ingressos_baile'), {
+        evento: events.find(ev => ev.id === selectedEvent)?.name || 'N/A',
+        tipoIngresso: ticketType === 'individual' ? 'Individual' : 'Dupla',
+        formaPagamento: formaPagamento === 'pix' ? 'Pix' : 'Cartão de Crédito (Link)',
+        nome1,
+        tel1,
+        nome2: ticketType === 'dupla' ? nome2 : null,
+        tel2: ticketType === 'dupla' ? tel2 : null,
+        comprovanteUrl,
+        createdAt: serverTimestamp()
+      });
+
       setSubmitted(true);
       setNome1('');
       setNome2('');
+      setTel1('');
+      setTel2('');
       setArquivo(null);
       setFileError('');
-    }, 2500);
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      alert('Erro ao processar a compra. Tente novamente.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const closeModal = () => {
@@ -80,7 +110,7 @@ export default function BailePage() {
         <div className="absolute inset-0 bg-black/60 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0118]/90 via-black/50 to-transparent pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto text-center relative z-10 px-6 mt-16">
+        <div className="max-w-7xl mx-auto text-center relative z-30 px-6 mt-16">
           <motion.h1 
             initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -101,14 +131,17 @@ export default function BailePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            onClick={() => document.getElementById('ingressos')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-fuchsia-600 text-white px-8 py-4 rounded-full font-bold tracking-wide hover:bg-fuchsia-700 transition-colors duration-300 shadow-lg inline-flex items-center gap-2"
+            onClick={(e: React.MouseEvent) => {
+              e.preventDefault();
+              document.getElementById('ingressos')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="bg-fuchsia-600 text-white px-8 py-4 rounded-full font-bold tracking-wide hover:bg-fuchsia-700 transition-colors duration-300 shadow-lg inline-flex items-center gap-2 relative z-50 pointer-events-auto"
           >
             Garanta seu Ingresso <Ticket size={20} />
           </motion.button>
         </div>
         
-        <div className="absolute bottom-0 left-0 w-full z-20">
+        <div className="absolute bottom-0 left-0 w-full z-20 pointer-events-none">
           <WaveDivider position="bottom" colorClass="fill-violet-50" />
         </div>
       </section>
@@ -239,18 +272,9 @@ export default function BailePage() {
               <h3 className="text-2xl font-display font-bold mb-6 text-center">Selecione seu Ingresso</h3>
               
               <form 
-                action="https://formsubmit.co/gustavoissao2005@gmail.com" 
-                method="POST" 
-                encType="multipart/form-data" 
-                target="_blank"
                 onSubmit={handleSubmit} 
                 className="space-y-6 mb-2"
               >
-                <input type="hidden" name="_captcha" value="false" />
-                <input type="hidden" name="Assunto" value={`Novo ingresso Baile: ${events.find(ev => ev.id === selectedEvent)?.name}`} />
-                <input type="hidden" name="Evento" value={events.find(ev => ev.id === selectedEvent)?.name || 'N/A'} />
-                <input type="hidden" name="TipoIngresso" value={ticketType === 'individual' ? 'Individual' : 'Dupla'} />
-                <input type="hidden" name="FormaPagamento" value={formaPagamento === 'pix' ? 'Pix' : 'Cartão de Crédito (Link)'} />
                 {/* Event Selection */}
                 <div className="space-y-3">
                   <label className="text-sm font-bold text-violet-600 uppercase tracking-wide">Evento</label>
@@ -331,7 +355,7 @@ export default function BailePage() {
                   <label className="text-sm font-bold text-violet-600 uppercase tracking-wide">Dados</label>
                   
                   {ticketType === 'individual' ? (
-                    <div>
+                    <div className="space-y-3">
                       <input 
                         type="text" 
                         name="Nome"
@@ -341,27 +365,58 @@ export default function BailePage() {
                         onChange={(e) => setNome1(e.target.value)}
                         className="w-full px-4 py-3 rounded-xl border border-violet-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-violet-50/50 text-sm"
                       />
+                      <input 
+                        type="tel" 
+                        name="Telefone"
+                        required 
+                        placeholder="Seu WhatsApp"
+                        value={tel1}
+                        onChange={(e) => setTel1(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl border border-violet-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-violet-50/50 text-sm"
+                      />
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      <input 
-                        type="text" 
-                        name="Nome da Pessoa 1"
-                        required 
-                        placeholder="Nome da Pessoa 1"
-                        value={nome1}
-                        onChange={(e) => setNome1(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-violet-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-violet-50/50 text-sm"
-                      />
-                      <input 
-                        type="text" 
-                        name="Nome da Pessoa 2"
-                        required 
-                        placeholder="Nome da Pessoa 2"
-                        value={nome2}
-                        onChange={(e) => setNome2(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-violet-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-violet-50/50 text-sm"
-                      />
+                      <div className="flex flex-col gap-3 md:flex-row">
+                        <input 
+                          type="text" 
+                          name="Nome da Pessoa 1"
+                          required 
+                          placeholder="Nome da Pessoa 1"
+                          value={nome1}
+                          onChange={(e) => setNome1(e.target.value)}
+                          className="flex-1 px-4 py-3 rounded-xl border border-violet-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-violet-50/50 text-sm"
+                        />
+                        <input 
+                          type="tel" 
+                          name="Telefone da Pessoa 1"
+                          required 
+                          placeholder="WhatsApp Pessoa 1"
+                          value={tel1}
+                          onChange={(e) => setTel1(e.target.value)}
+                          className="flex-1 px-4 py-3 rounded-xl border border-violet-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-violet-50/50 text-sm"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-3 md:flex-row">
+                        <input 
+                          type="text" 
+                          name="Nome da Pessoa 2"
+                          required 
+                          placeholder="Nome da Pessoa 2"
+                          value={nome2}
+                          onChange={(e) => setNome2(e.target.value)}
+                          className="flex-1 px-4 py-3 rounded-xl border border-violet-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-violet-50/50 text-sm"
+                        />
+                        <input 
+                          type="tel" 
+                          name="Telefone da Pessoa 2"
+                          required 
+                          placeholder="WhatsApp Pessoa 2"
+                          value={tel2}
+                          onChange={(e) => setTel2(e.target.value)}
+                          className="flex-1 px-4 py-3 rounded-xl border border-violet-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-violet-50/50 text-sm"
+                        />
+                      </div>
                     </div>
                   )}
                 </div>

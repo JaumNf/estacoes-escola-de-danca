@@ -5,6 +5,9 @@ import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { User, Users, Check, ArrowRight, ArrowLeft, Info, Copy, Upload, X, AlertCircle, CreditCard, Smartphone, CheckCircle, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { app, db, storage } from '@/lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 export interface Ritmo {
   id: string;
@@ -129,7 +132,8 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
     setTouched(p => ({...p, arquivo: true}));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setTouched({
       nome: true,
       email: true,
@@ -140,17 +144,44 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
     });
     
     if (!isValid) {
-      e.preventDefault();
       alert("Por favor, preencha todos os campos obrigatórios e anexe o comprovante de pagamento.");
       return;
     }
     
     setIsSubmitting(true);
     
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      let comprovanteUrl = '';
+      if (arquivo) {
+        const storageRef = ref(storage, `comprovantes_intensivos/${Date.now()}_${arquivo.name}`);
+        const snapshot = await uploadBytes(storageRef, arquivo);
+        comprovanteUrl = await getDownloadURL(snapshot.ref);
+      }
+
+      await addDoc(collection(db, 'inscricoes_intensivo'), {
+        tipoInscricao,
+        turmasSelecionadas: cursosSelecionados.map(c => {
+          const r = ritmos.find(r => r.id === c);
+          return r ? `${r.nome} (${r.nivel})` : '';
+        }).filter(Boolean).join(', '),
+        diasSelecionados: `${selectedDaysCount} dia(s)`,
+        valorFinal: `R$ ${finalValue.toFixed(2).replace('.', ',')}`,
+        comoConheceu,
+        autorizacaoImagem: autorizacao ? 'Sim' : 'Não',
+        nome,
+        email,
+        whatsapp,
+        comprovanteUrl,
+        createdAt: serverTimestamp()
+      });
+
       setSubmitted(true);
-    }, 2500);
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      alert('Erro ao processar a inscrição. Tente novamente.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleClose = () => {
@@ -413,27 +444,9 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
 
               <form 
                 className="flex flex-col-reverse lg:flex-row-reverse gap-4 md:gap-6" 
-                action="https://formsubmit.co/gustavoissao2005@gmail.com"
-                method="POST"
-                target="_blank"
-                encType="multipart/form-data"
                 onSubmit={handleSubmit}
                 noValidate
               >
-                  {/* Hidden inputs para o FormSubmit */}
-                  <input type="hidden" name="_captcha" value="false" />
-                  <input type="hidden" name="_subject" value={`Nova Inscrição - ${nome || 'Novo Aluno'}`} />
-                  <input type="hidden" name="_next" value={typeof window !== 'undefined' ? window.location.href.split('?')[0] + '?success=true' : ''} />
-                  <input type="hidden" name="Tipo de Inscrição" value={tipoInscricao} />
-                  <input type="hidden" name="Turmas Selecionadas" value={cursosSelecionados.map(c => {
-                    const r = ritmos.find(r => r.id === c);
-                    return r ? `${r.nome} (${r.nivel})` : '';
-                  }).filter(Boolean).join(', ')} />
-                  <input type="hidden" name="Dias Selecionados" value={`${selectedDaysCount} dia(s)`} />
-                  <input type="hidden" name="Valor Final" value={`R$ ${finalValue.toFixed(2).replace('.', ',')}`} />
-                  <input type="hidden" name="Como Conheceu" value={comoConheceu} />
-                  <input type="hidden" name="Autorização de Imagem" value={autorizacao ? 'Sim' : 'Não'} />
-
                   {/* Right Column / Top on Mobile - Summary, Terms & Submit */}
                   <div className="w-full lg:w-[35%] flex flex-col gap-4">
                      <div className="bg-[#fffdf0] border border-[#e8c09a] rounded-xl p-4 flex flex-col gap-3 shadow-sm">

@@ -40,6 +40,7 @@ export default function MapComponent({ selectedUnidade = 'unidade1' }: { selecte
   const [map, setMap] = useState<L.Map | null>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

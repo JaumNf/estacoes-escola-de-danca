@@ -1,0 +1,84 @@
+{
+  "entities": {
+    "IngressoBaile": {
+      "title": "IngressoBaile",
+      "description": "Dados do ingresso para o baile",
+      "type": "object",
+      "properties": {
+        "evento": { "type": "string" },
+        "tipoIngresso": { "type": "string", "enum": ["Individual", "Dupla"] },
+        "formaPagamento": { "type": "string", "enum": ["Pix", "Cartão de Crédito (Link)"] },
+        "nome1": { "type": "string" },
+        "tel1": { "type": "string" },
+        "nome2": { "type": ["string", "null"] },
+        "tel2": { "type": ["string", "null"] },
+        "comprovanteUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["evento", "tipoIngresso", "formaPagamento", "nome1", "tel1", "createdAt"]
+    },
+    "Contato": {
+      "title": "Contato",
+      "description": "Mensagem de contato",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "reason": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "phone", "reason", "message", "createdAt"]
+    },
+    "InscricaoIntensivo": {
+      "title": "InscricaoIntensivo",
+      "description": "Inscrição para curso intensivo",
+      "type": "object",
+      "properties": {
+        "tipoInscricao": { "type": "string" },
+        "turmasSelecionadas": { "type": "string" },
+        "diasSelecionados": { "type": "string" },
+        "valorFinal": { "type": "string" },
+        "comoConheceu": { "type": "string" },
+        "autorizacaoImagem": { "type": "string" },
+        "nome": { "type": "string" },
+        "email": { "type": "string" },
+        "whatsapp": { "type": "string" },
+        "comprovanteUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["tipoInscricao", "turmasSelecionadas", "diasSelecionados", "valorFinal", "comoConheceu", "autorizacaoImagem", "nome", "email", "whatsapp", "createdAt"]
+    },
+    "Feedback": {
+      "title": "Feedback",
+      "description": "Feedback do usuário",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "rating": { "type": "number" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "rating", "content", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/ingressos_baile/{ingressoId}": {
+      "schema": { "$ref": "#/entities/IngressoBaile" },
+      "description": "Ingressos comprados para o baile"
+    },
+    "/contatos/{contatoId}": {
+      "schema": { "$ref": "#/entities/Contato" },
+      "description": "Lista de mensagens de contato"
+    },
+    "/inscricoes_intensivo/{inscricaoId}": {
+      "schema": { "$ref": "#/entities/InscricaoIntensivo" },
+      "description": "Inscrições nos cursos intensivos"
+    },
+    "/feedbacks/{feedbackId}": {
+      "schema": { "$ref": "#/entities/Feedback" },
+      "description": "Feedbacks deixados pelos usuários"
+    }
+  }
+}

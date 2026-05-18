@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Star, Send, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export default function FeedbackSection() {
   const [name, setName] = useState('');
@@ -81,10 +83,20 @@ export default function FeedbackSection() {
     return () => clearInterval(timer);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !feedback) return;
+
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    try {
+      await addDoc(collection(db, 'feedbacks'), {
+        name,
+        rating,
+        content: feedback,
+        createdAt: serverTimestamp()
+      });
+
       // Play success sound
       try {
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
@@ -100,7 +112,11 @@ export default function FeedbackSection() {
       setRating(5);
       
       setTimeout(() => setSuccess(false), 5000);
-    }, 2000);
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      alert('Erro ao enviar feedback. Tente novamente.');
+      setIsSubmitting(false);
+    }
   };
 
   return (

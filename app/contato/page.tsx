@@ -5,6 +5,8 @@ import WaveDivider from '@/components/WaveDivider';
 import { Mail, Phone, MapPin, Send, Instagram, Facebook, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export default function Contato() {
   const [name, setName] = useState('');
@@ -56,16 +58,24 @@ export default function Contato() {
 
   const isFormValid = !validateName(name) && !validateEmail(email) && !validatePhone(phone) && !validateReason(reason) && !validateMessage(message);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!isFormValid) {
-      e.preventDefault();
       return;
     }
     
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await addDoc(collection(db, 'contatos'), {
+        name,
+        email,
+        phone,
+        reason,
+        message,
+        createdAt: serverTimestamp()
+      });
+
       setSuccess(true);
       setName('');
       setEmail('');
@@ -74,7 +84,12 @@ export default function Contato() {
       setMessage('');
       
       setTimeout(() => setSuccess(false), 5000);
-    }, 2000);
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      alert('Erro ao enviar mensagem. Tente novamente.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -149,15 +164,9 @@ export default function Contato() {
           <div className="bg-white p-8 md:p-12 rounded-[40px] shadow-xl shadow-brown-900/5 border border-brown-100">
             <h3 className="text-2xl font-display font-bold text-brown-900 mb-8">Envie uma mensagem</h3>
             <form 
-              action="https://formsubmit.co/gustavoissao2005@gmail.com"
-              method="POST"
-              target="_blank"
-              encType="multipart/form-data"
               onSubmit={handleSubmit} 
               className="space-y-6"
             >
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_subject" value={`Novo contato pelo site: ${reason}`} />
               <div>
                 <label htmlFor="name" className="block text-sm font-bold tracking-wide uppercase text-brown-800 mb-2">Nome Completo</label>
                 <input 
