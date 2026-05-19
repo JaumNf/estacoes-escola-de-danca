@@ -85,9 +85,13 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
     let fVal = 0;
     
     if (tipoInscricao === 'individual') {
-      let day1Cost = Math.min(45, classesByDay['22 de Maio'] * 20);
-      let day2Cost = Math.min(45, classesByDay['23 de Maio'] * 20);
-      fVal = Math.min(80, day1Cost + day2Cost);
+      if (days.size === 2) {
+        fVal = 80;
+      } else {
+        let day1Cost = Math.min(45, (classesByDay['22 de Maio'] || 0) * 20);
+        let day2Cost = Math.min(45, (classesByDay['23 de Maio'] || 0) * 20);
+        fVal = day1Cost + day2Cost;
+      }
     } else {
       // Dupla - pacote por dia
       fVal = days.size === 1 ? 80 : 120;
