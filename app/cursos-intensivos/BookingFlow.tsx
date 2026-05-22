@@ -30,6 +30,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
   const [cursosSelecionados, setCursosSelecionados] = useState<string[]>([]);
 
   const [nome, setNome] = useState('');
+  const [nome2, setNome2] = useState('');
   const [email, setEmail] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [comoConheceu, setComoConheceu] = useState('');
@@ -43,6 +44,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
 
   const [touched, setTouched] = useState({
     nome: false,
+    nome2: false,
     email: false,
     whatsapp: false,
     comoConheceu: false,
@@ -64,7 +66,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
 
     const txt = `Olá! Gostaria de pagar meu Curso Intensivo no Cartão de Crédito ${parcelado ? 'Parcelado' : 'à vista'}.
 
-*Nome:* ${nome.trim() || '*não preenchido*'}
+*Nome:* ${tipoInscricao === 'dupla' ? `${nome.trim()} e ${nome2.trim()}` : nome.trim() || '*não preenchido*'}
 *Tipo de Inscrição:* ${tipoInscricao === 'dupla' ? 'Casal/Dupla' : 'Individual'}
 *Cursos Selecionados:* ${coursenames}
 *Valor Total:* R$ ${finalValue.toFixed(2).replace('.', ',')}`;
@@ -107,6 +109,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
   const errors = useMemo(() => {
     const errs: any = {};
     if (!nome.trim()) errs.nome = 'Nome é obrigatório.';
+    if (tipoInscricao === 'dupla' && !nome2.trim()) errs.nome2 = 'Nome da dupla é obrigatório.';
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = 'E-mail inválido.';
     if (!whatsapp.trim() || whatsapp.replace(/\D/g, '').length < 10) errs.whatsapp = 'WhatsApp inválido.';
     if (!comoConheceu) errs.comoConheceu = 'Selecione uma opção.';
@@ -140,6 +143,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
     e.preventDefault();
     setTouched({
       nome: true,
+      nome2: true,
       email: true,
       whatsapp: true,
       comoConheceu: true,
@@ -173,6 +177,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
         comoConheceu,
         autorizacaoImagem: autorizacao ? 'Sim' : 'Não',
         nome,
+        nome2: tipoInscricao === 'dupla' ? nome2 : null,
         email,
         whatsapp,
         comprovanteUrl,
@@ -524,9 +529,9 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                     <User size={16} className="text-[#ea5d35]" /> Dados do Participante
                   </h3>
                   
-                  <div className="grid md:grid-cols-3 gap-2 sm:gap-3">
+                  <div className="grid md:grid-cols-2 gap-2 sm:gap-3">
                     <div>
-                      <label className="block text-xs font-bold text-[#645c58] mb-1">Nome Completo</label>
+                      <label className="block text-xs font-bold text-[#645c58] mb-1">Nome Completo {tipoInscricao === 'dupla' && '(1º Participante)'}</label>
                       <input 
                          type="text" 
                          name="Nome"
@@ -538,31 +543,50 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                        />
                        {touched.nome && errors.nome && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.nome}</p>}
                     </div>
-                    <div>
-                      <label className="block text-xs font-bold text-[#645c58] mb-1">E-mail</label>
-                      <input 
-                        type="email" 
-                        name="Email"
-                        value={email}
-                        onChange={e => { setEmail(e.target.value); setTouched(p => ({...p, email: true})); }}
-                        onBlur={() => setTouched(p => ({...p, email: true}))}
-                        className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.email && errors.email ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
-                        placeholder="seu@email.com"
-                      />
-                      {touched.email && errors.email && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.email}</p>}
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-[#645c58] mb-1">WhatsApp</label>
-                      <input 
-                        type="tel" 
-                        name="WhatsApp"
-                        value={whatsapp}
-                        onChange={e => { setWhatsapp(e.target.value); setTouched(p => ({...p, whatsapp: true})); }}
-                        onBlur={() => setTouched(p => ({...p, whatsapp: true}))}
-                        className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.whatsapp && errors.whatsapp ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
-                        placeholder="(00) 00000-0000"
-                      />
-                      {touched.whatsapp && errors.whatsapp && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.whatsapp}</p>}
+
+                    {tipoInscricao === 'dupla' && (
+                      <div>
+                        <label className="block text-xs font-bold text-[#645c58] mb-1">Nome Completo (2º Participante)</label>
+                        <input 
+                           type="text" 
+                           name="Nome2"
+                           value={nome2}
+                           onChange={e => { setNome2(e.target.value); setTouched(p => ({...p, nome2: true})); }}
+                           onBlur={() => setTouched(p => ({...p, nome2: true}))}
+                           className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.nome2 && errors.nome2 ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
+                           placeholder="Nome da sua dupla"
+                         />
+                         {touched.nome2 && errors.nome2 && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.nome2}</p>}
+                      </div>
+                    )}
+
+                    <div className={tipoInscricao === 'individual' ? '' : 'md:col-span-2 grid md:grid-cols-2 gap-2 sm:gap-3'}>
+                      <div className="w-full">
+                        <label className="block text-xs font-bold text-[#645c58] mb-1">E-mail</label>
+                        <input 
+                          type="email" 
+                          name="Email"
+                          value={email}
+                          onChange={e => { setEmail(e.target.value); setTouched(p => ({...p, email: true})); }}
+                          onBlur={() => setTouched(p => ({...p, email: true}))}
+                          className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.email && errors.email ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
+                          placeholder="seu@email.com"
+                        />
+                        {touched.email && errors.email && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.email}</p>}
+                      </div>
+                      <div className="w-full">
+                        <label className="block text-xs font-bold text-[#645c58] mb-1">WhatsApp</label>
+                        <input 
+                          type="tel" 
+                          name="WhatsApp"
+                          value={whatsapp}
+                          onChange={e => { setWhatsapp(e.target.value); setTouched(p => ({...p, whatsapp: true})); }}
+                          onBlur={() => setTouched(p => ({...p, whatsapp: true}))}
+                          className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.whatsapp && errors.whatsapp ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
+                          placeholder="(00) 00000-0000"
+                        />
+                        {touched.whatsapp && errors.whatsapp && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.whatsapp}</p>}
+                      </div>
                     </div>
                   </div>
                 </div>
