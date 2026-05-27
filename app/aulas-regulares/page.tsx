@@ -124,12 +124,22 @@ export default function AulasRegulares() {
           <p className="text-xl text-orange-100 max-w-2xl mx-auto mb-10 drop-shadow-md">
             Aprenda a dançar do zero ao baile com a nossa metodologia acolhedora e focada na sua evolução.
           </p>
-          <button 
-            onClick={() => document.getElementById('horarios')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-orange-600 text-orange-50 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-800 transition-colors duration-300 shadow-lg inline-flex items-center gap-2"
-          >
-            Quero Começar <ArrowRight size={20} />
-          </button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a 
+              href="https://wa.me/5567992630948?text=Gostaria%20de%20agendar%20minha%20aula%20experimental!"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white text-orange-700 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-100 transition-colors duration-300 shadow-lg inline-flex items-center gap-2"
+            >
+              Agendar aula experimental
+            </a>
+            <button 
+              onClick={() => document.getElementById('horarios')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-orange-600 text-orange-50 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-800 transition-colors duration-300 shadow-lg inline-flex items-center gap-2"
+            >
+              Quero Começar <ArrowRight size={20} />
+            </button>
+          </div>
         </div>
         
         <div className="absolute bottom-0 left-0 w-full z-20">
@@ -243,6 +253,25 @@ export default function AulasRegulares() {
                 </div>
                 <div className="flex-grow">
                   <h4 className="text-xl font-bold text-orange-900 group-hover/item:text-orange-600 transition-colors">Forró</h4>
+                  <p className="text-orange-700">Do zero</p>
+                </div>
+                <ArrowRight className="text-orange-300 group-hover/item:text-orange-600 transition-all group-hover/item:translate-x-2" size={24} />
+              </button>
+
+              <button 
+                onClick={() => {
+                  setUnidade('unidade1');
+                  setTurmaPrincipal('Bachata');
+                  document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-all duration-200 active:scale-[0.98] group/item"
+              >
+                <div className="flex items-center gap-3 min-w-[180px]">
+                  <Clock className="text-orange-600" size={24} />
+                  <span className="text-xl font-bold text-orange-600">20h40 - 21h40</span>
+                </div>
+                <div className="flex-grow">
+                  <h4 className="text-xl font-bold text-orange-900 group-hover/item:text-orange-600 transition-colors">Bachata</h4>
                   <p className="text-orange-700">Do zero</p>
                 </div>
                 <ArrowRight className="text-orange-300 group-hover/item:text-orange-600 transition-all group-hover/item:translate-x-2" size={24} />
@@ -478,338 +507,42 @@ export default function AulasRegulares() {
         className="py-16 px-6 bg-orange-50"
       >
         <div className="max-w-2xl mx-auto">
-          <div className="bg-white p-6 md:p-8 rounded-[32px] shadow-xl shadow-orange-900/5 border border-orange-100">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-display font-bold text-orange-900 mb-2">Faça sua Matrícula</h2>
-              <div className="inline-block mt-4 bg-orange-100 text-orange-800 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-widest">
-                Passo Final
-              </div>
-              <p className="text-orange-700 mt-4 text-sm max-w-lg mx-auto">
-                Preencha seus dados abaixo. As opções selecionadas nos passos anteriores já foram preenchidas para você!
-              </p>
+          <div className="bg-white p-6 md:p-12 rounded-[32px] shadow-xl shadow-orange-900/5 border border-orange-100 text-center">
+            <h2 className="text-3xl md:text-5xl font-display font-bold text-orange-900 mb-6">
+              Garanta sua vaga!
+            </h2>
+            <div className="inline-block mb-8 bg-orange-100 text-orange-800 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-widest">
+              Passo Final
             </div>
             
-            <div className="mb-10">
-              <h3 className="font-bold text-orange-900 mb-4 text-center">Localização das Unidades</h3>
-              <MapComponent selectedUnidade={unidade} />
-            </div>
+            <p className="text-orange-700 text-lg max-w-lg mx-auto mb-10">
+              Agende sua aula experimental agora! Escolha a modalidade de matrícula que mais faz sentido para você e venha dançar com a gente!
+            </p>
 
-            <form onSubmit={handleWhatsAppRedirect} className="space-y-6">
-              {/* Unidade */}
-              <div className="space-y-3">
-                <label className="block text-xs font-bold tracking-wide uppercase text-orange-800">Unidade</label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setUnidade('unidade1');
-                      setSegundaTurma('');
-                    }}
-                    className={`py-4 px-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
-                      unidade === 'unidade1' 
-                        ? 'border-orange-800 text-orange-900 bg-orange-50' 
-                        : 'border-orange-200 text-orange-400 hover:border-orange-300'
-                    }`}
-                  >
-                    <MapPin size={24} strokeWidth={1.5} />
-                    <span className="font-bold text-base text-center">Teatro do Mundo</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setUnidade('unidade2');
-                      setSegundaTurma('');
-                      setQuerSegundaTurma(false);
-                    }}
-                    className={`py-4 px-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
-                      unidade === 'unidade2' 
-                        ? 'border-orange-800 text-orange-900 bg-orange-50' 
-                        : 'border-orange-200 text-orange-400 hover:border-orange-300'
-                    }`}
-                  >
-                    <MapPin size={24} strokeWidth={1.5} />
-                    <span className="font-bold text-base text-center">Templo</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Turma Principal */}
-              <div className="space-y-3">
-                <label htmlFor="turmaPrincipal" className="block text-xs font-bold tracking-wide uppercase text-orange-800">Turma</label>
-                {unidade === 'unidade1' ? (
-                  <select 
-                    id="turmaPrincipal" 
-                    required
-                    value={turmaPrincipal}
-                    onChange={(e) => setTurmaPrincipal(e.target.value)}
-                    onBlur={() => setTouched(prev => ({ ...prev, turmaPrincipal: true }))}
-                    className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all bg-orange-50/50 text-sm text-orange-900 ${
-                      touched.turmaPrincipal && errors.turmaPrincipal ? 'border-red-500 bg-red-50' : 'border-orange-200 focus:border-transparent'
-                    }`}
-                  >
-                    <option value="" disabled>Selecione a turma principal...</option>
-                    <option value="Vanera e Chamamé">Vanera e Chamamé</option>
-                    <option value="Forró">Forró</option>
-                  </select>
-                ) : (
-                  <select 
-                    id="turmaPrincipal" 
-                    required
-                    value={turmaPrincipal}
-                    onChange={(e) => setTurmaPrincipal(e.target.value)}
-                    onBlur={() => setTouched(prev => ({ ...prev, turmaPrincipal: true }))}
-                    className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all bg-orange-50/50 text-sm text-orange-900 ${
-                      touched.turmaPrincipal && errors.turmaPrincipal ? 'border-red-500 bg-red-50' : 'border-orange-200 focus:border-transparent'
-                    }`}
-                  >
-                    <option value="" disabled>Selecione a turma principal...</option>
-                    <option value="Dança de Salão em Geral">Dança de Salão em Geral</option>
-                    <option value="Forró">Forró</option>
-                  </select>
-                )}
-                {touched.turmaPrincipal && errors.turmaPrincipal && (
-                  <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                    <AlertCircle size={12} /> {errors.turmaPrincipal}
-                  </motion.p>
-                )}
-              </div>
-
-              {/* Tipo de Inscrição */}
-              <div className="space-y-3">
-                <label className="block text-xs font-bold tracking-wide uppercase text-orange-800">Modalidade</label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setTipoInscricao('individual')}
-                    className={`py-4 px-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
-                      tipoInscricao === 'individual' 
-                        ? 'border-orange-800 text-orange-900 bg-orange-50' 
-                        : 'border-orange-200 text-orange-400 hover:border-orange-300'
-                    }`}
-                  >
-                    <User size={24} strokeWidth={1.5} />
-                    <span className="font-bold text-base">Individual</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setTipoInscricao('dupla')}
-                    className={`py-4 px-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
-                      tipoInscricao === 'dupla' 
-                        ? 'border-orange-600 text-orange-600 bg-orange-50' 
-                        : 'border-orange-200 text-orange-400 hover:border-orange-300'
-                    }`}
-                  >
-                    <Users size={24} strokeWidth={1.5} />
-                    <span className="font-bold text-base">Em Dupla</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Universitário Toggle */}
-              <div 
-                className={`p-4 rounded-xl transition-colors cursor-pointer border-2 ${
-                  isUniversitario ? 'bg-orange-100/50 border-orange-200' : 'bg-orange-50 border-transparent'
-                }`}
-                onClick={() => setIsUniversitario(!isUniversitario)}
+            <div className="grid md:grid-cols-2 gap-4">
+              <a 
+                href="https://docs.google.com/forms/d/1dFNLj91v5MmDWxBsLkG0ahtzBCAXL5zJPwp7juv99nw"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center justify-center p-8 border-2 border-orange-200 rounded-2xl hover:bg-orange-50 hover:border-orange-400 transition-all duration-300 group"
               >
-                <div className="flex items-start gap-3">
-                  <div className={`w-5 h-5 rounded flex items-center justify-center transition-colors shrink-0 mt-0.5 ${
-                    isUniversitario ? 'bg-orange-600 text-white' : 'bg-white border-2 border-orange-300'
-                  }`}>
-                    {isUniversitario && <Check size={14} strokeWidth={3} />}
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-orange-900 text-base mb-1">Sou Universitário</h3>
-                    {tipoInscricao === 'dupla' && (
-                      <motion.p 
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        className="text-orange-600 text-xs leading-relaxed mt-1"
-                      >
-                        Atenção: Para o desconto em dupla, ambos os alunos devem ser universitários.
-                      </motion.p>
-                    )}
-                  </div>
+                <div className="w-16 h-16 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <User size={32} />
                 </div>
-              </div>
-
-              {/* Segunda Turma Toggle */}
-              <div className="space-y-3">
-                <div 
-                  className={`p-4 rounded-xl transition-colors cursor-pointer border-2 ${
-                    querSegundaTurma ? 'bg-orange-600/10 border-orange-400' : 'bg-orange-50 border-transparent'
-                  }`}
-                  onClick={() => setQuerSegundaTurma(!querSegundaTurma)}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className={`w-5 h-5 rounded flex items-center justify-center transition-colors shrink-0 mt-0.5 ${
-                      querSegundaTurma ? 'bg-orange-600 text-white' : 'bg-white border-2 border-orange-300'
-                    }`}>
-                      {querSegundaTurma && <Check size={14} strokeWidth={3} />}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-orange-900 text-base mb-1">Adicionar mais turmas</h3>
-                      <p className="text-orange-600 text-xs leading-relaxed mt-1">
-                        Informação complementar: a partir da segunda turma, o valor sai com 50% de desconto!
-                      </p>
-                    </div>
-                  </div>
+                <span className="font-bold text-orange-900 text-xl">Matrícula Individual</span>
+              </a>
+              <a 
+                href="https://docs.google.com/forms/d/1OXWr0dlm5laEC8D8NzOUOHQopgTedmGbhrOeiSEqo4o"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center justify-center p-8 border-2 border-orange-200 rounded-2xl hover:bg-orange-50 hover:border-orange-400 transition-all duration-300 group"
+              >
+                <div className="w-16 h-16 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <Users size={32} />
                 </div>
-
-                <AnimatePresence>
-                  {querSegundaTurma && (
-                    <motion.div 
-                      initial={{ opacity: 0, height: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, height: 'auto', scale: 1 }}
-                      exit={{ opacity: 0, height: 0, scale: 0.95 }}
-                      transition={{ duration: 0.3, ease: 'easeOut' }}
-                      className="overflow-hidden"
-                    >
-                      <label htmlFor="segundaTurma" className="block text-xs font-bold tracking-wide uppercase text-orange-800 mb-2 mt-4">Qual será a turma adicional?</label>
-                      {unidade === 'unidade1' ? (
-                        <select 
-                          id="segundaTurma" 
-                          required={querSegundaTurma}
-                          value={segundaTurma}
-                          onChange={(e) => setSegundaTurma(e.target.value)}
-                          onBlur={() => setTouched(prev => ({ ...prev, segundaTurma: true }))}
-                          className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all bg-orange-50/50 text-sm text-orange-900 ${
-                            touched.segundaTurma && errors.segundaTurma ? 'border-red-500 bg-red-50' : 'border-orange-200 focus:border-transparent'
-                          }`}
-                        >
-                          <option value="" disabled>Selecione uma turma...</option>
-                          {['Vanera e Chamamé', 'Forró'].filter(t => t !== turmaPrincipal).map(t => (
-                            <option key={t} value={t}>{t}</option>
-                          ))}
-                        </select>
-                      ) : (
-                        <select 
-                          id="segundaTurma" 
-                          required={querSegundaTurma}
-                          value={segundaTurma}
-                          onChange={(e) => setSegundaTurma(e.target.value)}
-                          onBlur={() => setTouched(prev => ({ ...prev, segundaTurma: true }))}
-                          className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all bg-orange-50/50 text-sm text-orange-900 ${
-                            touched.segundaTurma && errors.segundaTurma ? 'border-red-500 bg-red-50' : 'border-orange-200 focus:border-transparent'
-                          }`}
-                        >
-                          <option value="" disabled>Selecione uma turma...</option>
-                          {['Dança de Salão em Geral', 'Forró'].filter(t => t !== turmaPrincipal).map(t => (
-                            <option key={t} value={t}>{t}</option>
-                          ))}
-                        </select>
-                      )}
-                      {touched.segundaTurma && errors.segundaTurma && (
-                        <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-xs mt-1 flex items-center gap-1 mb-2">
-                          <AlertCircle size={12} /> {errors.segundaTurma}
-                        </motion.p>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Dados Pessoais */}
-              <div className="space-y-4 pt-4 border-t border-orange-100">
-                {tipoInscricao === 'individual' ? (
-                  <div>
-                    <label htmlFor="nome" className="block text-xs font-bold tracking-wide uppercase text-orange-800 mb-2">Nome</label>
-                    <input 
-                      type="text" 
-                      id="nome" 
-                      required
-                      value={nome}
-                      onChange={(e) => setNome(e.target.value)}
-                      onBlur={() => setTouched(prev => ({ ...prev, nome: true }))}
-                      className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all bg-orange-50/50 text-sm ${
-                        touched.nome && errors.nome ? 'border-red-500 bg-red-50' : 'border-orange-200 focus:border-transparent'
-                      }`}
-                      placeholder="Como você gostaria de ser chamado?"
-                    />
-                    {touched.nome && errors.nome && (
-                      <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-xs mt-1 flex items-center gap-1 mb-2">
-                        <AlertCircle size={12} /> {errors.nome}
-                      </motion.p>
-                    )}
-                  </div>
-                ) : (
-                  <div>
-                    <label htmlFor="nomeDupla" className="block text-xs font-bold tracking-wide uppercase text-orange-800 mb-2">Nome da dupla</label>
-                    <input 
-                      type="text" 
-                      id="nomeDupla" 
-                      required
-                      value={nomeDupla}
-                      onChange={(e) => setNomeDupla(e.target.value)}
-                      onBlur={() => setTouched(prev => ({ ...prev, nomeDupla: true }))}
-                      className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all bg-orange-50/50 text-sm ${
-                        touched.nomeDupla && errors.nomeDupla ? 'border-red-500 bg-red-50' : 'border-orange-200 focus:border-transparent'
-                      }`}
-                      placeholder="Nomes das duas pessoas"
-                    />
-                    {touched.nomeDupla && errors.nomeDupla && (
-                      <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-xs mt-1 flex items-center gap-1 mb-2">
-                        <AlertCircle size={12} /> {errors.nomeDupla}
-                      </motion.p>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div className="pt-6 border-t border-orange-200">
-                <div className="bg-[#fffdfa] border border-orange-100 rounded-2xl p-5 shadow-sm mb-6">
-                  <h4 className="font-bold text-orange-900 mb-4 border-b border-orange-100 pb-2">Resumo da Inscrição</h4>
-                  <ul className="space-y-3 text-sm">
-                    <li className="flex justify-between items-start gap-4">
-                      <span className="text-orange-600 font-medium">Unidade:</span>
-                      <span className="text-orange-900 text-right">{unidade === 'unidade1' ? 'Unidade 1 - Centro' : 'Unidade 2 - Templo'}</span>
-                    </li>
-                    <li className="flex justify-between items-start gap-4">
-                      <span className="text-orange-600 font-medium">Modalidade:</span>
-                      <span className="text-orange-900 text-right">{tipoInscricao === 'individual' ? 'Individual' : 'Em Dupla'} {isUniversitario ? '(Universitário)' : ''}</span>
-                    </li>
-                    <li className="flex justify-between items-start gap-4">
-                      <span className="text-orange-600 font-medium">Turma Principal:</span>
-                      <span className="text-orange-900 text-right font-medium">{turmaPrincipal || '-'}</span>
-                    </li>
-                    {querSegundaTurma && (
-                      <li className="flex justify-between items-start gap-4">
-                        <span className="text-orange-600 font-medium">Segunda Turma (50% OFF):</span>
-                        <span className="text-orange-900 text-right font-medium">{segundaTurma || '-'}</span>
-                      </li>
-                    )}
-                    <li className="flex justify-between items-start gap-4 pt-3 border-t border-orange-100 mt-1">
-                      <span className="text-orange-900 font-bold">Total Mensal:</span>
-                      <motion.span 
-                        key={calcularValor()}
-                        initial={{ opacity: 0, scale: 0.8, y: -5 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        className="text-2xl font-display font-bold text-[#ea5d35]"
-                      >
-                        R$ {calcularValor()}
-                      </motion.span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <button 
-                  type="submit"
-                  disabled={!turmaPrincipal}
-                  className="w-full bg-[#25D366] text-white py-4 rounded-full font-bold tracking-wide text-base hover:bg-[#128C7E] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300 flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/20"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
-                    <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
-                  </svg>
-                  <span>Confirmar pelo WhatsApp</span>
-                </button>
-                <p className="text-center text-orange-500 text-xs">
-                  Você será redirecionado para o nosso WhatsApp para finalizar a matrícula.
-                </p>
-              </div>
-            </form>
+                <span className="font-bold text-orange-900 text-xl">Matrícula em Dupla</span>
+              </a>
+            </div>
           </div>
         </div>
       </motion.section>

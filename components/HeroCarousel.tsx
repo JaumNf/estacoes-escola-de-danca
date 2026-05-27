@@ -84,10 +84,10 @@ export default function HeroCarousel() {
             </p>
             <div className="pointer-events-auto flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a 
-                href="/cursos-intensivos"
+                href="/aulas-regulares"
                 className="bg-[#ea5d35] text-brown-50 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-[#c44e2b] transition-colors shadow-lg animate-[pulse_2s_ease-in-out_infinite]"
               >
-                Cursos Intensivos de Outono
+                Agendar aula experimental
               </a>
               <a 
                 href="#trabalhos"

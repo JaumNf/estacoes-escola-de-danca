@@ -116,7 +116,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
     if (!arquivo) errs.arquivo = 'Anexe o comprovante.';
     if (!autorizacao) errs.autorizacao = 'Aceite os termos obrigatórios.';
     return errs;
-  }, [nome, email, whatsapp, comoConheceu, arquivo, autorizacao]);
+  }, [nome, nome2, tipoInscricao, email, whatsapp, comoConheceu, arquivo, autorizacao]);
 
   const isValid = Object.keys(errors).length === 0;
 
@@ -167,6 +167,10 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
       }
 
       await addDoc(collection(db, 'inscricoes_intensivo'), {
+        nome,
+        nome2: tipoInscricao === 'dupla' ? nome2 : null,
+        email,
+        whatsapp,
         tipoInscricao,
         turmasSelecionadas: cursosSelecionados.map(c => {
           const r = ritmos.find(r => r.id === c);
@@ -176,10 +180,6 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
         valorFinal: `R$ ${finalValue.toFixed(2).replace('.', ',')}`,
         comoConheceu,
         autorizacaoImagem: autorizacao ? 'Sim' : 'Não',
-        nome,
-        nome2: tipoInscricao === 'dupla' ? nome2 : null,
-        email,
-        whatsapp,
         comprovanteUrl,
         createdAt: serverTimestamp()
       });
