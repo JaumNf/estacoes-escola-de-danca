@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import BackToTop from '@/components/BackToTop';
 import dynamic from 'next/dynamic';
+import AulaExperimentalModal from './AulaExperimentalModal';
 
 const MapComponent = dynamic(() => import('@/components/MapComponent'), { 
   ssr: false,
@@ -21,6 +22,7 @@ const MapComponent = dynamic(() => import('@/components/MapComponent'), {
 });
 
 export default function AulasRegulares() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [unidade, setUnidade] = useState<'unidade1' | 'unidade2'>('unidade1');
   const [turmaPrincipal, setTurmaPrincipal] = useState('');
   const [tipoInscricao, setTipoInscricao] = useState<'individual' | 'dupla'>('individual');
@@ -125,14 +127,12 @@ export default function AulasRegulares() {
             Aprenda a dançar do zero ao baile com a nossa metodologia acolhedora e focada na sua evolução.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a 
-              href="https://wa.me/5567992630948?text=Gostaria%20de%20agendar%20minha%20aula%20experimental!"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white text-orange-700 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-100 transition-colors duration-300 shadow-lg inline-flex items-center gap-2"
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="bg-white text-orange-700 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-100 transition-colors duration-300 shadow-lg inline-flex items-center gap-2 cursor-pointer"
             >
               Agendar aula experimental
-            </a>
+            </button>
             <button 
               onClick={() => document.getElementById('horarios')?.scrollIntoView({ behavior: 'smooth' })}
               className="bg-orange-600 text-orange-50 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-800 transition-colors duration-300 shadow-lg inline-flex items-center gap-2"
@@ -184,28 +184,8 @@ export default function AulasRegulares() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-display font-bold text-orange-900 mb-6">Horários e Turmas</h2>
-            <p className="text-lg text-orange-700 max-w-2xl mx-auto mb-8">
+            <p className="text-lg text-orange-700 max-w-2xl mx-auto">
               Encontre a turma perfeita para a sua rotina.
-            </p>
-            
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-sm font-bold tracking-wide uppercase text-orange-800">
-              <div className="flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-orange-200 flex items-center justify-center text-orange-900 border-2 border-orange-400">1</span>
-                <span>Escolha sua Turma</span>
-              </div>
-              <ArrowRight className="hidden md:block text-orange-400" size={16} />
-              <div className="flex items-center gap-2 opacity-70">
-                <span className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">2</span>
-                <span>Selecione o Plano</span>
-              </div>
-              <ArrowRight className="hidden md:block text-orange-400" size={16} />
-              <div className="flex items-center gap-2 opacity-70">
-                <span className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">3</span>
-                <span>Finalize a Matrícula</span>
-              </div>
-            </div>
-            <p className="text-orange-600 mt-6 text-sm font-medium animate-pulse">
-              👇 Clique na turma desejada nas caixas abaixo para iniciar a sua matrícula!
             </p>
           </div>
 
@@ -345,19 +325,9 @@ export default function AulasRegulares() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-display font-bold text-orange-50 mb-6">Investimento</h2>
-            <p className="text-lg text-orange-200 max-w-2xl mx-auto mb-8">
+            <p className="text-lg text-orange-200 max-w-2xl mx-auto">
               Escolha a melhor opção para você. A matrícula já está inclusa no valor de todas as mensalidades.
             </p>
-
-            <div className="flex justify-center mb-8">
-              <div className="inline-flex items-center gap-3 bg-orange-900/50 border border-orange-800 px-6 py-3 rounded-full text-orange-200 text-sm font-medium">
-                <span className="flex h-3 w-3 relative">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
-                </span>
-                Passo 2: Clique em um dos planos abaixo para avançar
-              </div>
-            </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
@@ -511,9 +481,6 @@ export default function AulasRegulares() {
             <h2 className="text-3xl md:text-5xl font-display font-bold text-orange-900 mb-6">
               Garanta sua vaga!
             </h2>
-            <div className="inline-block mb-8 bg-orange-100 text-orange-800 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-widest">
-              Passo Final
-            </div>
             
             <p className="text-orange-700 text-lg max-w-lg mx-auto mb-10">
               Agende sua aula experimental agora! Escolha a modalidade de matrícula que mais faz sentido para você e venha dançar com a gente!
@@ -610,6 +577,11 @@ export default function AulasRegulares() {
         </div>
       </footer>
       <BackToTop />
+      
+      <AulaExperimentalModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </main>
   );
 }
