@@ -10,7 +10,8 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import BackToTop from '@/components/BackToTop';
 import dynamic from 'next/dynamic';
-import AulaExperimentalModal from './AulaExperimentalModal';
+import HorariosTurmas from '@/components/HorariosTurmas';
+import InvestmentCalculator from '@/components/InvestmentCalculator';
 
 const MapComponent = dynamic(() => import('@/components/MapComponent'), { 
   ssr: false,
@@ -22,7 +23,6 @@ const MapComponent = dynamic(() => import('@/components/MapComponent'), {
 });
 
 export default function AulasRegulares() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [unidade, setUnidade] = useState<'unidade1' | 'unidade2'>('unidade1');
   const [turmaPrincipal, setTurmaPrincipal] = useState('');
   const [tipoInscricao, setTipoInscricao] = useState<'individual' | 'dupla'>('individual');
@@ -128,7 +128,7 @@ export default function AulasRegulares() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button 
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
               className="bg-white text-orange-700 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-100 transition-colors duration-300 shadow-lg inline-flex items-center gap-2 cursor-pointer"
             >
               Agendar aula experimental
@@ -181,136 +181,7 @@ export default function AulasRegulares() {
         transition={{ duration: 0.6 }}
         className="py-24 px-6 bg-orange-100/30"
       >
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-display font-bold text-orange-900 mb-6">Horários e Turmas</h2>
-            <p className="text-lg text-orange-700 max-w-2xl mx-auto">
-              Encontre a turma perfeita para a sua rotina.
-            </p>
-          </div>
-
-          <div className="group bg-white rounded-[40px] p-8 md:p-12 shadow-xl shadow-orange-900/5 border border-orange-100 hover:-translate-y-2 hover:shadow-2xl hover:border-fuchsia-500 transition-all duration-300">
-            <div className="flex items-center gap-4 mb-8 border-b border-orange-100 pb-6">
-              <div className="w-12 h-12 rounded-full border-2 border-orange-600 group-hover:border-fuchsia-500 flex items-center justify-center shrink-0 transition-colors duration-300">
-                <MapPin className="text-orange-600 group-hover:text-fuchsia-500 transition-colors duration-300" size={24} />
-              </div>
-              <div>
-                <h3 className="text-2xl font-display font-bold text-orange-900 group-hover:text-fuchsia-600 transition-colors duration-300">UNIDADE 1: Teatro do Mundo - Terça-feira</h3>
-              </div>
-            </div>
-
-            <div className="space-y-8">
-              <button 
-                onClick={() => {
-                  setUnidade('unidade1');
-                  setTurmaPrincipal('Vanera e Chamamé');
-                  document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-all duration-200 active:scale-[0.98] group/item"
-              >
-                <div className="flex items-center gap-3 min-w-[180px]">
-                  <Clock className="text-orange-600" size={24} />
-                  <span className="text-xl font-bold text-orange-600">18h20 - 19h20</span>
-                </div>
-                <div className="flex-grow">
-                  <h4 className="text-xl font-bold text-orange-900 group-hover/item:text-orange-600 transition-colors">Vanera e Chamamé</h4>
-                  <p className="text-orange-700">Do zero</p>
-                </div>
-                <ArrowRight className="text-orange-300 group-hover/item:text-orange-600 transition-all group-hover/item:translate-x-2" size={24} />
-              </button>
-
-              <button 
-                onClick={() => {
-                  setUnidade('unidade1');
-                  setTurmaPrincipal('Forró');
-                  document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-all duration-200 active:scale-[0.98] group/item"
-              >
-                <div className="flex items-center gap-3 min-w-[180px]">
-                  <Clock className="text-orange-600" size={24} />
-                  <span className="text-xl font-bold text-orange-600">19h30 - 20h30</span>
-                </div>
-                <div className="flex-grow">
-                  <h4 className="text-xl font-bold text-orange-900 group-hover/item:text-orange-600 transition-colors">Forró</h4>
-                  <p className="text-orange-700">Do zero</p>
-                </div>
-                <ArrowRight className="text-orange-300 group-hover/item:text-orange-600 transition-all group-hover/item:translate-x-2" size={24} />
-              </button>
-
-              <button 
-                onClick={() => {
-                  setUnidade('unidade1');
-                  setTurmaPrincipal('Bachata');
-                  document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-all duration-200 active:scale-[0.98] group/item"
-              >
-                <div className="flex items-center gap-3 min-w-[180px]">
-                  <Clock className="text-orange-600" size={24} />
-                  <span className="text-xl font-bold text-orange-600">20h40 - 21h40</span>
-                </div>
-                <div className="flex-grow">
-                  <h4 className="text-xl font-bold text-orange-900 group-hover/item:text-orange-600 transition-colors">Bachata</h4>
-                  <p className="text-orange-700">Do zero</p>
-                </div>
-                <ArrowRight className="text-orange-300 group-hover/item:text-orange-600 transition-all group-hover/item:translate-x-2" size={24} />
-              </button>
-            </div>
-          </div>
-
-          <div className="group bg-white rounded-[40px] p-8 md:p-12 shadow-xl shadow-orange-900/5 border border-orange-100 hover:-translate-y-2 hover:shadow-2xl hover:border-fuchsia-500 transition-all duration-300 mt-8 relative">
-            <div className="absolute -top-4 -right-4 bg-fuchsia-500 text-white font-bold text-sm px-4 py-1.5 rounded-full shadow-lg transform rotate-12 z-10">NOVIDADE!</div>
-            <div className="flex items-center gap-4 mb-8 border-b border-orange-100 pb-6">
-              <div className="w-12 h-12 rounded-full border-2 border-orange-600 group-hover:border-fuchsia-500 flex items-center justify-center shrink-0 transition-colors duration-300">
-                <MapPin className="text-orange-600 group-hover:text-fuchsia-500 transition-colors duration-300" size={24} />
-              </div>
-              <div>
-                <h3 className="text-2xl font-display font-bold text-orange-900 group-hover:text-fuchsia-600 transition-colors duration-300">UNIDADE 2: Templo Nambei - Quinta-feira</h3>
-              </div>
-            </div>
-
-            <div className="space-y-8">
-              <button 
-                onClick={() => {
-                  setUnidade('unidade2');
-                  setTurmaPrincipal('Dança de Salão em Geral');
-                  document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-all duration-200 active:scale-[0.98] group/item"
-              >
-                <div className="flex items-center gap-3 min-w-[180px]">
-                  <Clock className="text-orange-600" size={24} />
-                  <span className="text-xl font-bold text-orange-600">18h20 - 19h20</span>
-                </div>
-                <div className="flex-grow">
-                  <h4 className="text-xl font-bold text-orange-900 group-hover/item:text-orange-600 transition-colors">Dança de Salão em Geral</h4>
-                  <p className="text-orange-700">Vanera, Chamamé, Bolero, etc.</p>
-                </div>
-                <ArrowRight className="text-orange-300 group-hover/item:text-orange-600 transition-all group-hover/item:translate-x-2" size={24} />
-              </button>
-
-              <button 
-                onClick={() => {
-                  setUnidade('unidade2');
-                  setTurmaPrincipal('Forró');
-                  document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 rounded-2xl hover:bg-orange-50 transition-all duration-200 active:scale-[0.98] group/item"
-              >
-                <div className="flex items-center gap-3 min-w-[180px]">
-                  <Clock className="text-orange-600" size={24} />
-                  <span className="text-xl font-bold text-orange-600">19h30 - 20h30</span>
-                </div>
-                <div className="flex-grow">
-                  <h4 className="text-xl font-bold text-orange-900 group-hover/item:text-orange-600 transition-colors">Forró</h4>
-                  <p className="text-orange-700">Do zero</p>
-                </div>
-                <ArrowRight className="text-orange-300 group-hover/item:text-orange-600 transition-all group-hover/item:translate-x-2" size={24} />
-              </button>
-            </div>
-          </div>
-        </div>
+        <HorariosTurmas />
       </motion.section>
 
       {/* Valores Section */}
@@ -322,149 +193,7 @@ export default function AulasRegulares() {
         transition={{ duration: 0.6 }}
         className="py-24 px-6 bg-[#120400] text-orange-50"
       >
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-display font-bold text-orange-50 mb-6">Investimento</h2>
-            <p className="text-lg text-orange-200 max-w-2xl mx-auto">
-              Escolha a melhor opção para você. A matrícula já está inclusa no valor de todas as mensalidades.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {/* Público Geral */}
-            <div className="bg-orange-900/50 rounded-[32px] p-8 border border-orange-800 relative overflow-hidden flex flex-col justify-between">
-              <div>
-                <h3 className="text-2xl font-display font-bold text-orange-50 mb-6 text-center">Público Geral</h3>
-                
-                <div className="space-y-5">
-                  <button 
-                    onClick={() => {
-                      setIsUniversitario(false);
-                      setTipoInscricao('individual');
-                      document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    className="w-full flex justify-between items-center border-b border-orange-800 pb-3 hover:bg-orange-800/30 transition-colors p-2 rounded-lg group/price"
-                  >
-                    <div className="flex items-center gap-3">
-                      <User className="text-orange-500" size={24} strokeWidth={1.5} />
-                      <span className="text-lg text-orange-200 group-hover/price:text-orange-50 transition-colors">Individual</span>
-                    </div>
-                    <div className="text-right flex items-center gap-3">
-                      <div>
-                        <span className="text-2xl font-bold text-orange-50">R$ 120</span>
-                        <span className="text-orange-400 text-xs">/mês</span>
-                      </div>
-                      <ArrowRight className="text-orange-500 opacity-0 group-hover/price:opacity-100 transition-all group-hover/price:translate-x-1" size={20} />
-                    </div>
-                  </button>
-                  <button 
-                    onClick={() => {
-                      setIsUniversitario(false);
-                      setTipoInscricao('dupla');
-                      document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    className="w-full flex justify-between items-center pb-1 hover:bg-orange-800/30 transition-colors p-2 rounded-lg group/price"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Users className="text-orange-500" size={24} strokeWidth={1.5} />
-                      <span className="text-lg text-orange-200 group-hover/price:text-orange-50 transition-colors">Em Dupla</span>
-                    </div>
-                    <div className="text-right flex items-center gap-3">
-                      <div>
-                        <span className="text-2xl font-bold text-orange-50">R$ 180</span>
-                        <span className="text-orange-400 text-xs">/mês</span>
-                      </div>
-                      <ArrowRight className="text-orange-500 opacity-0 group-hover/price:opacity-100 transition-all group-hover/price:translate-x-1" size={20} />
-                    </div>
-                  </button>
-                </div>
-              </div>
-
-              <div className="mt-6 bg-orange-800/30 rounded-xl p-3 flex items-center gap-3 border border-orange-800">
-                <CheckCircle className="text-orange-500 shrink-0" size={18} />
-                <Tooltip content="Não cobramos taxa de matrícula separada. O valor é único e mensal.">
-                  <span className="text-orange-300 text-xs border-b border-dashed border-orange-600 cursor-help">Matrícula inclusa no valor da mensalidade.</span>
-                </Tooltip>
-              </div>
-            </div>
-
-            {/* Universitários */}
-            <div className="bg-orange-900/50 rounded-[32px] p-8 border border-orange-800 relative overflow-hidden flex flex-col justify-between">
-              <div className="absolute top-0 right-0 bg-orange-600 text-white text-[10px] font-bold px-4 py-1.5 rounded-bl-2xl tracking-widest uppercase">
-                Especial
-              </div>
-              
-              <div>
-                <h3 className="text-2xl font-display font-bold text-orange-50 mb-6 text-center">Universitários</h3>
-                
-                <div className="space-y-5">
-                  <button 
-                    onClick={() => {
-                      setIsUniversitario(true);
-                      setTipoInscricao('individual');
-                      document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    className="w-full flex justify-between items-center border-b border-orange-800 pb-3 hover:bg-orange-800/30 transition-colors p-2 rounded-lg group/price"
-                  >
-                    <div className="flex items-center gap-3">
-                      <User className="text-orange-500" size={24} strokeWidth={1.5} />
-                      <span className="text-lg text-orange-200 group-hover/price:text-orange-50 transition-colors">Individual</span>
-                    </div>
-                    <div className="text-right flex items-center gap-3">
-                      <div>
-                        <span className="text-2xl font-bold text-orange-50">R$ 100</span>
-                        <span className="text-orange-400 text-xs">/mês</span>
-                      </div>
-                      <ArrowRight className="text-orange-500 opacity-0 group-hover/price:opacity-100 transition-all group-hover/price:translate-x-1" size={20} />
-                    </div>
-                  </button>
-                  <button 
-                    onClick={() => {
-                      setIsUniversitario(true);
-                      setTipoInscricao('dupla');
-                      document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    className="w-full flex justify-between items-center pb-1 hover:bg-orange-800/30 transition-colors p-2 rounded-lg group/price"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Users className="text-orange-500" size={24} strokeWidth={1.5} />
-                      <span className="text-lg text-orange-200 group-hover/price:text-orange-50 transition-colors">Em Dupla*</span>
-                    </div>
-                    <div className="text-right flex items-center gap-3">
-                      <div>
-                        <span className="text-2xl font-bold text-orange-50">R$ 150</span>
-                        <span className="text-orange-400 text-xs">/mês</span>
-                      </div>
-                      <ArrowRight className="text-orange-500 opacity-0 group-hover/price:opacity-100 transition-all group-hover/price:translate-x-1" size={20} />
-                    </div>
-                  </button>
-                </div>
-              </div>
-
-              <div className="mt-6 bg-orange-800/30 rounded-xl p-3 flex items-start gap-3 border border-orange-800">
-                <CheckCircle className="text-orange-500 shrink-0 mt-0.5" size={18} />
-                <Tooltip content="É necessário apresentar comprovante de matrícula atualizado de ambos os alunos. Caso apenas um seja universitário, a inscrição deverá ser feita via Inscrição Individual para cada um.">
-                  <span className="text-orange-300 text-xs border-b border-dashed border-orange-600 cursor-help">*O valor promocional em dupla só é válido se <strong className="text-orange-100">ambos</strong> forem universitários. Se apenas um for universitário, deverão realizar inscrições individuais (um com desconto, outro sem).</span>
-                </Tooltip>
-              </div>
-            </div>
-          </div>
-
-          {/* Promo Banner */}
-          <div className="mt-8 max-w-4xl mx-auto bg-gradient-to-r from-orange-600 to-orange-500 rounded-2xl p-6 text-center shadow-lg border border-orange-400 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-bl-full pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/10 rounded-tr-full pointer-events-none" />
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4">
-              <span className="text-4xl">✨</span>
-              <div className="text-left">
-                <h4 className="text-xl font-display font-bold text-white mb-1">Promoção Especial</h4>
-                <p className="text-orange-50 font-medium text-lg">
-                  Na compra de uma turma, a <strong className="text-white">segunda turma sai pela metade do preço!</strong>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <InvestmentCalculator />
       </motion.section>
 
       {/* Formulário de Matrícula */}
@@ -577,11 +306,6 @@ export default function AulasRegulares() {
         </div>
       </footer>
       <BackToTop />
-      
-      <AulaExperimentalModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-      />
     </main>
   );
 }

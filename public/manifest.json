@@ -1,0 +1,16 @@
+{
+  "name": "Estações Escola de Dança",
+  "short_name": "Estações",
+  "description": "Venha descobrir o prazer da dança em um ambiente acolhedor e focado na sua evolução.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff7ed",
+  "theme_color": "#ea5d35",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}

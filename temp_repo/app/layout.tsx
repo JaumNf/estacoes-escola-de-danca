@@ -23,7 +23,6 @@ export const metadata: Metadata = {
   title: 'Estúdio de Dança Estações | Dança com Alegria e Sem Neura',
   description: 'Descubra a arte da dança a dois em Campo Grande. Mais que técnica, um espaço para se divertir, conhecer pessoas e viver melhor. Vem dançar!',
   metadataBase: new URL('https://escoladedancaestacoes.vercel.app/'),
-  manifest: '/manifest.json',
   openGraph: {
     title: 'Estúdio de Dança Estações | Vem dançar em Campo Grande/MS!',
     description: 'Aprenda Forró, Vanera, Chamamé e mais em um ambiente sem julgamentos. Dança a dois para se divertir, fazer novos amigos e relaxar. Clique e junte-se a nós!',
@@ -72,22 +71,6 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <Chatbot />
         <BackToTop />
         <AccessibilityMenu />
-        <Script id="service-worker-registration" strategy="afterInteractive">
-          {`
-            if ('serviceWorker' in navigator) {
-              window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js').then(
-                  function(registration) {
-                    console.log('Service Worker registration successful with scope: ', registration.scope);
-                  },
-                  function(err) {
-                    console.log('Service Worker registration failed: ', err);
-                  }
-                );
-              });
-            }
-          `}
-        </Script>
       </body>
     </html>
   );
