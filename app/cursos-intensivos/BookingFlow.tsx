@@ -54,7 +54,18 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const handleSetTipoInscricao = (tipo: 'individual' | 'dupla') => {
+    setTipoInscricao(tipo);
+    if (tipo === 'individual') {
+      setCursosSelecionados(prev => prev.filter(id => id !== 'forro_casais'));
+    }
+  };
+
   const toggleCurso = (id: string) => {
+    if (id === 'forro_casais' && tipoInscricao === 'individual') {
+      alert("O curso Forró - Casais é exclusivo para inscrições Casal.");
+      return;
+    }
     setCursosSelecionados(prev => prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]);
   };
 
@@ -87,21 +98,14 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
     let fVal = 0;
     
     if (tipoInscricao === 'individual') {
-      if (days.size === 2) {
-        fVal = 80;
-      } else {
-        let day1Cost = Math.min(45, (classesByDay['22 de Maio'] || 0) * 20);
-        let day2Cost = Math.min(45, (classesByDay['23 de Maio'] || 0) * 20);
-        fVal = day1Cost + day2Cost;
-      }
+      fVal = cursosSelecionados.length * 25;
     } else {
-      // Dupla - pacote por dia
-      fVal = days.size === 1 ? 80 : 120;
+      fVal = cursosSelecionados.length * 40;
     }
 
     return {
       finalValue: fVal,
-      selectedDaysCount: days.size,
+      selectedDaysCount: 1,
     };
   }, [cursosSelecionados, tipoInscricao, ritmos]);
 
@@ -263,23 +267,23 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
               </div>
 
               {/* Como se inscrever box */}
-              <div className="bg-[#fffdf0] rounded-3xl border border-[#fae8d4] p-6 md:p-8 mb-10 relative overflow-hidden">
-                <div className="absolute -right-8 -top-8 w-40 h-40 border-[20px] border-[#fae8d4]/30 rounded-full opacity-50 pointer-events-none" />
+              <div className="bg-[#fffdf0] rounded-3xl border border-[#ffe4e6] p-6 md:p-8 mb-10 relative overflow-hidden">
+                <div className="absolute -right-8 -top-8 w-40 h-40 border-[20px] border-[#ffe4e6]/30 rounded-full opacity-50 pointer-events-none" />
                 <h3 className="text-sm font-bold text-[#a04e22] tracking-widest uppercase mb-6 flex items-center gap-2">
-                  <span className="text-[#ea5d35] material-symbols-rounded">help</span> COMO SE INSCREVER (PASSO A PASSO):
+                  <span className="text-[#e11d48] material-symbols-rounded">help</span> COMO SE INSCREVER (PASSO A PASSO):
                 </h3>
                 
                 <div className="grid md:grid-cols-2 gap-6 relative z-10">
                   <div className="flex gap-4">
-                    <div className="w-8 h-8 rounded-full border-2 border-[#ea5d35] text-[#ea5d35] font-bold flex items-center justify-center shrink-0">1</div>
+                    <div className="w-8 h-8 rounded-full border-2 border-[#e11d48] text-[#e11d48] font-bold flex items-center justify-center shrink-0">1</div>
                     <p className="text-[#645c58] text-sm pt-1">Defina se a inscrição é <strong>Individual</strong> ou <strong>Em Dupla</strong> e selecione as aulas no calendário.</p>
                   </div>
                   <div className="flex gap-4">
-                    <div className="w-8 h-8 rounded-full border-2 border-[#ea5d35] text-[#ea5d35] font-bold flex items-center justify-center shrink-0">2</div>
+                    <div className="w-8 h-8 rounded-full border-2 border-[#e11d48] text-[#e11d48] font-bold flex items-center justify-center shrink-0">2</div>
                     <p className="text-[#645c58] text-sm pt-1">Clique no botão <strong>&quot;Prosseguir para Pagamento&quot;</strong> no final da página.</p>
                   </div>
                   <div className="flex gap-4">
-                    <div className="w-8 h-8 rounded-full border-2 border-[#ea5d35] text-[#ea5d35] font-bold flex items-center justify-center shrink-0">3</div>
+                    <div className="w-8 h-8 rounded-full border-2 border-[#e11d48] text-[#e11d48] font-bold flex items-center justify-center shrink-0">3</div>
                     <p className="text-[#645c58] text-sm pt-1">Preencha seus dados pessoais, faça o pagamento via PIX e anexe o comprovante.</p>
                   </div>
                   <div className="flex gap-4 bg-red-50 p-4 rounded-xl">
@@ -298,7 +302,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                   </h3>
                   <button 
                     onClick={() => setShowPrices(!showPrices)}
-                    className="text-sm font-bold text-[#ea5d35] hover:text-[#c44e2b] transition-colors flex items-center gap-1 bg-[#fae8d4]/50 px-3 py-1.5 rounded-full"
+                    className="text-sm font-bold text-[#e11d48] hover:text-[#be123c] transition-colors flex items-center gap-1 bg-[#ffe4e6]/50 px-3 py-1.5 rounded-full"
                   >
                     <Info size={16} />
                     {showPrices ? "Ocultar valores" : "Ver valores"}
@@ -307,34 +311,30 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                 
                 <div className="flex flex-col md:flex-row gap-4 items-stretch">
                   <button 
-                    onClick={() => setTipoInscricao('individual')}
-                    className={`flex-1 min-h-[44px] p-5 rounded-2xl flex flex-col items-start gap-4 transition-all duration-300 text-left ${tipoInscricao === 'individual' ? 'bg-[#fae8d4] text-[#682c0b] border-2 border-[#d69f65] shadow-md scale-[1.02]' : 'bg-[#fffcf5] text-gray-500 border border-gray-200 hover:bg-orange-50'}`}
+                    onClick={() => handleSetTipoInscricao('individual')}
+                    className={`flex-1 min-h-[44px] p-5 rounded-2xl flex flex-col items-start gap-4 transition-all duration-300 text-left ${tipoInscricao === 'individual' ? 'bg-rose-50 text-[#682c0b] border-2 border-rose-300 shadow-md scale-[1.02]' : 'bg-[#fffcf5] text-gray-500 border border-gray-200 hover:bg-rose-50'}`}
                   >
                     <div className="flex items-center gap-3 w-full">
-                      <User size={24} className={tipoInscricao === 'individual' ? "text-[#ea5d35]" : "text-gray-400"} />
+                      <User size={24} className={tipoInscricao === 'individual' ? "text-rose-500" : "text-gray-400"} />
                       <div className="font-bold text-lg">Individual</div>
                     </div>
                     {showPrices && (
-                      <ul className="text-sm font-medium text-[#645c58] space-y-1.5 mt-2 bg-white/50 w-full p-4 rounded-xl border border-orange-900/5">
-                        <li className="flex justify-between"><span>Aula avulsa</span> <strong>R$ 20</strong></li>
-                        <li className="flex justify-between"><span>Pacote 1 dia</span> <strong>R$ 45</strong></li>
-                        <li className="flex justify-between"><span>Pacote 2 dias <span className="text-[#ea5d35] text-[10px] uppercase ml-1">C/ Baile</span></span> <strong>R$ 80</strong></li>
+                      <ul className="text-sm font-medium text-[#645c58] space-y-1.5 mt-2 bg-white/50 w-full p-4 rounded-xl border border-rose-900/5">
+                        <li className="flex justify-between"><span>Lote Promocional</span> <strong>R$ 25</strong></li>
                       </ul>
                     )}
                   </button>
                   <button 
-                    onClick={() => setTipoInscricao('dupla')}
-                    className={`flex-1 min-h-[44px] p-5 rounded-2xl flex flex-col items-start gap-4 transition-all duration-300 text-left ${tipoInscricao === 'dupla' ? 'bg-[#fae8d4] text-[#682c0b] border-2 border-[#d69f65] shadow-md scale-[1.02]' : 'bg-[#fffcf5] text-gray-500 border border-gray-200 hover:bg-orange-50'}`}
+                    onClick={() => handleSetTipoInscricao('dupla')}
+                    className={`flex-1 min-h-[44px] p-5 rounded-2xl flex flex-col items-start gap-4 transition-all duration-300 text-left ${tipoInscricao === 'dupla' ? 'bg-rose-50 text-[#682c0b] border-2 border-rose-300 shadow-md scale-[1.02]' : 'bg-[#fffcf5] text-gray-500 border border-gray-200 hover:bg-rose-50'}`}
                   >
                     <div className="flex items-center gap-3 w-full">
-                      <Users size={24} className={tipoInscricao === 'dupla' ? "text-[#ea5d35]" : "text-gray-400"} />
-                      <div className="font-bold text-lg">Em Dupla</div>
+                      <Users size={24} className={tipoInscricao === 'dupla' ? "text-rose-500" : "text-gray-400"} />
+                      <div className="font-bold text-lg">Casal</div>
                     </div>
                     {showPrices && (
-                      <ul className="text-sm font-medium text-[#645c58] space-y-1.5 mt-2 bg-white/50 w-full p-4 rounded-xl border border-orange-900/5">
-                        <li className="flex justify-between text-gray-400 line-through"><span>Aula avulsa</span> <strong>N/A</strong></li>
-                        <li className="flex justify-between"><span>Pacote 1 dia</span> <strong>R$ 80</strong></li>
-                        <li className="flex justify-between"><span>Pacote 2 dias <span className="text-[#ea5d35] text-[10px] uppercase ml-1">C/ Baile</span></span> <strong>R$ 120</strong></li>
+                      <ul className="text-sm font-medium text-[#645c58] space-y-1.5 mt-2 bg-white/50 w-full p-4 rounded-xl border border-rose-900/5">
+                        <li className="flex justify-between"><span>Lote Promocional Casal</span> <strong>R$ 40</strong></li>
                       </ul>
                     )}
                   </button>
@@ -342,7 +342,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
               </div>
 
               <h3 className="text-xl font-bold text-[#682c0b] mb-4 flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-[#ea5d35] text-white flex items-center justify-center text-sm">1</div>
+                <div className="w-8 h-8 rounded-full bg-[#e11d48] text-white flex items-center justify-center text-sm">1</div>
                 Quais aulas você quer participar?
               </h3>
 
@@ -355,31 +355,31 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                       onClick={() => toggleCurso(ritmo.id)}
                       className={`relative p-5 rounded-2xl text-left border-2 transition-all duration-300 ${
                         isSelected 
-                        ? 'border-[#ea5d35] bg-[#fff5f2] shadow-md -translate-y-1' 
+                        ? 'border-[#e11d48] bg-[#fff5f2] shadow-md -translate-y-1' 
                         : ritmo.popular 
-                          ? 'border-orange-300 bg-orange-50/30 hover:border-orange-400 hover:bg-orange-50/60'
-                          : 'border-gray-100 bg-white hover:border-orange-200 hover:bg-orange-50/50'
+                          ? 'border-rose-300 bg-rose-50/30 hover:border-rose-400 hover:bg-rose-50/60'
+                          : 'border-gray-100 bg-white hover:border-rose-200 hover:bg-rose-50/50'
                       }`}
                     >
                       {ritmo.popular && (
-                        <div className="absolute -top-3 left-4 bg-gradient-to-r from-[#ea5d35] to-[#c44e2b] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm shadow-orange-500/20 uppercase tracking-widest whitespace-nowrap animate-pulse border border-white z-10 hidden md:block">
-                          🔥 Mais Procurado
+                        <div className="absolute -top-3 left-4 bg-gradient-to-r from-rose-500 to-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm shadow-rose-500/20 uppercase tracking-widest whitespace-nowrap animate-pulse border border-white z-10 hidden md:block">
+                          ❤️ Vagas de Casal
                         </div>
                       )}
                       {ritmo.popular && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#ea5d35] to-[#c44e2b] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm shadow-orange-500/20 uppercase tracking-widest whitespace-nowrap animate-pulse border border-white z-10 md:hidden">
-                          🔥 Mais Procurado
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-rose-500 to-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm shadow-rose-500/20 uppercase tracking-widest whitespace-nowrap animate-pulse border border-white z-10 md:hidden">
+                          ❤️ Vagas de Casal
                         </div>
                       )}
                       
-                      <div className={`absolute top-5 right-5 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-[#ea5d35] bg-white' : 'border-gray-300'}`}>
-                        {isSelected && <div className="w-3 h-3 rounded-full bg-[#ea5d35]" />}
+                      <div className={`absolute top-5 right-5 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-[#e11d48] bg-white' : 'border-gray-300'}`}>
+                        {isSelected && <div className="w-3 h-3 rounded-full bg-[#e11d48]" />}
                       </div>
                       
                       <div className="mb-2">
-                        <p className="text-[11px] font-bold text-[#ea5d35] uppercase tracking-widest mb-1">{ritmo.dia.toUpperCase()}</p>
+                        <p className="text-[11px] font-bold text-[#e11d48] uppercase tracking-widest mb-1">{ritmo.dia.toUpperCase()}</p>
                         <h4 className={`text-xl font-display font-bold leading-tight mb-1 pr-8 ${isSelected ? 'text-[#682c0b]' : 'text-gray-800'}`}>{ritmo.nome}</h4>
-                        <span className="inline-block px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 text-[10px] font-bold uppercase">{ritmo.nivel}</span>
+                        <span className="inline-block px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 text-[10px] font-bold uppercase">{ritmo.nivel}</span>
                       </div>
                       <p className="text-sm font-medium text-gray-500 mt-4">{ritmo.hora}</p>
                     </button>
@@ -388,10 +388,10 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
               </div>
 
               {/* Tabela de Valores Abaixo da grade */}
-              <div className="bg-orange-50/50 border-t border-orange-100 p-6 md:p-8 mt-12 flex flex-col md:flex-row items-center justify-between relative gap-6 transition-all rounded-b-[40px] -mx-6 md:-mx-10 -mb-6 md:-mb-10">
+              <div className="bg-rose-50/50 border-t border-rose-100 p-6 md:p-8 mt-12 flex flex-col md:flex-row items-center justify-between relative gap-6 transition-all rounded-b-[40px] -mx-6 md:-mx-10 -mb-6 md:-mb-10">
                 <div className="relative z-10 flex-1 w-full flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start gap-1">
                     <div className="flex flex-col">
-                      <p className="text-orange-600 text-xs md:text-sm font-bold uppercase tracking-wide">
+                      <p className="text-rose-600 text-xs md:text-sm font-bold uppercase tracking-wide">
                         {cursosSelecionados.length} turma{cursosSelecionados.length !== 1 ? 's' : ''} <span className="hidden md:inline">em {selectedDaysCount} dia{selectedDaysCount !== 1 ? 's' : ''}</span>
                       </p>
                       <h3 className="text-3xl md:text-5xl font-display font-bold text-[#682c0b] leading-none mb-1">
@@ -417,7 +417,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                       }}
                       className={`px-6 md:px-8 py-3 md:py-4 rounded-full font-bold tracking-wide flex items-center justify-center gap-2 transition-all shrink-0 w-full md:w-auto h-fit min-h-[44px] ${
                         cursosSelecionados.length > 0 
-                        ? 'bg-[#ea5d35] hover:bg-[#c44e2b] text-white shadow-[0_4px_14px_rgba(234,93,53,0.3)]' 
+                        ? 'bg-[#e11d48] hover:bg-[#be123c] text-white shadow-[0_4px_14px_rgba(234,93,53,0.3)]' 
                         : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                       }`}
                    >
@@ -466,7 +466,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                           </h3>
                         </div>
                         <div className="pt-3 border-t border-[#e8c09a]/30">
-                          <p className="text-2xl font-display font-bold text-[#ea5d35]">R$ {finalValue.toFixed(2).replace('.', ',')}</p>
+                          <p className="text-2xl font-display font-bold text-[#e11d48]">R$ {finalValue.toFixed(2).replace('.', ',')}</p>
                           {selectedDaysCount === 2 && (
                             <p className="text-green-600 text-xs font-bold uppercase mt-1">✨ Baile Incluso</p>
                           )}
@@ -482,7 +482,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                                 type="checkbox" 
                                 checked={autorizacao} 
                                 onChange={(e) => { setAutorizacao(e.target.checked); setTouched(p => ({...p, autorizacao: true})); }}
-                                className="w-4 h-4 rounded border-gray-300 text-[#ea5d35] focus:ring-[#ea5d35]" 
+                                className="w-4 h-4 rounded border-gray-300 text-[#e11d48] focus:ring-[#e11d48]" 
                               />
                             </div>
                             <div>
@@ -508,7 +508,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                             className={`w-full py-3 rounded-full font-bold tracking-widest text-sm transition-all shadow-md flex items-center justify-center gap-2 ${
                               isSubmitting 
                               ? 'bg-gray-400 text-white cursor-wait' 
-                              : 'bg-[#ea5d35] text-white hover:bg-[#c44e2b] hover:shadow-lg hover:-translate-y-0.5'
+                              : 'bg-[#e11d48] text-white hover:bg-[#be123c] hover:shadow-lg hover:-translate-y-0.5'
                             }`}
                           >
                             {isSubmitting ? 'ENVIANDO...' : 'ENVIAR COMPROVANTE'}
@@ -526,7 +526,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
 
                 <div className="space-y-3">
                   <h3 className="text-base md:text-lg font-bold text-[#682c0b] flex items-center gap-2 border-b border-gray-100 pb-1.5">
-                    <User size={16} className="text-[#ea5d35]" /> Dados do Participante
+                    <User size={16} className="text-[#e11d48]" /> Dados do Participante
                   </h3>
                   
                   <div className="grid md:grid-cols-2 gap-2 sm:gap-3">
@@ -538,7 +538,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                          value={nome}
                          onChange={e => { setNome(e.target.value); setTouched(p => ({...p, nome: true})); }}
                          onBlur={() => setTouched(p => ({...p, nome: true}))}
-                         className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.nome && errors.nome ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
+                         className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#e11d48]/50 ${touched.nome && errors.nome ? 'border-red-400' : 'border-gray-200 focus:border-[#e11d48]'}`}
                          placeholder="Seu nome completo"
                        />
                        {touched.nome && errors.nome && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.nome}</p>}
@@ -553,7 +553,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                            value={nome2}
                            onChange={e => { setNome2(e.target.value); setTouched(p => ({...p, nome2: true})); }}
                            onBlur={() => setTouched(p => ({...p, nome2: true}))}
-                           className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.nome2 && errors.nome2 ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
+                           className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#e11d48]/50 ${touched.nome2 && errors.nome2 ? 'border-red-400' : 'border-gray-200 focus:border-[#e11d48]'}`}
                            placeholder="Nome da sua dupla"
                          />
                          {touched.nome2 && errors.nome2 && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.nome2}</p>}
@@ -569,7 +569,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                           value={email}
                           onChange={e => { setEmail(e.target.value); setTouched(p => ({...p, email: true})); }}
                           onBlur={() => setTouched(p => ({...p, email: true}))}
-                          className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.email && errors.email ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
+                          className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#e11d48]/50 ${touched.email && errors.email ? 'border-red-400' : 'border-gray-200 focus:border-[#e11d48]'}`}
                           placeholder="seu@email.com"
                         />
                         {touched.email && errors.email && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.email}</p>}
@@ -582,7 +582,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                           value={whatsapp}
                           onChange={e => { setWhatsapp(e.target.value); setTouched(p => ({...p, whatsapp: true})); }}
                           onBlur={() => setTouched(p => ({...p, whatsapp: true}))}
-                          className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#ea5d35]/50 ${touched.whatsapp && errors.whatsapp ? 'border-red-400' : 'border-gray-200 focus:border-[#ea5d35]'}`}
+                          className={`w-full px-3 py-2 text-sm rounded-lg border bg-gray-50 focus:bg-white transition-colors outline-none focus:ring-2 focus:ring-[#e11d48]/50 ${touched.whatsapp && errors.whatsapp ? 'border-red-400' : 'border-gray-200 focus:border-[#e11d48]'}`}
                           placeholder="(00) 00000-0000"
                         />
                         {touched.whatsapp && errors.whatsapp && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1"><AlertCircle size={10}/>{errors.whatsapp}</p>}
@@ -603,7 +603,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                           setComoConheceu(op);
                           setTouched(p => ({...p, comoConheceu: true}));
                         }}
-                        className={`py-1.5 px-2 rounded-lg text-xs font-bold transition-all border ${comoConheceu === op ? 'bg-[#fae8d4] border-[#ea5d35] text-[#682c0b]' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}
+                        className={`py-1.5 px-2 rounded-lg text-xs font-bold transition-all border ${comoConheceu === op ? 'bg-[#ffe4e6] border-[#e11d48] text-[#682c0b]' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}
                       >
                         {op}
                       </button>
@@ -617,15 +617,15 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                   <div className="bg-gray-50 rounded-xl p-3 md:p-4 border border-gray-200 flex flex-col justify-between space-y-3">
                     <div>
                       <h3 className="text-sm md:text-base font-bold text-[#682c0b] flex items-center gap-1.5 mb-2">
-                        <Smartphone size={16} className="text-[#ea5d35]" /> Pagamento via PIX
+                        <Smartphone size={16} className="text-[#e11d48]" /> Pagamento via PIX
                       </h3>
                       
                       <div className="flex flex-col items-center gap-2 bg-white p-2.5 rounded-lg border border-gray-100">
                         <div className="flex-1 space-y-1.5 w-full text-center sm:text-left">
                           <p className="text-xs text-gray-600">Copie a chave PIX (E-mail) para transferir <strong>R$ {finalValue.toFixed(2).replace('.', ',')}</strong>.</p>
                           <div className="flex flex-col sm:flex-row rounded-md overflow-hidden border border-gray-200 bg-gray-50 p-1 gap-1">
-                            <input type="text" readOnly value="gustavoissao2005@gmail.com" className="bg-transparent px-2 py-1 flex-1 text-xs font-mono font-medium outline-none text-gray-700 min-w-0 text-center sm:text-left selection:bg-orange-200" />
-                            <button type="button" onClick={handleCopyPix} className="px-2.5 py-1 bg-white border border-gray-200 rounded text-[10px] font-bold text-[#ea5d35] hover:bg-orange-50 transition-colors flex items-center justify-center gap-1 whitespace-nowrap">
+                            <input type="text" readOnly value="gustavoissao2005@gmail.com" className="bg-transparent px-2 py-1 flex-1 text-xs font-mono font-medium outline-none text-gray-700 min-w-0 text-center sm:text-left selection:bg-rose-200" />
+                            <button type="button" onClick={handleCopyPix} className="px-2.5 py-1 bg-white border border-gray-200 rounded text-[10px] font-bold text-[#e11d48] hover:bg-rose-50 transition-colors flex items-center justify-center gap-1 whitespace-nowrap">
                               {copied ? <Check size={12} /> : <Copy size={12} />} 
                               {copied ? 'Copiada!' : 'Copiar'}
                             </button>
@@ -635,15 +635,15 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                     </div>
 
                     <div className="pt-2 border-t border-gray-200 mt-2">
-                      <p className="text-[10px] text-orange-600 font-bold mb-1.5 text-center sm:text-left">
+                      <p className="text-[10px] text-rose-600 font-bold mb-1.5 text-center sm:text-left">
                         *Aviso: Compras no crédito possuem acréscimo de taxa da maquininha.
                       </p>
                       <div className="flex flex-col sm:flex-row gap-1.5">
                         <a href={getWhatsAppCreditText(false)} target="_blank" rel="noopener noreferrer" className="flex-1 py-1.5 px-2 bg-white border border-gray-200 rounded text-center text-[10px] font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-1 transition-colors">
-                          <CreditCard size={12} className="text-[#ea5d35]" /> Crédito à Vista
+                          <CreditCard size={12} className="text-[#e11d48]" /> Crédito à Vista
                         </a>
                         <a href={getWhatsAppCreditText(true)} target="_blank" rel="noopener noreferrer" className="flex-1 py-1.5 px-2 bg-white border border-gray-200 rounded text-center text-[10px] font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-1 transition-colors">
-                          <CreditCard size={12} className="text-[#ea5d35]" /> Crédito Parcelado
+                          <CreditCard size={12} className="text-[#e11d48]" /> Crédito Parcelado
                         </a>
                       </div>
                     </div>
@@ -652,7 +652,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                   {/* Comprovante Upload */}
                   <div className="space-y-1.5 flex flex-col h-full">
                     <h3 className="text-sm md:text-base font-bold text-[#682c0b] mb-1 flex items-center gap-1.5">
-                       <Upload size={16} className="text-[#ea5d35]"/> Comprovante de Pagamento
+                       <Upload size={16} className="text-[#e11d48]"/> Comprovante de Pagamento
                     </h3>
                     
                     <div 
@@ -662,7 +662,7 @@ export default function BookingFlow({ ritmos }: BookingFlowProps) {
                         ? 'border-green-400 bg-green-50 cursor-default' 
                         : touched.arquivo && errors.arquivo 
                           ? 'border-red-400 bg-red-50 hover:bg-red-100 cursor-pointer' 
-                          : 'border-[#e8c09a] bg-orange-50/50 hover:bg-orange-50 cursor-pointer'
+                          : 'border-[#e8c09a] bg-rose-50/50 hover:bg-rose-50 cursor-pointer'
                       }`}
                     >
                       <input 

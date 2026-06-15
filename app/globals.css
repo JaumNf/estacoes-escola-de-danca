@@ -53,13 +53,13 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 0.75rem;
     font-weight: bold;
     color: white;
-    background-color: #ea5d35;
+    background-color: #e11d48;
     border-radius: 9999px;
     text-decoration: none;
     transition: background-color 0.2s;
   }
   .chat-markdown a:hover {
-    background-color: #c85a32;
+    background-color: #be123c;
   }
 }
 
