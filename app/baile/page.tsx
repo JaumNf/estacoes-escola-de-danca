@@ -25,12 +25,11 @@ export default function BailePage() {
 
   const events = [
     { id: 'baile-namorados', name: 'Baile de Namorados: Teatro do Mundo (21/06)', active: true },
-    { id: 'baile-encerramento', name: 'Baile de Encerramento (23/05)', active: true },
     { id: 'baile-unidade-2', name: 'Baile Unidade 2 (Em breve)', active: false },
   ];
 
   const handleCopyPix = () => {
-    navigator.clipboard.writeText('gustavoissao2005@gmail.com');
+    navigator.clipboard.writeText('cursodeverao67@gmail.com');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -40,7 +39,7 @@ export default function BailePage() {
     setIsSubmitting(true);
     
     const eventName = events.find(ev => ev.id === selectedEvent)?.name || 'N/A';
-    const msg = `*Compra de Ingresso Baile*%0A%0A*Evento:* ${eventName}%0A*Tipo de Ingresso:* ${ticketType === 'individual' ? 'Individual' : 'Dupla'}%0A*Forma de Pagamento:* ${formaPagamento === 'pix' ? 'Pix' : 'Cartão de Crédito (Link)'}%0A%0A*Nome:* ${nome1}%0A*Telefone:* ${tel1}${ticketType === 'dupla' ? `%0A%0A*Nome 2:* ${nome2}%0A*Telefone 2:* ${tel2}` : ''}`;
+    const msg = `*Compra de Ingresso Baile*%0A%0A*Evento:* ${eventName}%0A*Tipo de Ingresso:* ${ticketType === 'individual' ? 'Individual' : 'Dupla'}%0A*Forma de Pagamento:* ${formaPagamento === 'pix' ? 'Pix' : 'Cartão de Crédito (Link)'}%0A%0A*Nome:* ${nome1}%0A*Telefone:* ${tel1}${ticketType === 'dupla' ? `%0A%0A*Nome 2:* ${nome2}%0A*Telefone 2:* ${tel2}` : ''}%0A%0AEncaminhe o comprovante de pagamento por aqui!`;
     
     const whatsappUrl = `https://wa.me/5567992630948?text=${msg}`;
     window.open(whatsappUrl, '_blank');
@@ -152,36 +151,7 @@ export default function BailePage() {
             <p className="text-[#874c2e]">Confira a programação das nossas unidades.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Unidade 1 */}
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="bg-white rounded-[32px] p-8 shadow-lg shadow-orange-900/5 border border-orange-100 relative overflow-hidden group"
-            >
-              <div className="absolute top-0 left-0 w-full h-1.5 bg-rose-500" />
-              <div className="flex items-center gap-3 mb-6">
-                <MapPin className="text-rose-500" size={20} />
-                <h3 className="font-bold text-[#682c0b] tracking-wide uppercase text-sm">Unidade 1</h3>
-              </div>
-              
-              <div className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <div className="bg-[#fffcf5] rounded-xl p-3 text-center min-w-[70px] border border-orange-100">
-                    <span className="block text-xl font-bold text-[#682c0b]">23</span>
-                    <span className="block text-xs font-bold text-rose-500 uppercase">MAI</span>
-                  </div>
-                  <div>
-                    <h4 className="text-xl font-display font-bold text-[#682c0b] mb-1">Baile de Encerramento!</h4>
-                    <p className="text-[#874c2e] text-sm mb-2">Venha celebrar o fim de um ciclo incrível com muita dança.</p>
-                    <div className="flex items-center gap-2 text-xs text-orange-500">
-                      <Clock size={14} />
-                      <span>Das 19h às 00h</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
+          <div className="max-w-xl mx-auto">
             {/* Teatro do Mundo */}
             <motion.div 
               whileHover={{ y: -5 }}
@@ -201,7 +171,9 @@ export default function BailePage() {
                   </div>
                   <div>
                     <h4 className="text-xl font-display font-bold text-[#682c0b] mb-1">Baile dos Namorados!</h4>
-                    <p className="text-[#874c2e] text-sm mb-2">Momento para curtir a noite a dois ou conhecer gente nova.</p>
+                    <p className="text-[#874c2e] text-sm mb-2">
+                      Momento para curtir a noite a dois ou conhecer gente nova. <strong>Haverá concurso de melhor look de casal (roupas combinando)!</strong>
+                    </p>
                     <div className="flex items-center gap-2 text-xs text-orange-500">
                       <Clock size={14} />
                       <span>A partir das 19h</span>
@@ -442,7 +414,7 @@ export default function BailePage() {
                         <div>
                           <p className="text-xs text-[#682c0b] mb-2">Copie a chave PIX (E-mail) para transferir o valor do ingresso.</p>
                           <div className="flex items-center bg-white rounded-lg border border-orange-200 p-1">
-                            <input type="text" readOnly value="gustavoissao2005@gmail.com" className="bg-transparent px-3 py-2 flex-1 text-sm font-mono font-medium outline-none text-[#682c0b] w-full" />
+                            <input type="text" readOnly value="cursodeverao67@gmail.com" className="bg-transparent px-3 py-2 flex-1 text-sm font-mono font-medium outline-none text-[#682c0b] w-full" />
                             <button 
                               type="button" 
                               onClick={handleCopyPix} 
