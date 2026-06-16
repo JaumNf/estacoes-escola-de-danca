@@ -20,21 +20,21 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Estúdio de Dança Estações | Dança com Alegria e Sem Neura',
+  title: 'Estações Escola de Dança | Dança com Alegria e Sem Neura',
   description: 'Descubra a arte da dança a dois em Campo Grande. Mais que técnica, um espaço para se divertir, conhecer pessoas e viver melhor. Vem dançar!',
   metadataBase: new URL('https://escoladedancaestacoes.vercel.app/'),
   manifest: '/manifest.json',
   openGraph: {
-    title: 'Estúdio de Dança Estações | Vem dançar em Campo Grande/MS!',
+    title: 'Estações Escola de Dança | Vem dançar em Campo Grande/MS!',
     description: 'Aprenda Forró, Vanera, Chamamé e mais em um ambiente sem julgamentos. Dança a dois para se divertir, fazer novos amigos e relaxar. Clique e junte-se a nós!',
     url: 'https://escoladedancaestacoes.vercel.app/',
-    siteName: 'Estúdio de Dança Estações',
+    siteName: 'Estações Escola de Dança',
     images: [
       {
         url: 'https://escoladedancaestacoes.vercel.app/URL_DA_SUA_IMAGEM.jpg', // TODO: SUBSTITUIR PELO LINK DA SUA IMAGEM
         width: 1200,
         height: 630,
-        alt: 'Turma animada dançando na Escola de Dança Estações',
+        alt: 'Turma animada dançando na Estações Escola de Dança',
       },
     ],
     locale: 'pt_BR',
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Estúdio de Dança Estações | Vem dançar em Campo Grande/MS!',
+    title: 'Estações Escola de Dança | Vem dançar em Campo Grande/MS!',
     description: 'Aprenda Forró, Vanera, Chamamé e mais em um ambiente sem julgamentos. Dança a dois para se divertir, fazer novos amigos e relaxar.',
     images: ['https://escoladedancaestacoes.vercel.app/URL_DA_SUA_IMAGEM.jpg'], // TODO: SUBSTITUIR PELO LINK DA SUA IMAGEM
   },

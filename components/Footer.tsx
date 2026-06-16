@@ -60,7 +60,7 @@ export default function Footer() {
       
       <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-brown-800/50 flex flex-col md:flex-row justify-between items-center gap-4 relative z-10">
         <p className="text-brown-300 text-sm">
-          &copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.
+          &copy; {new Date().getFullYear()} Estações Escola de Dança. Todos os direitos reservados.
         </p>
         <Link href="/politica-de-privacidade" className="text-brown-300 text-sm hover:text-terracotta transition-colors underline underline-offset-2">
           Política de Privacidade

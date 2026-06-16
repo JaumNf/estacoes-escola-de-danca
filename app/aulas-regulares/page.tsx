@@ -127,12 +127,14 @@ export default function AulasRegulares() {
             Aprenda a dançar do zero ao baile com a nossa metodologia acolhedora e focada na sua evolução.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button 
-              onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+            <a 
+              href="https://wa.me/5567992630948?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20minha%20aula%20experimental"
+              target="_blank"
+              rel="noopener noreferrer"
               className="bg-white text-orange-700 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-100 transition-colors duration-300 shadow-lg inline-flex items-center gap-2 cursor-pointer"
             >
               Agendar aula experimental
-            </button>
+            </a>
             <button 
               onClick={() => document.getElementById('horarios')?.scrollIntoView({ behavior: 'smooth' })}
               className="bg-orange-600 text-orange-50 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-800 transition-colors duration-300 shadow-lg inline-flex items-center gap-2"
@@ -299,7 +301,7 @@ export default function AulasRegulares() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-orange-800 flex flex-col md:flex-row items-center justify-between gap-4 text-orange-400">
-          <p>&copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} Estações Escola de Dança. Todos os direitos reservados.</p>
           <Link href="/politica-de-privacidade" className="hover:text-orange-300 transition-colors underline underline-offset-2">
             Política de Privacidade
           </Link>

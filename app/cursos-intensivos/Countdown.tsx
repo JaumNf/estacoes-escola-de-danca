@@ -48,7 +48,7 @@ export default function Countdown() {
     const event = {
       title: 'Curso de Outono Estações (Namorados)',
       details: 'Não perca o curso intensivo focado em forró!',
-      location: 'Escola de Dança Estações',
+      location: 'Estações Escola de Dança',
       dates: '20260621T170000Z/20260621T200000Z'
     };
     const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&details=${encodeURIComponent(event.details)}&location=${encodeURIComponent(event.location)}&dates=${event.dates}`;

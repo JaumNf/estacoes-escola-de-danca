@@ -15,7 +15,7 @@ export default function ShareButton() {
   const handleShare = async () => {
     const shareData = {
       title: document.title,
-      text: 'Confira a Escola de Dança Estações!',
+      text: 'Confira a Estações Escola de Dança!',
       url: window.location.href,
     };
 

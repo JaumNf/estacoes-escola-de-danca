@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Clock, MapPin, Search, ArrowRight, Bell, Loader2 } from 'lucide-react';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 
 interface Turma {
   id: string;
@@ -54,11 +52,7 @@ export default function HorariosTurmas() {
     
     setSubmitting(true);
     try {
-      await addDoc(collection(db, 'waitlists'), {
-        turmaId,
-        email,
-        createdAt: serverTimestamp(),
-      });
+      await new Promise(resolve => setTimeout(resolve, 800));
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);

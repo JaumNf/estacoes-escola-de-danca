@@ -14,70 +14,7 @@ import Countdown from './Countdown';
 import Footer from '@/components/Footer';
 
 
-const RITMOS_OPCOES = [
-  { id: 'forro_casais', nome: 'Forró - Casais', nivel: 'Do zero', dia: '21 de Junho', hora: '14h00 às 15h20', popular: true },
-  { id: 'forro_solteiros', nome: 'Forró - Solteiros', nivel: 'Do zero', dia: '21 de Junho', hora: '15h40 às 17h00' },
-];
-
 export default function CursosIntensivos() {
-  const [cursosSelecionados, setCursosSelecionados] = useState<string[]>([]);
-
-  const toggleCurso = (id: string) => {
-    setCursosSelecionados(prev => prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]);
-  };
-
-  const [tipoInscricao, setTipoInscricao] = useState<'individual' | 'dupla'>('individual');
-  const [isUniversitario, setIsUniversitario] = useState(false);
-  const [nome, setNome] = useState('');
-  const [nomeDupla, setNomeDupla] = useState('');
-
-  const getValorDetails = () => {
-    const baseValue = cursosSelecionados.length * (tipoInscricao === 'individual' ? 35 : 50);
-    let discountPercent = 0;
-    
-    if (cursosSelecionados.length >= 5) {
-      discountPercent = 10;
-    } else if (cursosSelecionados.length === 4) {
-      discountPercent = 7.5;
-    } else if (cursosSelecionados.length === 3) {
-      discountPercent = 5;
-    }
-    
-    const discountAmount = baseValue * (discountPercent / 100);
-    const finalValue = baseValue - discountAmount;
-    
-    return {
-       baseValue,
-       discountPercent,
-       discountAmount,
-       finalValue
-    };
-  };
-
-  const handleWhatsAppRedirect = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    let mensagem = `Olá! Gostaria de me matricular nos cursos intensivos.%0A%0A`;
-    
-    const ritmosNomes = cursosSelecionados.map(id => {
-      const ritmo = RITMOS_OPCOES.find(r => r.id === id);
-      return ritmo ? `${ritmo.nome} (${ritmo.nivel})` : id;
-    });
-
-    mensagem += `*Ritmos Selecionados:* ${ritmosNomes.length > 0 ? ritmosNomes.join(', ') : 'Nenhum'}%0A`;
-    mensagem += `*Tipo de Inscrição:* ${tipoInscricao === 'individual' ? 'Individual' : 'Em Dupla'}%0A`;
-    mensagem += `*Universitário:* ${isUniversitario ? 'Sim' : 'Não'}%0A`;
-    
-    if (tipoInscricao === 'individual') {
-      mensagem += `*Nome:* ${nome}%0A`;
-    } else {
-      mensagem += `*Nome da Dupla:* ${nomeDupla}%0A`;
-    }
-    
-    const whatsappUrl = `https://wa.me/5567992630948?text=${mensagem}`;
-    window.open(whatsappUrl, '_blank');
-  };
-
   return (
     <main className="min-h-screen bg-rose-50 relative">
       <Header />
@@ -249,6 +186,33 @@ export default function CursosIntensivos() {
                       Do Zero
                     </div>
                   </button>
+
+                  {/* Baile */}
+                  <div className="w-full text-left bg-rose-600/10 rounded-[20px] p-4 shadow-sm border border-rose-200 mt-4 relative overflow-hidden">
+                    <div className="absolute -top-3 right-4 bg-rose-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-widest whitespace-nowrap border border-white flex gap-1 items-center z-20">
+                      <Music size={10} className="fill-white" />
+                      ABERTO AO PÚBLICO
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-rose-500/10 to-transparent pointer-events-none" />
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-2 text-rose-800 text-xs font-bold mb-1">
+                        <Clock size={14} />
+                        <span>A partir das 19:30</span>
+                      </div>
+                      <h4 className="text-lg font-bold text-[#682c0b] mb-1">Baile: Teatro do Mundo</h4>
+                      <p className="text-sm text-rose-800 font-medium mb-3">
+                        Edição Especial Namorados! Momento para curtir a noite no Teatro do Mundo, com comidas e bebidas no local.
+                      </p>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        <div className="inline-block px-3 py-1 bg-rose-200 text-rose-800 text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm">
+                          BAILE COMPLETO
+                        </div>
+                        <div className="inline-block px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm">
+                          NA PRÁTICA
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -388,7 +352,7 @@ export default function CursosIntensivos() {
         <WaveDivider position="top" colorClass="fill-[#3d1c04]" />
         <div className="max-w-6xl mx-auto relative z-10">
         <div className="w-full bg-white/5 border border-white/10 rounded-[32px] overflow-hidden shadow-2xl backdrop-blur-sm">
-           <BookingFlow ritmos={RITMOS_OPCOES} />
+           <BookingFlow />
         </div>
       </div>
       </section>

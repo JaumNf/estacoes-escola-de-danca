@@ -14,7 +14,7 @@ export default function PoliticaPrivacidade() {
         
         <div className="prose prose-brown max-w-none space-y-6 text-brown-800 leading-relaxed text-lg">
           <p>
-            A <strong>Escola de Dança Estações</strong> valoriza a sua privacidade e está comprometida em proteger os seus dados pessoais. 
+            A <strong>Estações Escola de Dança</strong> valoriza a sua privacidade e está comprometida em proteger os seus dados pessoais. 
             Esta Política de Privacidade explica como coletamos, usamos e protegemos as informações que você nos fornece ao utilizar nosso site, 
             em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018).
           </p>

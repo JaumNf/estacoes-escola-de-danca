@@ -166,7 +166,7 @@ export default function Header() {
                   transition={{ delay: 0.6 }}
                   className="mt-12 pt-8 border-t border-brown-200/60 text-center"
                 >
-                  <p className="text-brown-400 text-xs font-medium">© {new Date().getFullYear()} Escola de Dança Estações</p>
+                  <p className="text-brown-400 text-xs font-medium">© {new Date().getFullYear()} Estações Escola de Dança</p>
                 </motion.div>
               </div>
             </motion.div>

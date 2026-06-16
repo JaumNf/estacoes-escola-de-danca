@@ -3,8 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Star, Send, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 
 export default function FeedbackSection() {
   const [name, setName] = useState('');
@@ -90,12 +88,8 @@ export default function FeedbackSection() {
     setIsSubmitting(true);
 
     try {
-      await addDoc(collection(db, 'feedbacks'), {
-        name,
-        rating,
-        content: feedback,
-        createdAt: serverTimestamp()
-      });
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       // Play success sound
       try {

@@ -5,8 +5,6 @@ import WaveDivider from '@/components/WaveDivider';
 import { Mail, Phone, MapPin, Send, Instagram, Facebook, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 
 export default function Contato() {
   const [name, setName] = useState('');
@@ -65,31 +63,22 @@ export default function Contato() {
     }
     
     setIsSubmitting(true);
+    
+    // Convert to WhatsApp message
+    const msg = `*Novo Contato do Site*%0A%0A*Nome:* ${name}%0A*E-mail:* ${email}%0A*Telefone:* ${phone}%0A*Motivo:* ${reason}%0A*Mensagem:* ${message}`;
+    const whatsappUrl = `https://wa.me/5567992630948?text=${msg}`;
+    window.open(whatsappUrl, '_blank');
 
-    try {
-      await addDoc(collection(db, 'contatos'), {
-        name,
-        email,
-        phone,
-        reason,
-        message,
-        createdAt: serverTimestamp()
-      });
-
-      setSuccess(true);
-      setName('');
-      setEmail('');
-      setPhone('');
-      setReason('');
-      setMessage('');
-      
-      setTimeout(() => setSuccess(false), 5000);
-    } catch (error) {
-      console.error("Error adding document: ", error);
-      alert('Erro ao enviar mensagem. Tente novamente.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    setSuccess(true);
+    setName('');
+    setEmail('');
+    setPhone('');
+    setReason('');
+    setMessage('');
+    setTouched({ name: false, email: false, phone: false, reason: false, message: false });
+    
+    setTimeout(() => setSuccess(false), 5000);
+    setIsSubmitting(false);
   };
 
   return (
@@ -336,7 +325,7 @@ export default function Contato() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-brown-800 flex flex-col md:flex-row items-center justify-between gap-4 text-brown-400">
-          <p>&copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} Estações Escola de Dança. Todos os direitos reservados.</p>
           <Link href="/politica-de-privacidade" className="hover:text-terracotta transition-colors underline underline-offset-2">
             Política de Privacidade
           </Link>

@@ -8,13 +8,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import { createPortal } from 'react-dom';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '@/lib/firebase';
 
 export default function BailePage() {
   const [ticketType, setTicketType] = useState<'individual' | 'dupla'>('individual');
-  const [selectedEvent, setSelectedEvent] = useState('baile-encerramento');
+  const [selectedEvent, setSelectedEvent] = useState('baile-namorados');
 
   const [nome1, setNome1] = useState('');
   const [nome2, setNome2] = useState('');
@@ -22,13 +19,12 @@ export default function BailePage() {
   const [tel2, setTel2] = useState('');
   const [formaPagamento, setFormaPagamento] = useState<'pix' | 'credito'>('pix');
   const [copied, setCopied] = useState(false);
-  const [arquivo, setArquivo] = useState<File | null>(null);
-  const [fileError, setFileError] = useState('');
-  
+      
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const events = [
+    { id: 'baile-namorados', name: 'Baile de Namorados: Teatro do Mundo (21/06)', active: true },
     { id: 'baile-encerramento', name: 'Baile de Encerramento (23/05)', active: true },
     { id: 'baile-unidade-2', name: 'Baile Unidade 2 (Em breve)', active: false },
   ];
@@ -41,46 +37,20 @@ export default function BailePage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (formaPagamento === 'pix' && !arquivo) {
-      setFileError('Por favor, anexe o comprovante do PIX.');
-      return;
-    }
-
     setIsSubmitting(true);
     
-    try {
-      let comprovanteUrl = '';
-      if (formaPagamento === 'pix' && arquivo) {
-        const storageRef = ref(storage, `comprovantes_baile/${Date.now()}_${arquivo.name}`);
-        const snapshot = await uploadBytes(storageRef, arquivo);
-        comprovanteUrl = await getDownloadURL(snapshot.ref);
-      }
+    const eventName = events.find(ev => ev.id === selectedEvent)?.name || 'N/A';
+    const msg = `*Compra de Ingresso Baile*%0A%0A*Evento:* ${eventName}%0A*Tipo de Ingresso:* ${ticketType === 'individual' ? 'Individual' : 'Dupla'}%0A*Forma de Pagamento:* ${formaPagamento === 'pix' ? 'Pix' : 'Cartão de Crédito (Link)'}%0A%0A*Nome:* ${nome1}%0A*Telefone:* ${tel1}${ticketType === 'dupla' ? `%0A%0A*Nome 2:* ${nome2}%0A*Telefone 2:* ${tel2}` : ''}`;
+    
+    const whatsappUrl = `https://wa.me/5567992630948?text=${msg}`;
+    window.open(whatsappUrl, '_blank');
 
-      await addDoc(collection(db, 'ingressos_baile'), {
-        evento: events.find(ev => ev.id === selectedEvent)?.name || 'N/A',
-        tipoIngresso: ticketType === 'individual' ? 'Individual' : 'Dupla',
-        formaPagamento: formaPagamento === 'pix' ? 'Pix' : 'Cartão de Crédito (Link)',
-        nome1,
-        tel1,
-        nome2: ticketType === 'dupla' ? nome2 : null,
-        tel2: ticketType === 'dupla' ? tel2 : null,
-        comprovanteUrl,
-        createdAt: serverTimestamp()
-      });
-
-      setSubmitted(true);
-      setNome1('');
-      setNome2('');
-      setTel1('');
-      setTel2('');
-      setArquivo(null);
-      setFileError('');
-    } catch (error) {
-      console.error("Error adding document: ", error);
-      alert('Erro ao processar a compra. Tente novamente.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    setSubmitted(true);
+    setNome1('');
+    setNome2('');
+    setTel1('');
+    setTel2('');
+    setIsSubmitting(false);
   };
 
   const closeModal = () => {
@@ -88,11 +58,11 @@ export default function BailePage() {
   };
 
   return (
-    <main className="min-h-screen bg-violet-50 flex flex-col">
+    <main className="min-h-screen bg-[#fffcf5] flex flex-col relative before:absolute before:inset-0 before:bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] before:opacity-60 before:pointer-events-none before:z-[100]">
       <Header />
       
       {/* Hero Section */}
-      <section className="relative h-screen w-full bg-[#0a0118] text-violet-50 overflow-hidden flex items-center justify-center">
+      <section className="relative h-screen w-full bg-[#311707] text-orange-50 overflow-hidden flex items-center justify-center">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -108,7 +78,7 @@ export default function BailePage() {
         
         {/* Overlays */}
         <div className="absolute inset-0 bg-black/60 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0118]/90 via-black/50 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#311707]/90 via-black/50 to-transparent pointer-events-none" />
 
         <div className="max-w-7xl mx-auto text-center relative z-30 px-6 mt-16">
           <motion.h1 
@@ -123,7 +93,7 @@ export default function BailePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-xl text-violet-50 max-w-2xl mx-auto mb-10 drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] font-medium"
+            className="text-xl text-orange-50 max-w-2xl mx-auto mb-10 drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] font-medium"
           >
             A prática faz o dançarino. Venha se divertir, conhecer gente nova e colocar em prática tudo o que você aprendeu em aula.
           </motion.p>
@@ -135,14 +105,14 @@ export default function BailePage() {
               e.preventDefault();
               document.getElementById('ingressos')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="bg-fuchsia-600 text-white px-8 py-4 rounded-full font-bold tracking-wide hover:bg-fuchsia-700 transition-colors duration-300 shadow-lg inline-flex items-center gap-2 relative z-50 pointer-events-auto"
+            className="bg-rose-600 text-white px-8 py-4 rounded-full font-bold tracking-wide hover:bg-rose-800 transition-colors duration-300 shadow-lg inline-flex items-center gap-2 relative z-50 pointer-events-auto"
           >
             Garanta seu Ingresso <Ticket size={20} />
           </motion.button>
         </div>
         
         <div className="absolute bottom-0 left-0 w-full z-20 pointer-events-none">
-          <WaveDivider position="bottom" colorClass="fill-violet-50" />
+          <WaveDivider position="bottom" colorClass="fill-orange-50" />
         </div>
       </section>
 
@@ -155,11 +125,11 @@ export default function BailePage() {
         className="py-20 px-6"
       >
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <div className="w-16 h-16 bg-fuchsia-100 rounded-full flex items-center justify-center mx-auto text-fuchsia-600 mb-6">
+          <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto text-rose-600 mb-6">
             <Music size={32} />
           </div>
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-violet-900">O Ambiente Perfeito</h2>
-          <p className="text-lg text-violet-700 leading-relaxed max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-display font-bold text-[#682c0b]">O Ambiente Perfeito</h2>
+          <p className="text-lg text-[#644230] leading-relaxed max-w-3xl mx-auto">
             Nossos bailes são pensados para serem o ambiente mais acolhedor e divertido possível. 
             Aqui, o objetivo não é a perfeição, mas a conexão. Com iluminação aconchegante, 
             música de qualidade e uma comunidade vibrante, você vai descobrir que a dança de salão 
@@ -174,36 +144,36 @@ export default function BailePage() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="py-20 px-6 bg-violet-100/30"
+        className="py-20 px-6 bg-[#fae8d4]"
       >
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-violet-900 mb-4">Próximos Eventos</h2>
-            <p className="text-violet-600">Confira a programação das nossas unidades.</p>
+            <h2 className="text-3xl md:text-4xl font-display font-bold text-[#682c0b] mb-4">Próximos Eventos</h2>
+            <p className="text-[#874c2e]">Confira a programação das nossas unidades.</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Unidade 1 */}
             <motion.div 
               whileHover={{ y: -5 }}
-              className="bg-white rounded-[32px] p-8 shadow-lg shadow-violet-900/5 border border-violet-100 relative overflow-hidden group"
+              className="bg-white rounded-[32px] p-8 shadow-lg shadow-orange-900/5 border border-orange-100 relative overflow-hidden group"
             >
-              <div className="absolute top-0 left-0 w-full h-1.5 bg-fuchsia-500" />
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-rose-500" />
               <div className="flex items-center gap-3 mb-6">
-                <MapPin className="text-fuchsia-500" size={20} />
-                <h3 className="font-bold text-violet-900 tracking-wide uppercase text-sm">Unidade 1</h3>
+                <MapPin className="text-rose-500" size={20} />
+                <h3 className="font-bold text-[#682c0b] tracking-wide uppercase text-sm">Unidade 1</h3>
               </div>
               
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="bg-violet-50 rounded-xl p-3 text-center min-w-[70px] border border-violet-100">
-                    <span className="block text-xl font-bold text-violet-900">23</span>
-                    <span className="block text-xs font-bold text-fuchsia-500 uppercase">MAI</span>
+                  <div className="bg-[#fffcf5] rounded-xl p-3 text-center min-w-[70px] border border-orange-100">
+                    <span className="block text-xl font-bold text-[#682c0b]">23</span>
+                    <span className="block text-xs font-bold text-rose-500 uppercase">MAI</span>
                   </div>
                   <div>
-                    <h4 className="text-xl font-display font-bold text-violet-900 mb-1">Baile de Encerramento!</h4>
-                    <p className="text-violet-600 text-sm mb-2">Venha celebrar o fim de um ciclo incrível com muita dança.</p>
-                    <div className="flex items-center gap-2 text-xs text-violet-500">
+                    <h4 className="text-xl font-display font-bold text-[#682c0b] mb-1">Baile de Encerramento!</h4>
+                    <p className="text-[#874c2e] text-sm mb-2">Venha celebrar o fim de um ciclo incrível com muita dança.</p>
+                    <div className="flex items-center gap-2 text-xs text-orange-500">
                       <Clock size={14} />
                       <span>Das 19h às 00h</span>
                     </div>
@@ -212,18 +182,34 @@ export default function BailePage() {
               </div>
             </motion.div>
 
-            {/* Unidade 2 */}
-            <div className="bg-white/60 rounded-[32px] p-8 shadow-sm border border-violet-100/50 flex flex-col items-center justify-center text-center opacity-70">
-              <div className="flex items-center gap-3 mb-6 opacity-50">
-                <MapPin size={20} />
-                <h3 className="font-bold text-violet-900 tracking-wide uppercase text-sm">Unidade 2</h3>
+            {/* Teatro do Mundo */}
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-white rounded-[32px] p-8 shadow-lg shadow-orange-900/5 border border-orange-100 relative overflow-hidden group"
+            >
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-rose-500" />
+              <div className="flex items-center gap-3 mb-6">
+                <MapPin className="text-rose-500" size={20} />
+                <h3 className="font-bold text-[#682c0b] tracking-wide uppercase text-sm">Teatro do Mundo</h3>
               </div>
-              <div className="py-8">
-                <Calendar className="mx-auto text-violet-300 mb-3" size={40} />
-                <p className="text-violet-500 font-medium">Nenhum evento programado</p>
-                <p className="text-violet-400 text-sm mt-1">Aguarde as novidades!</p>
+              
+              <div className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="bg-[#fffcf5] rounded-xl p-3 text-center min-w-[70px] border border-orange-100">
+                    <span className="block text-xl font-bold text-[#682c0b]">21</span>
+                    <span className="block text-xs font-bold text-rose-500 uppercase">JUN</span>
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-display font-bold text-[#682c0b] mb-1">Baile dos Namorados!</h4>
+                    <p className="text-[#874c2e] text-sm mb-2">Momento para curtir a noite a dois ou conhecer gente nova.</p>
+                    <div className="flex items-center gap-2 text-xs text-orange-500">
+                      <Clock size={14} />
+                      <span>A partir das 19h</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </motion.section>
@@ -235,32 +221,32 @@ export default function BailePage() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="py-24 px-6 bg-[#0a0118] text-violet-50 relative overflow-hidden"
+        className="py-24 px-6 bg-[#311707] text-orange-50 relative overflow-hidden"
       >
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-fuchsia-500 rounded-full opacity-5 blur-3xl -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-violet-900 rounded-full opacity-10 blur-3xl translate-y-1/2 -translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500 rounded-full opacity-5 blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-900 rounded-full opacity-10 blur-3xl translate-y-1/2 -translate-x-1/2" />
 
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="grid md:grid-cols-2 gap-12 items-start">
             
             <div className="space-y-8 md:sticky md:top-32">
               <div>
-                <span className="text-fuchsia-400 font-bold tracking-widest uppercase text-sm mb-2 block">Venda Antecipada</span>
-                <h2 className="text-4xl md:text-5xl font-display font-bold text-violet-50 mb-4">Garanta seu Ingresso</h2>
-                <p className="text-violet-200 text-lg leading-relaxed">
+                <span className="text-rose-500 font-bold tracking-widest uppercase text-sm mb-2 block">Venda Antecipada</span>
+                <h2 className="text-4xl md:text-5xl font-display font-bold text-orange-50 mb-4">Garanta seu Ingresso</h2>
+                <p className="text-orange-200 text-lg leading-relaxed">
                   Compre antecipado e garanta o melhor valor para curtir o Baile de Encerramento.
                 </p>
               </div>
 
-              <div className="bg-violet-900/50 rounded-2xl p-6 border border-violet-800 space-y-4">
+              <div className="bg-orange-900/50 rounded-2xl p-6 border border-orange-800 space-y-4">
                 <div className="flex items-start gap-3">
-                  <AlertCircle className="text-fuchsia-400 shrink-0 mt-0.5" size={20} />
+                  <AlertCircle className="text-rose-500 shrink-0 mt-0.5" size={20} />
                   <div className="space-y-2">
-                    <p className="text-violet-200 text-sm font-medium">Informações Importantes:</p>
-                    <ul className="text-violet-400 text-xs space-y-1 list-disc list-inside">
+                    <p className="text-orange-200 text-sm font-medium">Informações Importantes:</p>
+                    <ul className="text-orange-400 text-xs space-y-1 list-disc list-inside">
                       <li>Vendas antecipadas encerram 2h antes do evento.</li>
-                      <li>Na hora: <strong className="text-violet-200">R$ 25,00</strong> (Dinheiro ou Pix).</li>
+                      <li>Na hora: <strong className="text-orange-200">R$ 25,00</strong> (Dinheiro ou Pix).</li>
                       <li>Acréscimo de taxas para pagamentos via link no Cartão.</li>
                     </ul>
                   </div>
@@ -268,7 +254,7 @@ export default function BailePage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-[32px] p-8 text-violet-900 shadow-2xl shadow-black/20">
+            <div className="bg-white rounded-[32px] p-8 text-[#682c0b] shadow-2xl shadow-black/20">
               <h3 className="text-2xl font-display font-bold mb-6 text-center">Selecione seu Ingresso</h3>
               
               <form 
@@ -277,7 +263,7 @@ export default function BailePage() {
               >
                 {/* Event Selection */}
                 <div className="space-y-3">
-                  <label className="text-sm font-bold text-violet-600 uppercase tracking-wide">Evento</label>
+                  <label className="text-sm font-bold text-[#874c2e] uppercase tracking-wide">Evento</label>
                   <div className="space-y-2">
                     {events.map((event) => (
                       <div
@@ -285,19 +271,19 @@ export default function BailePage() {
                         onClick={() => event.active && setSelectedEvent(event.id)}
                         className={`w-full p-4 rounded-xl border-2 transition-all flex items-center justify-between group cursor-pointer ${
                           selectedEvent === event.id
-                            ? 'border-fuchsia-500 bg-fuchsia-50'
+                            ? 'border-rose-500 bg-rose-50'
                             : event.active 
-                              ? 'border-violet-100 hover:border-violet-200'
-                              : 'border-violet-100 opacity-50 cursor-not-allowed bg-violet-50'
+                              ? 'border-orange-100 hover:border-orange-200'
+                              : 'border-orange-100 opacity-50 cursor-not-allowed bg-[#fffcf5]'
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
-                            selectedEvent === event.id ? 'border-fuchsia-500' : 'border-violet-300'
+                            selectedEvent === event.id ? 'border-rose-500' : 'border-orange-300'
                           }`}>
-                            {selectedEvent === event.id && <div className="w-2.5 h-2.5 rounded-full bg-fuchsia-500" />}
+                            {selectedEvent === event.id && <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />}
                           </div>
-                          <span className={`font-bold ${selectedEvent === event.id ? 'text-violet-900' : 'text-violet-600'}`}>
+                          <span className={`font-bold ${selectedEvent === event.id ? 'text-[#682c0b]' : 'text-[#874c2e]'}`}>
                             {event.name}
                           </span>
                         </div>
@@ -308,51 +294,51 @@ export default function BailePage() {
 
                 {/* Ticket Type Selection */}
                 <div className="space-y-3">
-                  <label className="text-sm font-bold text-violet-600 uppercase tracking-wide">Tipo de Ingresso</label>
+                  <label className="text-sm font-bold text-[#874c2e] uppercase tracking-wide">Tipo de Ingresso</label>
                   <div className="space-y-2">
                     <div
                       onClick={() => setTicketType('individual')}
                       className={`w-full p-4 rounded-xl border-2 transition-all flex items-center justify-between group cursor-pointer ${
                         ticketType === 'individual' 
-                          ? 'border-fuchsia-500 bg-fuchsia-50' 
-                          : 'border-violet-100 hover:border-violet-200'
+                          ? 'border-rose-500 bg-rose-50' 
+                          : 'border-orange-100 hover:border-orange-200'
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                          ticketType === 'individual' ? 'border-fuchsia-500' : 'border-violet-300'
+                          ticketType === 'individual' ? 'border-rose-500' : 'border-orange-300'
                         }`}>
-                          {ticketType === 'individual' && <div className="w-2.5 h-2.5 rounded-full bg-fuchsia-500" />}
+                          {ticketType === 'individual' && <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />}
                         </div>
-                        <span className="font-bold text-violet-800">Individual</span>
+                        <span className="font-bold text-[#682c0b]">Individual</span>
                       </div>
-                      <span className="text-xl font-bold text-violet-900">R$ 20</span>
+                      <span className="text-xl font-bold text-[#682c0b]">R$ 20</span>
                     </div>
 
                     <div
                       onClick={() => setTicketType('dupla')}
                       className={`w-full p-4 rounded-xl border-2 transition-all flex items-center justify-between group cursor-pointer ${
                         ticketType === 'dupla' 
-                          ? 'border-fuchsia-500 bg-fuchsia-50' 
-                          : 'border-violet-100 hover:border-violet-200'
+                          ? 'border-rose-500 bg-rose-50' 
+                          : 'border-orange-100 hover:border-orange-200'
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                          ticketType === 'dupla' ? 'border-fuchsia-500' : 'border-violet-300'
+                          ticketType === 'dupla' ? 'border-rose-500' : 'border-orange-300'
                         }`}>
-                          {ticketType === 'dupla' && <div className="w-2.5 h-2.5 rounded-full bg-fuchsia-500" />}
+                          {ticketType === 'dupla' && <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />}
                         </div>
-                        <span className="font-bold text-violet-800">Dupla</span>
+                        <span className="font-bold text-[#682c0b]">Dupla</span>
                       </div>
-                      <span className="text-xl font-bold text-violet-900">R$ 35</span>
+                      <span className="text-xl font-bold text-[#682c0b]">R$ 35</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Dados */}
                 <div className="space-y-3 pt-2">
-                  <label className="text-sm font-bold text-violet-600 uppercase tracking-wide">Dados</label>
+                  <label className="text-sm font-bold text-[#874c2e] uppercase tracking-wide">Dados</label>
                   
                   {ticketType === 'individual' ? (
                     <div className="space-y-3">
@@ -363,7 +349,7 @@ export default function BailePage() {
                         placeholder="Seu Nome Completo"
                         value={nome1}
                         onChange={(e) => setNome1(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-violet-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-violet-50/50 text-sm"
+                        className="w-full px-4 py-3 rounded-xl border border-orange-100 focus:outline-none focus:ring-2 focus:ring-rose-500 bg-[#fffcf5]/50 text-sm"
                       />
                       <input 
                         type="tel" 
@@ -372,7 +358,7 @@ export default function BailePage() {
                         placeholder="Seu WhatsApp"
                         value={tel1}
                         onChange={(e) => setTel1(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-violet-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-violet-50/50 text-sm"
+                        className="w-full px-4 py-3 rounded-xl border border-orange-100 focus:outline-none focus:ring-2 focus:ring-rose-500 bg-[#fffcf5]/50 text-sm"
                       />
                     </div>
                   ) : (
@@ -385,7 +371,7 @@ export default function BailePage() {
                           placeholder="Nome da Pessoa 1"
                           value={nome1}
                           onChange={(e) => setNome1(e.target.value)}
-                          className="flex-1 px-4 py-3 rounded-xl border border-violet-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-violet-50/50 text-sm"
+                          className="flex-1 px-4 py-3 rounded-xl border border-orange-100 focus:outline-none focus:ring-2 focus:ring-rose-500 bg-[#fffcf5]/50 text-sm"
                         />
                         <input 
                           type="tel" 
@@ -394,7 +380,7 @@ export default function BailePage() {
                           placeholder="WhatsApp Pessoa 1"
                           value={tel1}
                           onChange={(e) => setTel1(e.target.value)}
-                          className="flex-1 px-4 py-3 rounded-xl border border-violet-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-violet-50/50 text-sm"
+                          className="flex-1 px-4 py-3 rounded-xl border border-orange-100 focus:outline-none focus:ring-2 focus:ring-rose-500 bg-[#fffcf5]/50 text-sm"
                         />
                       </div>
                       <div className="flex flex-col gap-3 md:flex-row">
@@ -405,7 +391,7 @@ export default function BailePage() {
                           placeholder="Nome da Pessoa 2"
                           value={nome2}
                           onChange={(e) => setNome2(e.target.value)}
-                          className="flex-1 px-4 py-3 rounded-xl border border-violet-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-violet-50/50 text-sm"
+                          className="flex-1 px-4 py-3 rounded-xl border border-orange-100 focus:outline-none focus:ring-2 focus:ring-rose-500 bg-[#fffcf5]/50 text-sm"
                         />
                         <input 
                           type="tel" 
@@ -414,7 +400,7 @@ export default function BailePage() {
                           placeholder="WhatsApp Pessoa 2"
                           value={tel2}
                           onChange={(e) => setTel2(e.target.value)}
-                          className="flex-1 px-4 py-3 rounded-xl border border-violet-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-violet-50/50 text-sm"
+                          className="flex-1 px-4 py-3 rounded-xl border border-orange-100 focus:outline-none focus:ring-2 focus:ring-rose-500 bg-[#fffcf5]/50 text-sm"
                         />
                       </div>
                     </div>
@@ -423,24 +409,24 @@ export default function BailePage() {
 
                 {/* Pagamento */}
                 <div className="space-y-3 pt-2">
-                  <label className="text-sm font-bold text-violet-600 uppercase tracking-wide">Forma de Pagamento</label>
+                  <label className="text-sm font-bold text-[#874c2e] uppercase tracking-wide">Forma de Pagamento</label>
                   <div className="grid grid-cols-2 gap-3">
                     <div 
                       onClick={() => setFormaPagamento('pix')}
                       className={`p-3 rounded-xl border-2 text-center cursor-pointer transition-all ${
-                        formaPagamento === 'pix' ? 'border-fuchsia-500 bg-fuchsia-50 text-violet-900' : 'border-violet-100 hover:border-violet-200 text-violet-600'
+                        formaPagamento === 'pix' ? 'border-rose-500 bg-rose-50 text-[#682c0b]' : 'border-orange-100 hover:border-orange-200 text-[#874c2e]'
                       }`}
                     >
-                      <Smartphone size={20} className={`mx-auto mb-1 ${formaPagamento === 'pix' ? 'text-fuchsia-500' : 'text-violet-400'}`} />
+                      <Smartphone size={20} className={`mx-auto mb-1 ${formaPagamento === 'pix' ? 'text-rose-500' : 'text-orange-400'}`} />
                       <span className="font-bold text-sm">Pix Agora</span>
                     </div>
                     <div 
                       onClick={() => setFormaPagamento('credito')}
                       className={`p-3 rounded-xl border-2 text-center cursor-pointer transition-all ${
-                        formaPagamento === 'credito' ? 'border-fuchsia-500 bg-fuchsia-50 text-violet-900' : 'border-violet-100 hover:border-violet-200 text-violet-600'
+                        formaPagamento === 'credito' ? 'border-rose-500 bg-rose-50 text-[#682c0b]' : 'border-orange-100 hover:border-orange-200 text-[#874c2e]'
                       }`}
                     >
-                      <CreditCard size={20} className={`mx-auto mb-1 ${formaPagamento === 'credito' ? 'text-fuchsia-500' : 'text-violet-400'}`} />
+                      <CreditCard size={20} className={`mx-auto mb-1 ${formaPagamento === 'credito' ? 'text-rose-500' : 'text-orange-400'}`} />
                       <span className="font-bold text-sm">Cartão (Link)</span>
                     </div>
                   </div>
@@ -451,16 +437,16 @@ export default function BailePage() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="bg-violet-50 rounded-xl p-4 border border-violet-100 overflow-hidden space-y-4"
+                        className="bg-[#fffcf5] rounded-xl p-4 border border-orange-100 overflow-hidden space-y-4"
                       >
                         <div>
-                          <p className="text-xs text-violet-800 mb-2">Copie a chave PIX (E-mail) para transferir o valor do ingresso.</p>
-                          <div className="flex items-center bg-white rounded-lg border border-violet-200 p-1">
-                            <input type="text" readOnly value="gustavoissao2005@gmail.com" className="bg-transparent px-3 py-2 flex-1 text-sm font-mono font-medium outline-none text-violet-900 w-full" />
+                          <p className="text-xs text-[#682c0b] mb-2">Copie a chave PIX (E-mail) para transferir o valor do ingresso.</p>
+                          <div className="flex items-center bg-white rounded-lg border border-orange-200 p-1">
+                            <input type="text" readOnly value="gustavoissao2005@gmail.com" className="bg-transparent px-3 py-2 flex-1 text-sm font-mono font-medium outline-none text-[#682c0b] w-full" />
                             <button 
                               type="button" 
                               onClick={handleCopyPix} 
-                              className="bg-violet-100 text-violet-700 hover:bg-violet-200 px-3 py-2 rounded-md font-bold text-xs flex items-center gap-1 transition-colors shrink-0"
+                              className="bg-orange-100 text-[#644230] hover:bg-orange-200 px-3 py-2 rounded-md font-bold text-xs flex items-center gap-1 transition-colors shrink-0"
                             >
                               {copied ? <Check size={14} /> : <Copy size={14} />} 
                               {copied ? 'Copiada' : 'Copiar'}
@@ -468,22 +454,7 @@ export default function BailePage() {
                           </div>
                         </div>
 
-                        <div className="pt-2 border-t border-violet-200">
-                           <label className="text-sm font-bold text-violet-600 uppercase tracking-wide mb-2 block">Comprovante PIX</label>
-                           <input 
-                             type="file" 
-                             name="attachment"
-                             accept="image/*,.pdf"
-                             onChange={(e) => {
-                               if (e.target.files && e.target.files[0]) {
-                                 setArquivo(e.target.files[0]);
-                                 setFileError('');
-                               }
-                             }}
-                             className="w-full text-sm text-violet-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-fuchsia-50 file:text-fuchsia-700 hover:file:bg-fuchsia-100"
-                           />
-                           {fileError && <p className="text-red-500 text-xs mt-1">{fileError}</p>}
-                        </div>
+                        
                       </motion.div>
                     )}
                     
@@ -506,7 +477,7 @@ export default function BailePage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-fuchsia-600 text-white py-4 mt-6 rounded-xl font-bold text-lg hover:bg-fuchsia-700 transition-colors shadow-lg shadow-fuchsia-500/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-wait"
+                  className="w-full bg-rose-600 text-white py-4 mt-6 rounded-xl font-bold text-lg hover:bg-rose-800 transition-colors shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-wait"
                 >
                   <Ticket size={20} />
                   {isSubmitting ? 'Enviando...' : 'Confirmar Ingresso'}
@@ -520,7 +491,7 @@ export default function BailePage() {
 
       {/* Success Modal */}
       {submitted && typeof document !== 'undefined' && createPortal(
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-violet-950/80 backdrop-blur-sm mt-0 overflow-y-auto">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-orange-950/80 backdrop-blur-sm mt-0 overflow-y-auto">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -529,8 +500,8 @@ export default function BailePage() {
             <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle2 size={40} />
             </div>
-            <h2 className="text-3xl font-display font-bold text-violet-900 mb-2">Tudo Certo!</h2>
-            <p className="text-violet-600 mb-8 leading-relaxed">
+            <h2 className="text-3xl font-display font-bold text-[#682c0b] mb-2">Tudo Certo!</h2>
+            <p className="text-[#874c2e] mb-8 leading-relaxed">
               Deu tudo certo com o seu ingresso! 
               {formaPagamento === 'pix' ? ' Recebemos o seu comprovante.' : ' Enviaremos seu link de pagamento em breve, ou você pode solicitá-lo no grupo do WhatsApp.'}
               <br/><br/>
@@ -547,7 +518,7 @@ export default function BailePage() {
               </Link>
               <button 
                 onClick={closeModal}
-                className="w-full bg-violet-100 text-violet-700 font-bold py-3 px-6 rounded-full hover:bg-violet-200 transition-colors"
+                className="w-full bg-orange-100 text-[#644230] font-bold py-3 px-6 rounded-full hover:bg-orange-200 transition-colors"
               >
                 Entendido!
               </button>
@@ -557,10 +528,10 @@ export default function BailePage() {
       , document.body)}
 
       {/* Footer */}
-      <footer className="relative bg-[#0a0118] pt-20 pb-10 px-6 mt-auto border-t border-violet-900/30">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-violet-400 text-sm">
-          <p>&copy; {new Date().getFullYear()} Escola de Dança Estações. Todos os direitos reservados.</p>
-          <Link href="/politica-de-privacidade" className="hover:text-fuchsia-400 transition-colors underline underline-offset-2">
+      <footer className="relative bg-[#311707] pt-20 pb-10 px-6 mt-auto border-t border-orange-900/30">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-orange-400 text-sm">
+          <p>&copy; {new Date().getFullYear()} Estações Escola de Dança. Todos os direitos reservados.</p>
+          <Link href="/politica-de-privacidade" className="hover:text-rose-500 transition-colors underline underline-offset-2">
             Política de Privacidade
           </Link>
         </div>
