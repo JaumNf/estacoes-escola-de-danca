@@ -36,51 +36,38 @@ export default function BailePage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const eventName = events.find(ev => ev.id === selectedEvent)?.name || 'N/A';
     
     if (formaPagamento === 'pix') {
-      const formData = new FormData();
-      formData.append("Evento", eventName);
-      formData.append("Tipo de Ingresso", ticketType === 'individual' ? 'Individual' : 'Dupla');
-      formData.append("Nome", nome1);
-      formData.append("WhatsApp", tel1);
-      if (ticketType === 'dupla') {
-        formData.append("Nome 2", nome2);
-        formData.append("WhatsApp 2", tel2);
-      }
-      if (comprovante) {
-        formData.append("Comprovante", comprovante);
-      }
-
-      try {
-        await fetch("https://formsubmit.co/ajax/cursodeverao67@gmail.com", {
-          method: "POST",
-          body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-      } catch (err) {
-        console.error(err);
-      }
+      // Allow the form to submit natively via the iframe
+      setIsSubmitting(true);
+      // formsubmit.co will respond to the iframe.
+      // Set a short delay to consider it submitted.
+      setTimeout(() => {
+        setSubmitted(true);
+        setNome1('');
+        setNome2('');
+        setTel1('');
+        setTel2('');
+        setComprovante(null);
+        setIsSubmitting(false);
+      }, 2000);
     } else {
+      e.preventDefault();
+      setIsSubmitting(true);
       const msg = `*Compra de Ingresso Baile*%0A%0A*Evento:* ${eventName}%0A*Tipo de Ingresso:* ${ticketType === 'individual' ? 'Individual' : 'Dupla'}%0A*Forma de Pagamento:* Cartão de Crédito (Link)%0A%0A*Nome:* ${nome1}%0A*Telefone:* ${tel1}${ticketType === 'dupla' ? `%0A%0A*Nome 2:* ${nome2}%0A*Telefone 2:* ${tel2}` : ''}`;
       
       const whatsappUrl = `https://wa.me/5567992630948?text=${msg}`;
       window.open(whatsappUrl, '_blank');
+      setSubmitted(true);
+      setNome1('');
+      setNome2('');
+      setTel1('');
+      setTel2('');
+      setComprovante(null);
+      setIsSubmitting(false);
     }
-
-    setSubmitted(true);
-    setNome1('');
-    setNome2('');
-    setTel1('');
-    setTel2('');
-    setComprovante(null);
-    setIsSubmitting(false);
   };
 
   const closeModal = () => {
@@ -261,10 +248,19 @@ export default function BailePage() {
             <div className="bg-white rounded-[32px] p-8 text-[#682c0b] shadow-2xl shadow-black/20">
               <h3 className="text-2xl font-display font-bold mb-6 text-center">Selecione seu Ingresso</h3>
               
+              <iframe name="hidden_iframe" id="hidden_iframe" style={{ display: 'none' }}></iframe>
               <form 
+                action="https://formsubmit.co/cursodeverao67@gmail.com"
+                method="POST"
+                encType="multipart/form-data"
+                target={formaPagamento === 'pix' ? 'hidden_iframe' : ''}
                 onSubmit={handleSubmit} 
                 className="space-y-6 mb-2"
               >
+                <input type="hidden" name="_captcha" value="false" />
+                <input type="hidden" name="Evento" value={events.find(ev => ev.id === selectedEvent)?.name || 'N/A'} />
+                <input type="hidden" name="Tipo de Ingresso" value={ticketType === 'individual' ? 'Individual' : 'Dupla'} />
+                
                 {currentStep === 1 && (
                   <motion.div 
                     initial={{ opacity: 0, x: -20 }}
@@ -494,6 +490,7 @@ export default function BailePage() {
                           <p className="text-xs text-[#682c0b] mb-2 font-bold">Anexar Comprovante PIX</p>
                           <input 
                             type="file" 
+                            name="Comprovante"
                             accept="image/*,.pdf"
                             onChange={(e) => setComprovante(e.target.files ? e.target.files[0] : null)}
                             className="bg-white border border-orange-200 text-[#874c2e] focus:border-rose-500 rounded-lg p-2 text-sm w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-orange-100 file:text-[#644230] hover:file:bg-orange-200 cursor-pointer transition-colors"
