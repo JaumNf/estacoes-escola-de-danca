@@ -133,8 +133,13 @@ export default function HorariosTurmas() {
                       <div className="flex-grow">
                         <div className="flex items-center gap-3">
                           <h4 className="text-xl font-bold text-orange-900 group-hover/item:text-orange-600 transition-colors">{turma.ritmo}</h4>
-                          {turma.esgotada && (
+                          {turma.esgotada ? (
                             <span className="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide">Esgotada</span>
+                          ) : (
+                            <span className="flex items-center gap-1.5 bg-green-50 text-green-700 text-[10px] sm:text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide border border-green-200">
+                              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_5px_rgba(34,197,94,0.6)]"></span>
+                              Abertas
+                            </span>
                           )}
                         </div>
                         <p className="text-orange-700">{turma.nivel}</p>

@@ -13,7 +13,10 @@ export default function EssenceCard({ title, desc, icon }: EssenceCardProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div 
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
       onClick={() => setIsOpen(!isOpen)}
       className={`bg-brown-50 p-8 rounded-[32px] shadow-sm border border-brown-200/50 hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col items-center text-center relative overflow-hidden ${isOpen ? 'ring-2 ring-terracotta/50' : ''}`}
     >
@@ -45,6 +48,6 @@ export default function EssenceCard({ title, desc, icon }: EssenceCardProps) {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 }

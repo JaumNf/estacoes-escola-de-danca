@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Header from '@/components/Header';
 import WaveDivider from '@/components/WaveDivider';
-import { Calendar, MapPin, Clock, Music, AlertCircle, Ticket, Smartphone, CreditCard, Copy, Check, CheckCircle2 } from 'lucide-react';
+import { Calendar, MapPin, Clock, Music, AlertCircle, Ticket, Smartphone, CreditCard, Copy, Check, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
@@ -12,6 +12,7 @@ import { createPortal } from 'react-dom';
 export default function BailePage() {
   const [ticketType, setTicketType] = useState<'individual' | 'dupla'>('individual');
   const [selectedEvent, setSelectedEvent] = useState('baile-namorados');
+  const [currentStep, setCurrentStep] = useState(1);
 
   const [nome1, setNome1] = useState('');
   const [nome2, setNome2] = useState('');
@@ -19,6 +20,7 @@ export default function BailePage() {
   const [tel2, setTel2] = useState('');
   const [formaPagamento, setFormaPagamento] = useState<'pix' | 'credito'>('pix');
   const [copied, setCopied] = useState(false);
+  const [comprovante, setComprovante] = useState<File | null>(null);
       
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -39,21 +41,51 @@ export default function BailePage() {
     setIsSubmitting(true);
     
     const eventName = events.find(ev => ev.id === selectedEvent)?.name || 'N/A';
-    const msg = `*Compra de Ingresso Baile*%0A%0A*Evento:* ${eventName}%0A*Tipo de Ingresso:* ${ticketType === 'individual' ? 'Individual' : 'Dupla'}%0A*Forma de Pagamento:* ${formaPagamento === 'pix' ? 'Pix' : 'Cartão de Crédito (Link)'}%0A%0A*Nome:* ${nome1}%0A*Telefone:* ${tel1}${ticketType === 'dupla' ? `%0A%0A*Nome 2:* ${nome2}%0A*Telefone 2:* ${tel2}` : ''}%0A%0AEncaminhe o comprovante de pagamento por aqui!`;
     
-    const whatsappUrl = `https://wa.me/5567992630948?text=${msg}`;
-    window.open(whatsappUrl, '_blank');
+    if (formaPagamento === 'pix') {
+      const formData = new FormData();
+      formData.append("Evento", eventName);
+      formData.append("Tipo de Ingresso", ticketType === 'individual' ? 'Individual' : 'Dupla');
+      formData.append("Nome", nome1);
+      formData.append("WhatsApp", tel1);
+      if (ticketType === 'dupla') {
+        formData.append("Nome 2", nome2);
+        formData.append("WhatsApp 2", tel2);
+      }
+      if (comprovante) {
+        formData.append("Comprovante", comprovante);
+      }
+
+      try {
+        await fetch("https://formsubmit.co/ajax/cursodeverao67@gmail.com", {
+          method: "POST",
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      const msg = `*Compra de Ingresso Baile*%0A%0A*Evento:* ${eventName}%0A*Tipo de Ingresso:* ${ticketType === 'individual' ? 'Individual' : 'Dupla'}%0A*Forma de Pagamento:* Cartão de Crédito (Link)%0A%0A*Nome:* ${nome1}%0A*Telefone:* ${tel1}${ticketType === 'dupla' ? `%0A%0A*Nome 2:* ${nome2}%0A*Telefone 2:* ${tel2}` : ''}`;
+      
+      const whatsappUrl = `https://wa.me/5567992630948?text=${msg}`;
+      window.open(whatsappUrl, '_blank');
+    }
 
     setSubmitted(true);
     setNome1('');
     setNome2('');
     setTel1('');
     setTel2('');
+    setComprovante(null);
     setIsSubmitting(false);
   };
 
   const closeModal = () => {
     setSubmitted(false);
+    setCurrentStep(1);
   };
 
   return (
@@ -233,8 +265,15 @@ export default function BailePage() {
                 onSubmit={handleSubmit} 
                 className="space-y-6 mb-2"
               >
-                {/* Event Selection */}
-                <div className="space-y-3">
+                {currentStep === 1 && (
+                  <motion.div 
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    className="space-y-6"
+                  >
+                    {/* Event Selection */}
+                    <div className="space-y-3">
                   <label className="text-sm font-bold text-[#874c2e] uppercase tracking-wide">Evento</label>
                   <div className="space-y-2">
                     {events.map((event) => (
@@ -308,8 +347,33 @@ export default function BailePage() {
                   </div>
                 </div>
 
-                {/* Dados */}
-                <div className="space-y-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentStep(2)}
+                      className="w-full bg-rose-600 text-white py-4 mt-6 rounded-xl font-bold text-lg hover:bg-rose-800 transition-colors shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      Continuar para Pagamento
+                      <ArrowRight size={20} />
+                    </button>
+                  </motion.div>
+                )}
+
+                {currentStep === 2 && (
+                  <motion.div 
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-6"
+                  >
+                    <button 
+                      type="button" 
+                      onClick={() => setCurrentStep(1)}
+                      className="text-sm font-bold text-[#874c2e] hover:text-[#682c0b] flex items-center gap-1 transition-colors -mt-2 mb-2"
+                    >
+                      <ArrowLeft size={16} /> Voltar
+                    </button>
+                    {/* Dados */}
+                    <div className="space-y-3 pt-2">
                   <label className="text-sm font-bold text-[#874c2e] uppercase tracking-wide">Dados</label>
                   
                   {ticketType === 'individual' ? (
@@ -426,7 +490,16 @@ export default function BailePage() {
                           </div>
                         </div>
 
-                        
+                        <div>
+                          <p className="text-xs text-[#682c0b] mb-2 font-bold">Anexar Comprovante PIX</p>
+                          <input 
+                            type="file" 
+                            accept="image/*,.pdf"
+                            onChange={(e) => setComprovante(e.target.files ? e.target.files[0] : null)}
+                            className="bg-white border border-orange-200 text-[#874c2e] focus:border-rose-500 rounded-lg p-2 text-sm w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-orange-100 file:text-[#644230] hover:file:bg-orange-200 cursor-pointer transition-colors"
+                            required={formaPagamento === 'pix'}
+                          />
+                        </div>
                       </motion.div>
                     )}
                     
@@ -446,14 +519,16 @@ export default function BailePage() {
                   </AnimatePresence>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-rose-600 text-white py-4 mt-6 rounded-xl font-bold text-lg hover:bg-rose-800 transition-colors shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-wait"
-                >
-                  <Ticket size={20} />
-                  {isSubmitting ? 'Enviando...' : 'Confirmar Ingresso'}
-                </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-rose-600 text-white py-4 mt-6 rounded-xl font-bold text-lg hover:bg-rose-800 transition-colors shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-wait"
+                    >
+                      <Ticket size={20} />
+                      {isSubmitting ? 'Enviando...' : 'Confirmar Ingresso'}
+                    </button>
+                  </motion.div>
+                )}
               </form>
             </div>
 

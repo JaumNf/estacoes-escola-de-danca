@@ -13,6 +13,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 
 import EssenceCard from '@/components/EssenceCard';
+import FAQSection from '@/components/FAQSection';
 import Footer from '@/components/Footer';
 
 export default function Home() {
@@ -194,6 +195,9 @@ export default function Home() {
         </div>
       </motion.section>
 
+      {/* FAQ Section */}
+      <FAQSection />
+
       {/* Partners Section */}
       <motion.section 
         initial={{ opacity: 0, y: 50 }}
@@ -299,7 +303,13 @@ function WorksCarousel() {
     <div className="overflow-hidden cursor-grab active:cursor-grabbing w-full pb-4" ref={emblaRef}>
       <div className="flex">
         {works.map((work, idx) => (
-          <div className="flex-[0_0_90%] md:flex-[0_0_50%] lg:flex-[0_0_33.333333%] min-w-0 pr-6" key={idx}>
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: idx * 0.1, duration: 0.5 }}
+            className="flex-[0_0_90%] md:flex-[0_0_50%] lg:flex-[0_0_33.333333%] min-w-0 pr-6" key={idx}
+          >
             <Link 
               href={work.href}
               className="group relative h-[300px] md:h-[400px] rounded-[32px] overflow-hidden cursor-pointer shadow-lg transition-transform duration-300 hover:-translate-y-2 block"
@@ -322,7 +332,7 @@ function WorksCarousel() {
                 </p>
               </div>
             </Link>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
