@@ -61,7 +61,29 @@ export default function Chatbot() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isDancing, setIsDancing] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShowTooltip(false);
+      return;
+    }
+    const sequence = () => {
+      setShowTooltip(true);
+      setTimeout(() => {
+        setShowTooltip(false);
+      }, 4000);
+    };
+    const intervalId = setInterval(sequence, 14000);
+    // Initial delay for the first show to not pop up instantly on mount
+    const initialTimeout = setTimeout(sequence, 2000); 
+    
+    return () => {
+      clearInterval(intervalId);
+      clearTimeout(initialTimeout);
+    };
+  }, [isOpen]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -275,16 +297,30 @@ export default function Chatbot() {
         {/* Toggle Button */}
         <AnimatePresence>
           {!isOpen && (
-            <motion.button
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-              onClick={() => setIsOpen(true)}
-              className="w-14 h-14 bg-[#ea5d35] text-white rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex items-center justify-center z-50 relative"
-            >
-              <div className="absolute inset-0 bg-[#ea5d35] rounded-full animate-ping opacity-20" />
-              <MessageCircle size={24} />
-            </motion.button>
+            <div className="relative flex justify-end">
+              <AnimatePresence>
+                {showTooltip && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.9 }}
+                    className="absolute bottom-full mb-4 right-0 w-max bg-white text-brown-900 px-4 py-3 rounded-2xl shadow-xl border border-orange-200 text-sm font-bold text-center pointer-events-none z-50 before:content-[''] before:absolute before:-bottom-2 before:right-5 before:w-4 before:h-4 before:bg-white before:rotate-45 before:border-b before:border-r before:border-orange-200"
+                  >
+                    Dúvidas? Pergunte aqui! 🤩
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <motion.button
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0 }}
+                onClick={() => setIsOpen(true)}
+                className="w-14 h-14 bg-[#ea5d35] text-white rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex items-center justify-center z-50 relative"
+              >
+                <div className="absolute inset-0 bg-[#ea5d35] rounded-full animate-ping opacity-20" />
+                <MessageCircle size={24} />
+              </motion.button>
+            </div>
           )}
         </AnimatePresence>
       </div>

@@ -7,7 +7,7 @@ import { motion } from 'motion/react';
 const TURMAS = [
   { id: 'v_u1', nome: 'Vanera e Chamamé', unidade: 'Teatro do Mundo' },
   { id: 'f_u1', nome: 'Forró', unidade: 'Teatro do Mundo' },
-  { id: 'b_u1', nome: 'Bachata', unidade: 'Teatro do Mundo' },
+  { id: 'b_u1', nome: 'Bachata', unidade: 'Teatro do Mundo', esgotado: true },
   { id: 'd_u2', nome: 'Dança de Salão', unidade: 'Templo Nambei' },
   { id: 'f_u2', nome: 'Forró', unidade: 'Templo Nambei' },
 ];
@@ -50,17 +50,31 @@ export default function InvestmentCalculator() {
         <h3 className="text-3xl md:text-4xl font-display font-bold text-orange-400 mb-2">Simule seu Plano</h3>
         <p className="text-orange-200 text-lg mb-6">Descubra o valor ideal para sua rotina na dança.</p>
 
-        <div className="flex justify-center max-w-md mx-auto bg-black/40 rounded-xl p-1 border border-orange-900/30">
+        <div className="flex justify-center max-w-md mx-auto bg-black/40 rounded-xl p-1 border border-orange-900/30 relative">
           <button 
             onClick={() => setViewMode('regular')}
-            className={`flex-1 py-3 text-sm font-bold tracking-wide rounded-lg transition-all ${viewMode === 'regular' ? 'bg-orange-600 text-white shadow-md' : 'text-orange-400 hover:text-orange-200'}`}
+            className={`flex-1 py-3 text-sm font-bold tracking-wide rounded-lg transition-colors relative z-10 ${viewMode === 'regular' ? 'text-white' : 'text-orange-400 hover:text-orange-200'}`}
           >
+            {viewMode === 'regular' && (
+              <motion.div
+                layoutId="viewModeTab"
+                className="absolute inset-0 bg-orange-600 rounded-lg shadow-md -z-10"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
             Planos Regulares
           </button>
           <button 
             onClick={() => setViewMode('grupo')}
-            className={`flex-1 py-3 text-sm font-bold tracking-wide rounded-lg transition-all ${viewMode === 'grupo' ? 'bg-orange-600 text-white shadow-md' : 'text-orange-400 hover:text-orange-200'}`}
+            className={`flex-1 py-3 text-sm font-bold tracking-wide rounded-lg transition-colors relative z-10 ${viewMode === 'grupo' ? 'text-white' : 'text-orange-400 hover:text-orange-200'}`}
           >
+            {viewMode === 'grupo' && (
+              <motion.div
+                layoutId="viewModeTab"
+                className="absolute inset-0 bg-orange-600 rounded-lg shadow-md -z-10"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
             Planos Especiais (Grupos)
           </button>
         </div>
@@ -115,18 +129,21 @@ export default function InvestmentCalculator() {
                 return (
                   <button
                     key={turma.id}
+                    disabled={turma.esgotado}
                     onClick={() => toggleTurma(turma.id)}
-                    className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all text-left ${isSelected ? 'bg-orange-800/40 border-orange-500' : 'bg-black/20 border-orange-900/30 hover:border-orange-700 hover:bg-black/40'}`}
+                    className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all text-left ${turma.esgotado ? 'opacity-50 cursor-not-allowed bg-black/40 border-orange-900/10' : isSelected ? 'bg-orange-800/40 border-orange-500' : 'bg-black/20 border-orange-900/30 hover:border-orange-700 hover:bg-black/40'}`}
                   >
                     <div>
-                      <div className={`font-bold ${isSelected ? 'text-orange-100' : 'text-orange-300'}`}>{turma.nome}</div>
+                      <div className={`font-bold ${turma.esgotado ? 'text-orange-500/50 line-through' : isSelected ? 'text-orange-100' : 'text-orange-300'}`}>
+                        {turma.nome} {turma.esgotado && <span className="text-[10px] ml-2 bg-orange-900/50 px-2 py-0.5 rounded-full not-italic no-underline inline-block uppercase font-bold tracking-wider">Esgotado</span>}
+                      </div>
                       <div className="text-xs text-orange-500/80 mt-1">{turma.unidade}</div>
                     </div>
-                    {isSelected ? (
+                    {!turma.esgotado && (isSelected ? (
                       <CheckCircle2 className="text-orange-500" size={24} />
                     ) : (
                       <div className="w-6 h-6 rounded-full border border-orange-800/50" />
-                    )}
+                    ))}
                   </button>
                 );
               })}
@@ -178,13 +195,14 @@ export default function InvestmentCalculator() {
             </div>
           )}
 
-          <button 
-            onClick={() => { const el = document.getElementById('matricula'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}
+          <motion.button 
+            whileTap={selectedTurmas.length > 0 ? { scale: 0.95 } : {}}
+            onClick={() => window.open('https://wa.me/5567992630948?text=Olá! Gostaria de fazer minha matrícula!', '_blank', 'noopener,noreferrer')}
             disabled={selectedTurmas.length === 0}
-            className={`w-full py-4 mt-8 rounded-xl font-bold tracking-widest uppercase transition-all flex items-center justify-center ${selectedTurmas.length > 0 ? 'bg-orange-600 text-white hover:bg-orange-500 shadow-xl shadow-orange-900/20' : 'bg-orange-900/20 text-orange-700 cursor-not-allowed'}`}
+            className={`w-full py-4 mt-8 rounded-xl font-bold tracking-widest uppercase transition-all flex items-center justify-center ${selectedTurmas.length > 0 ? 'bg-orange-600 text-white hover:bg-orange-500 shadow-xl shadow-orange-900/20 cursor-pointer' : 'bg-orange-900/20 text-orange-700 cursor-not-allowed'}`}
           >
             Quero me matricular
-          </button>
+          </motion.button>
         </div>
       </div>
       ) : (
@@ -227,12 +245,13 @@ export default function InvestmentCalculator() {
             </div>
           </div>
           
-          <button 
-            onClick={() => { const el = document.getElementById('matricula'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}
-            className="w-full py-4 mt-8 rounded-xl font-bold tracking-widest uppercase transition-all flex items-center justify-center bg-orange-600 text-white hover:bg-orange-500 shadow-xl shadow-orange-900/20"
+          <motion.button 
+            whileTap={{ scale: 0.95 }}
+            onClick={() => window.open('https://wa.me/5567992630948?text=Olá! Gostaria de fazer minha matrícula para um Plano Especial (Grupo)!', '_blank', 'noopener,noreferrer')}
+            className="w-full py-4 mt-8 rounded-xl font-bold tracking-widest uppercase transition-all flex items-center justify-center bg-orange-600 text-white hover:bg-orange-500 shadow-xl shadow-orange-900/20 cursor-pointer"
           >
             Quero me matricular
-          </button>
+          </motion.button>
         </motion.div>
       )}
     </div>
