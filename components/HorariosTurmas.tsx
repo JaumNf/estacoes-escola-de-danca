@@ -96,17 +96,17 @@ export default function HorariosTurmas() {
           </div>
         ) : (
           Object.entries(turmasAgrupadas).map(([grupo, turmas]) => (
-            <div key={grupo} className="group bg-white rounded-[40px] p-8 md:p-12 shadow-xl shadow-orange-900/5 border border-orange-100 hover:-translate-y-2 hover:shadow-2xl hover:border-fuchsia-500 transition-all duration-300 relative">
+            <div key={grupo} className="group bg-white rounded-[40px] p-8 md:p-12 shadow-xl shadow-orange-900/5 border border-orange-100 hover:-translate-y-2 hover:shadow-2xl hover:border-terracotta transition-all duration-300 relative">
               {grupo.includes('Templo Nambei') && (
-                <div className="absolute -top-4 -right-4 bg-fuchsia-500 text-white font-bold text-sm px-4 py-1.5 rounded-full shadow-lg transform rotate-12 z-10">NOVIDADE!</div>
+                <div className="absolute -top-4 -right-4 bg-terracotta text-white font-bold text-sm px-4 py-1.5 rounded-full shadow-lg transform rotate-12 z-10">NOVIDADE!</div>
               )}
               
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8 border-b border-orange-100 pb-6">
-                <div className="w-12 h-12 rounded-full border-2 border-orange-600 group-hover:border-fuchsia-500 flex items-center justify-center shrink-0 transition-colors duration-300">
-                  <MapPin className="text-orange-600 group-hover:text-fuchsia-500 transition-colors duration-300" size={24} />
+                <div className="w-12 h-12 rounded-full border-2 border-orange-600 group-hover:border-terracotta flex items-center justify-center shrink-0 transition-colors duration-300">
+                  <MapPin className="text-orange-600 group-hover:text-terracotta transition-colors duration-300" size={24} />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-display font-bold text-orange-900 group-hover:text-fuchsia-600 transition-colors duration-300">
+                  <h3 className="text-2xl font-display font-bold text-orange-900 group-hover:text-terracotta transition-colors duration-300">
                     {grupo.split(' - ')[0].toUpperCase()} <span className="font-normal opacity-80 text-xl">- {grupo.split(' - ')[1]}</span>
                   </h3>
                 </div>
@@ -147,7 +147,7 @@ export default function HorariosTurmas() {
                       
                       <div className="shrink-0">
                         {turma.esgotada ? (
-                          <div className="flex items-center gap-2 text-fuchsia-600 font-bold bg-fuchsia-50 px-3 py-1.5 rounded-lg border border-fuchsia-200 group-hover/item:bg-fuchsia-100 transition-colors">
+                          <div className="flex items-center gap-2 text-terracotta font-bold bg-orange-50 px-3 py-1.5 rounded-lg border border-orange-200 group-hover/item:bg-orange-100 transition-colors">
                             <Bell size={18} />
                             Avise-me
                           </div>
@@ -178,12 +178,12 @@ export default function HorariosTurmas() {
                                   value={email}
                                   onChange={(e) => setEmail(e.target.value)}
                                   placeholder="Digite seu e-mail..."
-                                  className="flex-1 px-4 py-2.5 rounded-xl border border-orange-200 focus:outline-none focus:border-fuchsia-400 focus:ring-1 focus:ring-fuchsia-400"
+                                  className="flex-1 px-4 py-2.5 rounded-xl border border-orange-200 focus:outline-none focus:border-terracotta focus:ring-1 focus:ring-terracotta"
                                 />
                                 <button
                                   type="submit"
                                   disabled={submitting}
-                                  className="bg-fuchsia-600 text-white font-bold px-6 py-2.5 rounded-xl hover:bg-fuchsia-700 transition-colors disabled:opacity-70 flex items-center justify-center min-w-[120px]"
+                                  className="bg-terracotta text-white font-bold px-6 py-2.5 rounded-xl hover:bg-orange-700 transition-colors disabled:opacity-70 flex items-center justify-center min-w-[120px]"
                                 >
                                   {submitting ? <Loader2 className="animate-spin" size={20} /> : 'Me avise!'}
                                 </button>

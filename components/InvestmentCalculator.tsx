@@ -187,7 +187,7 @@ export default function InvestmentCalculator() {
                   </span>
                 </div>
                 {selectedTurmas.length > 1 && (
-                  <div className="bg-fuchsia-900/30 text-fuchsia-300 text-sm px-3 py-2 rounded-lg font-medium text-center border border-fuchsia-800/50">
+                  <div className="bg-orange-900/30 text-orange-300 text-sm px-3 py-2 rounded-lg font-medium text-center border border-orange-800/50">
                     Sua economia mensal: R$ {calculateDiscountInfo()?.toFixed(2).replace('.', ',')} 🚀
                   </div>
                 )}
@@ -228,19 +228,19 @@ export default function InvestmentCalculator() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-b from-fuchsia-900/30 to-black/40 border border-fuchsia-800/40 rounded-3xl p-6 md:p-8">
-            <h4 className="text-2xl font-display font-bold text-fuchsia-300 mb-6 flex items-center gap-3">
-              <Users className="text-fuchsia-500" size={28} />
+          <div className="bg-gradient-to-b from-orange-900/30 to-black/40 border border-orange-800/40 rounded-3xl p-6 md:p-8">
+            <h4 className="text-2xl font-display font-bold text-orange-300 mb-6 flex items-center gap-3">
+              <Users className="text-orange-500" size={28} />
               Família / Galera <span className="text-sm font-sans font-normal opacity-70">(4 ou + pessoas)</span>
             </h4>
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2">
               <div>
                 <p className="text-orange-100 text-lg">Ideal para grupos maiores.</p>
-                <p className="text-fuchsia-400 text-sm mt-1">Exemplo: 4 pessoas = R$ 320,00</p>
+                <p className="text-orange-400 text-sm mt-1">Exemplo: 4 pessoas = R$ 320,00</p>
               </div>
               <div className="text-right">
                 <span className="text-sm text-orange-200 block mb-1">Valor por pessoa</span>
-                <span className="text-4xl font-display font-bold text-fuchsia-400">R$ 80,00</span>
+                <span className="text-4xl font-display font-bold text-orange-400">R$ 80,00</span>
               </div>
             </div>
           </div>

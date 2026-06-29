@@ -5,7 +5,6 @@ import './globals.css'; // Global styles
 import CookieBanner from '@/components/CookieBanner';
 import Chatbot from '@/components/Chatbot';
 import BackToTop from '@/components/BackToTop';
-import AccessibilityMenu from '@/components/AccessibilityMenu';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -71,7 +70,6 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <CookieBanner />
         <Chatbot />
         <BackToTop />
-        <AccessibilityMenu />
         <Script id="service-worker-registration" strategy="afterInteractive">
           {`
             if ('serviceWorker' in navigator) {

@@ -40,7 +40,7 @@ export default function HeroCarousel() {
   const prev = () => setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-brown-950">
+    <div className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden bg-brown-950">
       {/* Animated Images */}
       {images.map((img, idx) => (
         <div

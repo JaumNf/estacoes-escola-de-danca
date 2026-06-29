@@ -304,7 +304,7 @@ export default function Chatbot() {
                     initial={{ opacity: 0, y: 10, scale: 0.9 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.9 }}
-                    className="absolute bottom-full mb-4 right-0 w-max bg-white text-brown-900 px-4 py-3 rounded-2xl shadow-xl border border-orange-200 text-sm font-bold text-center pointer-events-none z-50 before:content-[''] before:absolute before:-bottom-2 before:right-5 before:w-4 before:h-4 before:bg-white before:rotate-45 before:border-b before:border-r before:border-orange-200"
+                    className="absolute bottom-full mb-4 right-0 w-max max-w-[250px] bg-white text-brown-900 px-4 py-3 rounded-2xl shadow-xl border border-orange-200 text-sm font-bold text-center pointer-events-none z-50 origin-bottom-right before:content-[''] before:absolute before:-bottom-2 before:right-5 before:w-4 before:h-4 before:bg-white before:rotate-45 before:border-b before:border-r before:border-orange-200"
                   >
                     Dúvidas? Pergunte aqui! 🤩
                   </motion.div>

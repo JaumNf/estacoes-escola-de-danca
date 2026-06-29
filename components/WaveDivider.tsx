@@ -16,7 +16,7 @@ export default function WaveDivider({
       <motion.svg 
         viewBox="0 0 1440 320" 
         preserveAspectRatio="none" 
-        className="relative block w-full h-[60px] md:h-[120px]"
+        className="relative block w-full h-[20px] md:h-[40px]"
         animate={animated ? { scaleY: [1, 1.2, 1] } : {}}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         style={{ transformOrigin: 'bottom' }}

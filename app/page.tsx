@@ -37,9 +37,9 @@ export default function Home() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="relative py-16 md:py-24 px-6 bg-brown-50"
+        className="relative py-10 md:py-12 px-6 bg-brown-50"
       >
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-6 items-center">
           <div className="space-y-6">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-brown-900 leading-tight">
               Todo mundo nasceu para dançar.
@@ -63,7 +63,7 @@ export default function Home() {
               </button>
             </div>
           </div>
-          <div className="relative h-[350px] md:h-[500px] w-full">
+          <div className="relative h-[300px] md:h-[400px] w-full">
             <div className="absolute inset-0 bg-ochre/20 rounded-[40px] rounded-tr-none transform translate-x-4 translate-y-4"></div>
             <Image
               src="https://lh3.googleusercontent.com/d/1s4pxsblj1XCqcLd02lJN4yuXz4zNRlop"
@@ -85,11 +85,11 @@ export default function Home() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="relative pt-24 pb-16 md:pt-32 md:pb-24 bg-brown-100 px-6"
+        className="relative pt-10 pb-6 md:pt-14 md:pb-10 bg-brown-100 px-6"
       >
         <WaveDivider position="top" colorClass="fill-brown-50" />
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-display font-bold text-brown-900 mb-4">Nossa Essência</h2>
             <p className="text-brown-700 max-w-2xl mx-auto text-base md:text-lg">Nossa metodologia para um aprendizado natural e divertido.</p>
             <p className="text-terracotta text-xs mt-3 font-bold uppercase tracking-widest animate-pulse">Arraste para os lados para saber mais</p>
@@ -106,11 +106,11 @@ export default function Home() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="relative pt-24 pb-16 md:pt-32 md:pb-24 px-6 bg-brown-50"
+        className="relative pt-10 pb-6 md:pt-14 md:pb-10 px-6 bg-brown-50"
       >
         <WaveDivider position="top" colorClass="fill-brown-100" />
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-brown-900 mb-4">Nossos Trabalhos</h2>
             <div className="w-16 h-1 bg-terracotta mx-auto rounded-full mb-4"></div>
             <p className="text-brown-700 max-w-2xl mx-auto text-base md:text-lg">Selecione algum que você teria mais interesse...</p>
@@ -134,7 +134,7 @@ export default function Home() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="relative pt-24 pb-16 md:pt-32 md:pb-24 bg-brown-900 text-brown-50 px-6 overflow-hidden"
+        className="relative pt-10 pb-6 md:pt-14 md:pb-10 bg-brown-900 text-brown-50 px-6 overflow-hidden"
       >
         <WaveDivider position="top" colorClass="fill-brown-100" />
         {/* Decorative organic shape */}
@@ -142,7 +142,7 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-terracotta/10 rounded-organic-2 blur-3xl translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
         
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4">Nossas Unidades</h2>
             <p className="text-brown-200 text-base md:text-lg max-w-2xl mx-auto mb-3">Encontre o espaço mais próximo de você e venha nos fazer uma visita.</p>
             <p className="text-terracotta text-xs md:text-sm max-w-2xl mx-auto italic">* Os endereços abaixo são espaços parceiros que utilizamos para a realização das nossas aulas e cursos.</p>
@@ -210,7 +210,7 @@ export default function Home() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="relative pt-24 pb-16 md:pt-32 md:pb-16 px-6 bg-brown-50"
+        className="relative pt-10 pb-6 md:pt-14 md:pb-10 px-6 bg-brown-50"
       >
         <WaveDivider position="top" colorClass="fill-brown-900" />
         <div className="max-w-7xl mx-auto text-center relative z-10">
@@ -318,7 +318,7 @@ function WorksCarousel() {
           >
             <Link 
               href={work.href}
-              className="group relative h-[300px] md:h-[400px] rounded-[32px] overflow-hidden cursor-pointer shadow-lg transition-transform duration-300 hover:-translate-y-2 block"
+              className="group relative h-[250px] md:h-[350px] rounded-[32px] overflow-hidden cursor-pointer shadow-lg transition-transform duration-300 hover:-translate-y-2 block"
             >
               <Image
                 src={work.img}

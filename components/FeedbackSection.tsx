@@ -116,19 +116,19 @@ export default function FeedbackSection() {
   };
 
   return (
-    <section className="py-16 md:py-24 px-4 md:px-6 bg-brown-50">
+    <section className="py-10 md:py-14 px-4 md:px-6 bg-brown-50">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-brown-900 mb-6">O que dizem sobre nós</h2>
+        <div className="text-center mb-8">
+          <h2 className="text-3xl md:text-4xl font-display font-bold text-brown-900 mb-4">O que dizem sobre nós</h2>
           <p className="text-lg text-brown-700 max-w-2xl mx-auto">
             Acompanhe a experiência de quem já faz parte da nossa escola e aproveite para deixar sua avaliação.
           </p>
         </div>
 
         {/* Carousel de Feedbacks */}
-        <div className="mb-24">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-2xl font-display font-bold text-brown-900 border-b-2 border-terracotta inline-block pb-2">Feedbacks Recentes</h3>
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl md:text-2xl font-display font-bold text-brown-900 border-b-2 border-terracotta inline-block pb-1">Feedbacks Recentes</h3>
             <div className="flex gap-2">
               <button onClick={scrollLeft} className="p-2 rounded-full bg-white border border-brown-200 text-brown-700 hover:bg-brown-100 transition-colors">
                 <ChevronLeft size={20} />
@@ -169,7 +169,7 @@ export default function FeedbackSection() {
         </div>
 
         {/* Formulário de Feedback */}
-        <div className="max-w-3xl mx-auto bg-white p-6 md:p-10 rounded-3xl md:rounded-[40px] shadow-xl border border-brown-100 relative">
+        <div className="max-w-3xl mx-auto bg-white p-6 md:p-10 rounded-3xl md:rounded-[40px] shadow-xl border border-brown-100 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-terracotta/5 rounded-bl-[40px] pointer-events-none" />
           <h3 className="text-xl md:text-2xl font-display font-bold text-brown-900 mb-6 md:mb-8 text-center relative z-10">Avalie Nossos Professores</h3>
           

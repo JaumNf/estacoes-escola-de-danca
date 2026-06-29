@@ -42,36 +42,36 @@ export default function FAQSection() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.6 }}
-      className="relative pt-24 pb-16 md:pt-32 md:pb-24 px-6 bg-brown-100"
+      className="relative pt-10 pb-6 md:pt-14 md:pb-10 px-6 bg-brown-100"
     >
       <WaveDivider position="top" colorClass="fill-brown-50" />
       <div className="max-w-3xl mx-auto relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-brown-900 mb-4">Perguntas Frequentes</h2>
-          <div className="w-16 h-1 bg-terracotta mx-auto rounded-full mb-4"></div>
-          <p className="text-brown-700 max-w-2xl mx-auto text-base md:text-lg">Tire suas dúvidas antes de começar a dançar com a gente.</p>
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-display font-bold text-brown-900 mb-3">Perguntas Frequentes</h2>
+          <div className="w-12 h-1 bg-terracotta mx-auto rounded-full mb-3"></div>
+          <p className="text-brown-700 max-w-2xl mx-auto text-sm md:text-base">Tire suas dúvidas antes de começar a dançar com a gente.</p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
 
             return (
               <div 
                 key={index} 
-                className="bg-white rounded-[24px] shadow-sm border border-brown-200 overflow-hidden"
+                className="bg-white rounded-2xl shadow-sm border border-brown-200 overflow-hidden"
               >
                 <button
                   onClick={() => toggleOpen(index)}
-                  className="w-full flex items-center justify-between p-6 text-left hover:bg-brown-50 transition-colors"
+                  className="w-full flex items-center justify-between p-4 md:p-5 text-left hover:bg-brown-50 transition-colors"
                 >
-                  <span className="font-bold text-brown-900 text-lg pr-4">{faq.question}</span>
+                  <span className="font-bold text-brown-900 text-base md:text-lg pr-4">{faq.question}</span>
                   <motion.div
                     animate={{ rotate: isOpen ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
                     className="flex-shrink-0 text-terracotta"
                   >
-                    <ChevronDown size={24} />
+                    <ChevronDown size={20} />
                   </motion.div>
                 </button>
                 
@@ -83,7 +83,7 @@ export default function FAQSection() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3, ease: 'easeInOut' }}
                     >
-                      <div className="p-6 pt-0 text-brown-800 leading-relaxed border-t border-brown-50">
+                      <div className="p-4 md:p-5 pt-0 text-sm md:text-base text-brown-800 leading-relaxed border-t border-brown-50">
                         {faq.answer}
                       </div>
                     </motion.div>
