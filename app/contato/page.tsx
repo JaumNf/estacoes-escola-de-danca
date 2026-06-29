@@ -128,8 +128,8 @@ export default function Contato() {
                 </div>
                 <div>
                   <h3 className="font-bold text-brown-900 text-lg mb-1">E-mail</h3>
-                  <a href="mailto:gustavoissao2005@gmail.com" className="text-brown-700 hover:text-terracotta transition-colors text-lg">
-                    gustavoissao2005@gmail.com
+                  <a href="mailto:cursodeverao67@gmail.com" className="text-brown-700 hover:text-terracotta transition-colors text-lg">
+                    cursodeverao67@gmail.com
                   </a>
                 </div>
               </div>
@@ -310,8 +310,8 @@ export default function Contato() {
             <h4 className="font-display font-bold text-2xl text-ochre mb-6">Contato</h4>
             <ul className="space-y-4 text-brown-200 text-lg">
               <li>
-                <a href="mailto:gustavoissao2005@gmail.com" className="hover:text-terracotta transition-colors">
-                  gustavoissao2005@gmail.com
+                <a href="mailto:cursodeverao67@gmail.com" className="hover:text-terracotta transition-colors">
+                  cursodeverao67@gmail.com
                 </a>
               </li>
               <li>

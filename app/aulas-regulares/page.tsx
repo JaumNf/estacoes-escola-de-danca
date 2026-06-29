@@ -283,8 +283,8 @@ export default function AulasRegulares() {
             <h4 className="font-display font-bold text-2xl text-orange-200 mb-6">Contato</h4>
             <ul className="space-y-4 text-orange-200 text-lg">
               <li>
-                <a href="mailto:gustavoissao2005@gmail.com" className="hover:text-orange-400 transition-colors">
-                  gustavoissao2005@gmail.com
+                <a href="mailto:cursodeverao67@gmail.com" className="hover:text-orange-400 transition-colors">
+                  cursodeverao67@gmail.com
                 </a>
               </li>
               <li>

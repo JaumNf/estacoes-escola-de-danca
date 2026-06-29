@@ -11,6 +11,7 @@ export default function FeedbackSection() {
   const [feedback, setFeedback] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   
   const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -101,6 +102,7 @@ export default function FeedbackSection() {
 
       setIsSubmitting(false);
       setSuccess(true);
+      setShowForm(false);
       setName('');
       setFeedback('');
       setRating(5);
@@ -171,17 +173,30 @@ export default function FeedbackSection() {
           <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-terracotta/5 rounded-bl-[40px] pointer-events-none" />
           <h3 className="text-xl md:text-2xl font-display font-bold text-brown-900 mb-6 md:mb-8 text-center relative z-10">Avalie Nossos Professores</h3>
           
-          <form 
-            action="https://formsubmit.co/gustavoissao2005@gmail.com"
-            method="POST"
-            target="_blank"
-            encType="multipart/form-data"
-            onSubmit={handleSubmit} 
-            className="space-y-4 md:space-y-6 relative z-10"
-          >
-            <input type="hidden" name="_captcha" value="false" />
-            <input type="hidden" name="_subject" value={`Novo Feedback de Avaliação: ${rating} Estrelas`} />
-            <input type="hidden" name="Avaliacao" value={`${rating} Estrelas`} />
+          {!showForm ? (
+            <div className="text-center relative z-10">
+              <p className="text-brown-700 mb-6">Sua opinião é muito importante para continuarmos melhorando!</p>
+              <button 
+                onClick={() => setShowForm(true)}
+                className="bg-terracotta text-white px-8 py-4 rounded-full font-bold tracking-wide hover:bg-ochre transition-colors shadow-lg cursor-pointer"
+              >
+                Adicionar Feedback
+              </button>
+            </div>
+          ) : (
+            <motion.form 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              action="https://formsubmit.co/cursodeverao67@gmail.com"
+              method="POST"
+              target="_blank"
+              encType="multipart/form-data"
+              onSubmit={handleSubmit} 
+              className="space-y-4 md:space-y-6 relative z-10"
+            >
+              <input type="hidden" name="_captcha" value="false" />
+              <input type="hidden" name="_subject" value={`Novo Feedback de Avaliação: ${rating} Estrelas`} />
+              <input type="hidden" name="Avaliacao" value={`${rating} Estrelas`} />
             
             <div>
               <label htmlFor="name" className="block text-xs md:text-sm font-bold tracking-wide uppercase text-brown-800 mb-1.5 md:mb-2">Seu Nome</label>
@@ -239,7 +254,8 @@ export default function FeedbackSection() {
               <span>{isSubmitting ? 'Enviando...' : 'Enviar Feedback'}</span>
               {!isSubmitting && <Send size={18} className="md:w-5 md:h-5 w-4 h-4" />}
             </button>
-          </form>
+          </motion.form>
+          )}
         </div>
       </div>
 

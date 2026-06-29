@@ -124,6 +124,9 @@ export default function Home() {
       {/* Feedbacks Section */}
       <FeedbackSection />
 
+      {/* FAQ Section */}
+      <FAQSection />
+
       {/* Locations Section */}
       <motion.section 
         id="unidades" 
@@ -133,7 +136,7 @@ export default function Home() {
         transition={{ duration: 0.6 }}
         className="relative pt-24 pb-16 md:pt-32 md:pb-24 bg-brown-900 text-brown-50 px-6 overflow-hidden"
       >
-        <WaveDivider position="top" colorClass="fill-brown-50" />
+        <WaveDivider position="top" colorClass="fill-brown-100" />
         {/* Decorative organic shape */}
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brown-800/40 rounded-organic-1 blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-terracotta/10 rounded-organic-2 blur-3xl translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
@@ -153,7 +156,7 @@ export default function Home() {
                 mapLink: 'https://maps.app.goo.gl/vXB9ezPd49HmbC9eA',
                 phone: '(67) 99263-0948',
                 whatsappLink: 'https://wa.me/5567992630948',
-                email: 'gustavoissao2005@gmail.com',
+                email: 'cursodeverao67@gmail.com',
                 img: 'https://lh3.googleusercontent.com/d/1-G5rU0kTPGyQe8wOwArb756R9FX_17rc'
               },
               {
@@ -162,7 +165,7 @@ export default function Home() {
                 mapLink: 'https://maps.app.goo.gl/dtnrdk3MXYSwZsdc8',
                 phone: '(67) 99263-0948',
                 whatsappLink: 'https://wa.me/5567992630948',
-                email: 'gustavoissao2005@gmail.com',
+                email: 'cursodeverao67@gmail.com',
                 img: 'https://lh3.googleusercontent.com/d/1tj8o79FcqiMRoIdZfr1hKlLSobPCyhkK'
               }
             ].map((unit, idx) => (
@@ -200,9 +203,6 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
-
-      {/* FAQ Section */}
-      <FAQSection />
 
       {/* Partners Section */}
       <motion.section 

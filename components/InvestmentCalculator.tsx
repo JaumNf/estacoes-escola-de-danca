@@ -16,6 +16,7 @@ export default function InvestmentCalculator() {
   const [isUniversitario, setIsUniversitario] = useState(false);
   const [type, setType] = useState<'individual' | 'dupla'>('individual');
   const [selectedTurmas, setSelectedTurmas] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<'regular' | 'grupo'>('regular');
 
   const toggleTurma = (id: string) => {
     setSelectedTurmas(prev => 
@@ -47,10 +48,26 @@ export default function InvestmentCalculator() {
     <div className="bg-[#1e0a05] rounded-3xl p-6 md:p-10 border border-orange-900/50 shadow-2xl w-full max-w-4xl mx-auto text-orange-50 font-sans">
       <div className="text-center mb-8">
         <h3 className="text-3xl md:text-4xl font-display font-bold text-orange-400 mb-2">Simule seu Plano</h3>
-        <p className="text-orange-200 text-lg">Descubra o valor ideal para sua rotina na dança.</p>
+        <p className="text-orange-200 text-lg mb-6">Descubra o valor ideal para sua rotina na dança.</p>
+
+        <div className="flex justify-center max-w-md mx-auto bg-black/40 rounded-xl p-1 border border-orange-900/30">
+          <button 
+            onClick={() => setViewMode('regular')}
+            className={`flex-1 py-3 text-sm font-bold tracking-wide rounded-lg transition-all ${viewMode === 'regular' ? 'bg-orange-600 text-white shadow-md' : 'text-orange-400 hover:text-orange-200'}`}
+          >
+            Planos Regulares
+          </button>
+          <button 
+            onClick={() => setViewMode('grupo')}
+            className={`flex-1 py-3 text-sm font-bold tracking-wide rounded-lg transition-all ${viewMode === 'grupo' ? 'bg-orange-600 text-white shadow-md' : 'text-orange-400 hover:text-orange-200'}`}
+          >
+            Planos Especiais (Grupos)
+          </button>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-10">
+      {viewMode === 'regular' ? (
+        <div className="grid md:grid-cols-2 gap-10">
         <div className="space-y-8">
           <div className="space-y-4">
             <h4 className="text-xl font-bold text-orange-300">1. Qual o seu perfil?</h4>
@@ -170,6 +187,54 @@ export default function InvestmentCalculator() {
           </button>
         </div>
       </div>
+      ) : (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-2xl mx-auto space-y-6"
+        >
+          <div className="bg-gradient-to-b from-orange-900/40 to-black/40 border border-orange-800/50 rounded-3xl p-6 md:p-8">
+            <h4 className="text-2xl font-display font-bold text-orange-300 mb-6 flex items-center gap-3">
+              <Users className="text-orange-500" size={28} />
+              Trio
+            </h4>
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-orange-800/30 pb-6 mb-6">
+              <div>
+                <p className="text-orange-100 text-lg">Venha com mais dois amigos!</p>
+                <p className="text-orange-400 text-sm mt-1">Valor por pessoa: R$ 90,00</p>
+              </div>
+              <div className="text-right">
+                <span className="text-sm text-orange-200 block mb-1">Total (Mensal)</span>
+                <span className="text-4xl font-display font-bold text-orange-400">R$ 270,00</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-b from-fuchsia-900/30 to-black/40 border border-fuchsia-800/40 rounded-3xl p-6 md:p-8">
+            <h4 className="text-2xl font-display font-bold text-fuchsia-300 mb-6 flex items-center gap-3">
+              <Users className="text-fuchsia-500" size={28} />
+              Família / Galera <span className="text-sm font-sans font-normal opacity-70">(4 ou + pessoas)</span>
+            </h4>
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2">
+              <div>
+                <p className="text-orange-100 text-lg">Ideal para grupos maiores.</p>
+                <p className="text-fuchsia-400 text-sm mt-1">Exemplo: 4 pessoas = R$ 320,00</p>
+              </div>
+              <div className="text-right">
+                <span className="text-sm text-orange-200 block mb-1">Valor por pessoa</span>
+                <span className="text-4xl font-display font-bold text-fuchsia-400">R$ 80,00</span>
+              </div>
+            </div>
+          </div>
+          
+          <button 
+            onClick={() => { const el = document.getElementById('matricula'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}
+            className="w-full py-4 mt-8 rounded-xl font-bold tracking-widest uppercase transition-all flex items-center justify-center bg-orange-600 text-white hover:bg-orange-500 shadow-xl shadow-orange-900/20"
+          >
+            Quero me matricular
+          </button>
+        </motion.div>
+      )}
     </div>
   );
 }
