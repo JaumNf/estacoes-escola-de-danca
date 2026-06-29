@@ -17,7 +17,7 @@ interface Turma {
 const turmasOriginal: Turma[] = [
   { id: '1', ritmo: 'Vanera e Chamamé', nivel: 'Do zero', horario: '18h20 - 19h20', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: false },
   { id: '2', ritmo: 'Forró', nivel: 'Do zero', horario: '19h30 - 20h30', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: false },
-  { id: '3', ritmo: 'Bachata', nivel: 'Do zero', horario: '20h40 - 21h40', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: false },
+  { id: '3', ritmo: 'Bachata', nivel: 'Do zero', horario: '20h40 - 21h40', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: true },
   { id: '4', ritmo: 'Dança de Salão em Geral', nivel: 'Vanera, Chamamé, Bolero, etc.', horario: '18h20 - 19h20', unidade: 'Templo Nambei', dia: 'Quinta-feira', esgotada: false },
   { id: '5', ritmo: 'Forró', nivel: 'Do zero', horario: '19h30 - 20h30', unidade: 'Templo Nambei', dia: 'Quinta-feira', esgotada: false },
 ];

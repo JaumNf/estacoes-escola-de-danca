@@ -12,6 +12,7 @@ import BackToTop from '@/components/BackToTop';
 import dynamic from 'next/dynamic';
 import HorariosTurmas from '@/components/HorariosTurmas';
 import InvestmentCalculator from '@/components/InvestmentCalculator';
+import AulaExperimentalModal from './AulaExperimentalModal';
 
 const MapComponent = dynamic(() => import('@/components/MapComponent'), { 
   ssr: false,
@@ -23,6 +24,7 @@ const MapComponent = dynamic(() => import('@/components/MapComponent'), {
 });
 
 export default function AulasRegulares() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [unidade, setUnidade] = useState<'unidade1' | 'unidade2'>('unidade1');
   const [turmaPrincipal, setTurmaPrincipal] = useState('');
   const [tipoInscricao, setTipoInscricao] = useState<'individual' | 'dupla'>('individual');
@@ -102,6 +104,11 @@ export default function AulasRegulares() {
     <main className="min-h-screen bg-orange-50 flex flex-col">
       <Header />
       
+      <AulaExperimentalModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
+
       {/* Hero Section */}
       <section className="relative h-screen w-full bg-[#120400] text-orange-50 overflow-hidden flex items-center justify-center">
         {/* Background Image */}
@@ -127,14 +134,12 @@ export default function AulasRegulares() {
             Aprenda a dançar do zero ao baile com a nossa metodologia acolhedora e focada na sua evolução.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a 
-              href="https://wa.me/5567992630948?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20minha%20aula%20experimental"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button 
+              onClick={() => setIsModalOpen(true)}
               className="bg-white text-orange-700 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-100 transition-colors duration-300 shadow-lg inline-flex items-center gap-2 cursor-pointer"
             >
               Agendar aula experimental
-            </a>
+            </button>
             <button 
               onClick={() => document.getElementById('horarios')?.scrollIntoView({ behavior: 'smooth' })}
               className="bg-orange-600 text-orange-50 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-800 transition-colors duration-300 shadow-lg inline-flex items-center gap-2"

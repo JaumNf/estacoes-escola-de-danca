@@ -15,12 +15,20 @@ import Autoplay from 'embla-carousel-autoplay';
 import EssenceCard from '@/components/EssenceCard';
 import FAQSection from '@/components/FAQSection';
 import Footer from '@/components/Footer';
+import AulaExperimentalModal from '@/app/aulas-regulares/AulaExperimentalModal';
 
 export default function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <main className="min-h-screen bg-brown-50 relative">
       <Header />
       <HeroCarousel />
+      
+      <AulaExperimentalModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
 
       {/* About Section */}
       <motion.section 
@@ -47,14 +55,12 @@ export default function Home() {
               <p className="text-brown-900 font-bold text-base mb-2">
                 Ficou interessado? Agende sua aula para aprender com a gente.
               </p>
-              <a 
-                href="https://wa.me/5567992630948?text=Gostaria%20de%20conhecer%20como%20funcionamos%2C%20agende%20sua%20aula%20experimental"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block bg-brown-900 text-brown-50 px-6 py-3 rounded-full font-medium tracking-wide hover:bg-terracotta transition-colors duration-300 shadow-lg shadow-brown-900/20"
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="inline-block bg-brown-900 text-brown-50 px-6 py-3 rounded-full font-medium tracking-wide hover:bg-terracotta transition-colors duration-300 shadow-lg shadow-brown-900/20 cursor-pointer"
               >
                 Agende sua aula experimental
-              </a>
+              </button>
             </div>
           </div>
           <div className="relative h-[350px] md:h-[500px] w-full">
