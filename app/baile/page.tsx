@@ -11,7 +11,7 @@ import { createPortal } from 'react-dom';
 
 export default function BailePage() {
   const [ticketType, setTicketType] = useState<'individual' | 'dupla'>('individual');
-  const [selectedEvent, setSelectedEvent] = useState('baile-namorados');
+  const [selectedEvent, setSelectedEvent] = useState('baile-julino');
   const [currentStep, setCurrentStep] = useState(1);
 
   const [nome1, setNome1] = useState('');
@@ -26,7 +26,7 @@ export default function BailePage() {
   const [submitted, setSubmitted] = useState(false);
 
   const events = [
-    { id: 'baile-namorados', name: 'Baile de Namorados: Teatro do Mundo (21/06)', active: true },
+    { id: 'baile-julino', name: 'Baile Edição Julina: Teatro do Mundo (25/07)', active: true },
     { id: 'baile-unidade-2', name: 'Baile Unidade 2 (Em breve)', active: false },
   ];
 
@@ -185,17 +185,17 @@ export default function BailePage() {
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="bg-[#fffcf5] rounded-xl p-3 text-center min-w-[70px] border border-orange-100">
-                    <span className="block text-xl font-bold text-[#682c0b]">21</span>
-                    <span className="block text-xs font-bold text-rose-500 uppercase">JUN</span>
+                    <span className="block text-xl font-bold text-[#682c0b]">25</span>
+                    <span className="block text-xs font-bold text-orange-500 uppercase">JUL</span>
                   </div>
                   <div>
-                    <h4 className="text-xl font-display font-bold text-[#682c0b] mb-1">Baile dos Namorados!</h4>
+                    <h4 className="text-xl font-display font-bold text-[#682c0b] mb-1">Baile Edição Julina!</h4>
                     <p className="text-[#874c2e] text-sm mb-2">
-                      Momento para curtir a noite a dois ou conhecer gente nova. <strong>Haverá concurso de melhor look de casal (roupas combinando)!</strong>
+                      Venha se divertir na nossa festa julina! <strong>Haverá uma feira de festa julina na parte de fora do baile.</strong>
                     </p>
                     <div className="flex items-center gap-2 text-xs text-orange-500">
                       <Clock size={14} />
-                      <span>A partir das 19h</span>
+                      <span>Das 19h às 00h</span>
                     </div>
                   </div>
                 </div>

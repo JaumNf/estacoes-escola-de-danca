@@ -64,6 +64,47 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
             gtag('config', 'G-BPFGLVKRPL');
           `}
         </Script>
+        <Script id="local-business-schema" type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": "Estações Escola de Dança",
+              "image": "https://escoladedancaestacoes.vercel.app/icon.png",
+              "url": "https://escoladedancaestacoes.vercel.app/",
+              "telephone": "+5567993444005",
+              "address": [
+                {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Rua Barão de Melgaço, 177 - Centro",
+                  "addressLocality": "Campo Grande",
+                  "addressRegion": "MS",
+                  "postalCode": "79002-090",
+                  "addressCountry": "BR"
+                },
+                {
+                  "@type": "PostalAddress",
+                  "streetAddress": "R. Carvalho, 319 - Cidade Jardim",
+                  "addressLocality": "Campo Grande",
+                  "addressRegion": "MS",
+                  "postalCode": "79040-620",
+                  "addressCountry": "BR"
+                }
+              ],
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                  "opens": "18:00",
+                  "closes": "22:00"
+                }
+              ],
+              "sameAs": [
+                "https://www.instagram.com/estacoes.danca"
+              ]
+            }
+          `}
+        </Script>
       </head>
       <body suppressHydrationWarning className="antialiased selection:bg-brown-300 selection:text-brown-950">
         {children}

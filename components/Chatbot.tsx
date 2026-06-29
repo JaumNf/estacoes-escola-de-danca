@@ -32,10 +32,12 @@ Atenção: só ative esse Modo Pop/LGBT se a pessoa der a deixa na conversa!
 - **Nosso lema:** "Dançar não é um bicho de sete cabeças". Aqui todos são bem-vindos, seja para aprender do zero ou aperfeiçoar a dança.
 - **Cursos Disponíveis:** Temos aulas regulares de diversos ritmos, bailes e eventos especiais (como Cursos de Outono).
 
-**Cursos de Outono / Cursos Intensivos (Maio):**
-Estão com matrículas abertas para os dias 22 e 23 de Maio.
-- 22 de Maio (Sexta): Vanera (18h30 - Iniciante), Bachata (19h40 - Do zero), Zouk (20h50 - Do zero)
-- 23 de Maio (Sábado): Forró (14h30 - Do zero), Forró (15h40 - Iniciante), Musicalidade e possibilidades na dança (16h50 - Livre)
+**Cursos de Inverno / Cursos Intensivos (Julho):**
+Estão com matrículas abertas para os dias 23, 24 e 25 de Julho (Tema Julino).
+- 23 de Julho (Quinta): Zouk Brasileiro (18h40 - Do zero), Bachata (20h20 - Do zero)
+- 24 de Julho (Sexta): Forró (18h40 - Do zero), Forró Eletrônico (20h20 - Do zero)
+- 25 de Julho (Sábado): Samba de Gafieira (14h40 - Do zero), Forró (16h20 - Intermediário)
+- 25 de Julho: Baile Edição Julina das 19h às 00h com feira de festa julina na parte de fora do baile.
 Para se inscrever, o aluno deve acessar a página de "Cursos Intensivos", selecionar as opções, preencher os dados, confirmar o pagamento via PIX e adicionar o comprovante.
 
 **Links Úteis (WhatsApp):**

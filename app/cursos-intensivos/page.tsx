@@ -16,16 +16,16 @@ import Footer from '@/components/Footer';
 
 export default function CursosIntensivos() {
   return (
-    <main className="min-h-screen bg-rose-50 relative">
+    <main className="min-h-screen bg-orange-50 relative">
       <Header />
       
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex flex-col items-center justify-center bg-[#120400] text-rose-50 overflow-hidden">
+      <section className="relative min-h-[90vh] flex flex-col items-center justify-center bg-[#120400] text-orange-50 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
             src="https://lh3.googleusercontent.com/d/1URzYQjUA6RL0bn783UvqPyQ2txodm-kB"
-            alt="Dançar não é um bicho de sete cabeças"
+            alt="Curso de Inverno - Estações"
             fill
             className="object-cover"
             priority
@@ -37,14 +37,14 @@ export default function CursosIntensivos() {
         <div className="absolute inset-0 bg-black/60 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#120400] via-black/40 to-transparent pointer-events-none" />
 
-        <div className="max-w-4xl w-full mx-auto text-center relative z-10 px-6 py-24 flex flex-col items-center justify-center h-full">
+        <div className="max-w-4xl w-full mx-auto text-center relative z-10 px-6 py-16 flex flex-col items-center justify-center h-full">
           
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold mb-6 text-white leading-tight mt-8">
-            Curso de Outono:<br className="hidden md:block"/> Edição dos Namorados
+            Curso de Inverno:<br className="hidden md:block"/> 1ª Edição
           </h1>
           
           <p className="text-xl md:text-2xl text-[#fcd34d] font-bold max-w-2xl mx-auto mb-10">
-            Neste dia 21 de junho, venha aprender muito FORRÓ com a gente! (Para quem está começando)
+            Dias 23, 24 e 25 de Julho. Venha aquecer o inverno dançando com a gente!
           </p>
           
           {/* Countdown Timer */}
@@ -59,7 +59,7 @@ export default function CursosIntensivos() {
         </div>
         
         <div className="absolute bottom-0 left-0 w-full z-20">
-          <WaveDivider position="bottom" colorClass="fill-rose-50" />
+          <WaveDivider position="bottom" colorClass="fill-orange-50" />
         </div>
       </section>
 
@@ -69,9 +69,9 @@ export default function CursosIntensivos() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="relative py-24 px-6 bg-rose-50"
+        className="relative py-16 px-6 bg-orange-50"
       >
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-16 items-center">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 items-center">
           
           {/* Text Side */}
           <div className="space-y-6 text-left order-1">
@@ -87,7 +87,7 @@ export default function CursosIntensivos() {
               Nosso ambiente é pensado para que ninguém fique de fora: acolhemos quem nunca dançou com segurança e desafiamos quem já dança a evoluir.
             </p>
 
-            <blockquote className="bg-[#fcf8f2] border-l-[4px] border-rose-600 p-4 text-rose-700 font-medium italic text-lg md:text-xl rounded-r-lg shadow-sm my-4 shrink-0">
+            <blockquote className="bg-[#fcf8f2] border-l-[4px] border-orange-600 p-4 text-orange-700 font-medium italic text-lg md:text-xl rounded-r-lg shadow-sm my-4 shrink-0">
               &quot;Priorizamos o movimento sobre a teoria e a diversão sobre a rigidez.&quot;
             </blockquote>
 
@@ -100,7 +100,7 @@ export default function CursosIntensivos() {
           <div className="relative h-[300px] md:h-[600px] w-full mb-8 md:mb-0 block order-2">
             {/* Background Shape */}
             <div className="absolute top-4 -right-4 md:top-8 md:-right-8 w-full h-[80%] bg-[#e8a32a] rounded-[40px] md:rounded-[60px]" />
-            <div className="relative h-[80%] w-full rounded-[40px] md:rounded-[60px] overflow-hidden border-4 border-rose-50 bg-gray-200">
+            <div className="relative h-[80%] w-full rounded-[40px] md:rounded-[60px] overflow-hidden border-4 border-orange-50 bg-gray-200">
               <Image 
                 src="https://i.ibb.co/5XDbwVrd/Screenshot-20260129-194726-Instagram-2.jpg" 
                 alt="Turma Estações" 
@@ -121,110 +121,195 @@ export default function CursosIntensivos() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="relative py-24 px-6 bg-rose-50/50"
+        className="relative py-16 px-6 bg-orange-50/50"
       >
         <div className="max-w-6xl mx-auto">
           <div className="text-center shrink-0">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-[#682c0b] mb-4">Cronograma do Evento</h2>
             <p className="text-lg md:text-xl text-[#645c58] font-medium max-w-2xl mx-auto flex items-center justify-center gap-2">
-              <Heart className="text-rose-500 fill-rose-500" size={24} />
-              No Teatro do Mundo, um dia focado em forró para você curtir a dois ou conhecer gente nova.
-              <Heart className="text-rose-500 fill-rose-500" size={24} />
+              <Sparkles className="text-[#e8a32a] fill-[#e8a32a]" size={24} />
+              No Teatro do Mundo, 3 dias incríveis para aquecer o inverno dançando!
+              <Sparkles className="text-[#e8a32a] fill-[#e8a32a]" size={24} />
             </p>
           </div>
 
-          <div className="relative max-w-4xl mx-auto mt-12">
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-8 relative z-10 max-w-xl mx-auto">
-              
-              {/* Day 1 */}
-              <div className="bg-rose-50 relative rounded-[32px] p-8 lg:p-10 shadow-lg border border-rose-100 hover:-translate-y-2 transition-transform duration-300">
-                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-rose-200 rounded-full border border-rose-300 shadow-sm z-20" />
-                
-                <div className="text-center mb-4 mt-1">
-                  <h3 className="text-3xl font-display font-bold text-[#682c0b]">21 JUN</h3>
-                  <p className="text-rose-600 text-xs font-bold tracking-widest uppercase mt-1">Domingo Romântico</p>
+          <div className="relative max-w-4xl mx-auto mt-8 md:mt-12 space-y-6 md:space-y-8 relative z-10">
+            
+            {/* Day 1 */}
+            <div className="bg-orange-50/80 rounded-2xl md:rounded-[32px] p-5 md:p-8 shadow-sm border border-orange-100">
+              <div className="flex items-center gap-4 mb-5 border-b border-orange-200/50 pb-4">
+                <div className="bg-[#682c0b] text-white px-4 py-2 rounded-xl text-center shrink-0 shadow-sm">
+                  <span className="block text-2xl font-display font-bold leading-none">23</span>
+                  <span className="block text-[10px] uppercase tracking-wider font-bold mt-1 text-orange-200">JUL</span>
                 </div>
-                
-                <div className="w-full h-px bg-rose-200/50 mb-4" />
-                
-                <div className="flex flex-col gap-3 flex-1">
-                  
-                  {/* Class 1 */}
-                  <button 
-                    onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="relative w-full text-left bg-rose-100/50 rounded-[20px] p-4 shadow-sm border-2 border-rose-300 cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all hover:bg-rose-100"
-                  >
-                     <div className="absolute -top-3 right-4 bg-gradient-to-r from-rose-500 to-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-widest whitespace-nowrap animate-pulse border border-white z-10 flex gap-1 items-center">
-                      <Heart size={10} className="fill-white" />
-                      EXCLUSIVA PARA CASAIS
-                    </div>
-                    <div className="flex items-center gap-2 text-rose-800 text-xs font-bold mb-1">
+                <div>
+                  <h3 className="text-xl md:text-2xl font-display font-bold text-[#682c0b]">Quinta-feira</h3>
+                  <p className="text-orange-700 text-sm hidden md:block">Início do intensivo</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                {/* Class 1 */}
+                <button 
+                  onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover:-translate-y-1 transition-all group"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
                       <Clock size={14} />
-                      <span>14:00 às 15:20</span>
+                      <span>18:40 às 20:00</span>
                     </div>
-                    <h4 className="text-lg font-bold text-[#682c0b] mb-2">Forró</h4>
-                    <div className="inline-block px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm">
+                    <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[9px] font-bold rounded uppercase tracking-wider">
                       Do Zero
-                    </div>
-                  </button>
+                    </span>
+                  </div>
+                  <h4 className="text-base md:text-lg font-bold text-[#682c0b] group-hover:text-orange-700 transition-colors">Zouk Brasileiro</h4>
+                </button>
 
-                  {/* Class 2 */}
-                  <button 
-                    onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="w-full text-left bg-white/80 rounded-[20px] p-4 shadow-sm border-2 border-rose-100 cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-transform relative mt-4"
-                  >
-                    <div className="absolute -top-3 right-4 bg-gradient-to-r from-rose-400 to-rose-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-widest whitespace-nowrap border border-white z-10 flex gap-1 items-center">
-                      <Sparkles size={10} className="fill-white" />
-                      EXCLUSIVA PARA SOLTEIROS
-                    </div>
-                    <div className="flex items-center gap-2 text-rose-800 text-xs font-bold mb-1">
+                {/* Class 2 */}
+                <button 
+                  onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover:-translate-y-1 transition-all group"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
                       <Clock size={14} />
-                      <span>15:40 às 17:00</span>
+                      <span>20:20 às 21:40</span>
                     </div>
-                    <h4 className="text-lg font-bold text-[#682c0b] mb-2">Forró</h4>
-                    <div className="inline-block px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm">
+                    <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[9px] font-bold rounded uppercase tracking-wider">
                       Do Zero
-                    </div>
-                  </button>
+                    </span>
+                  </div>
+                  <h4 className="text-base md:text-lg font-bold text-[#682c0b] group-hover:text-orange-700 transition-colors">Bachata Brasileira</h4>
+                </button>
+              </div>
+            </div>
 
-                  {/* Baile */}
-                  <div className="w-full text-left bg-rose-600/10 rounded-[20px] p-4 shadow-sm border border-rose-200 mt-4 relative overflow-hidden">
-                    <div className="absolute -top-3 right-4 bg-rose-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-widest whitespace-nowrap border border-white flex gap-1 items-center z-20">
-                      <Music size={10} className="fill-white" />
-                      ABERTO AO PÚBLICO
+            {/* Day 2 */}
+            <div className="bg-orange-50/80 rounded-2xl md:rounded-[32px] p-5 md:p-8 shadow-sm border border-orange-100">
+              <div className="flex items-center gap-4 mb-5 border-b border-orange-200/50 pb-4">
+                <div className="bg-[#682c0b] text-white px-4 py-2 rounded-xl text-center shrink-0 shadow-sm">
+                  <span className="block text-2xl font-display font-bold leading-none">24</span>
+                  <span className="block text-[10px] uppercase tracking-wider font-bold mt-1 text-orange-200">JUL</span>
+                </div>
+                <div>
+                  <h3 className="text-xl md:text-2xl font-display font-bold text-[#682c0b]">Sexta-feira</h3>
+                  <p className="text-orange-700 text-sm hidden md:block">Noite do Forró</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                {/* Class 1 */}
+                <button 
+                  onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover:-translate-y-1 transition-all group"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
+                      <Clock size={14} />
+                      <span>18:40 às 20:00</span>
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-r from-rose-500/10 to-transparent pointer-events-none" />
-                    <div className="relative z-10">
-                      <div className="flex items-center gap-2 text-rose-800 text-xs font-bold mb-1">
-                        <Clock size={14} />
-                        <span>A partir das 19:30</span>
-                      </div>
-                      <h4 className="text-lg font-bold text-[#682c0b] mb-1">Baile: Teatro do Mundo</h4>
-                      <p className="text-sm text-rose-800 font-medium mb-3">
-                        Edição Especial Namorados! Momento para curtir a noite no Teatro do Mundo, com comidas e bebidas no local.
-                      </p>
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        <div className="inline-block px-3 py-1 bg-rose-200 text-rose-800 text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm">
-                          BAILE COMPLETO
-                        </div>
-                        <div className="inline-block px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase tracking-wider shadow-sm">
-                          NA PRÁTICA
-                        </div>
-                      </div>
+                    <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[9px] font-bold rounded uppercase tracking-wider">
+                      Do Zero
+                    </span>
+                  </div>
+                  <h4 className="text-base md:text-lg font-bold text-[#682c0b] group-hover:text-orange-700 transition-colors">Forró</h4>
+                </button>
+
+                {/* Class 2 */}
+                <button 
+                  onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover:-translate-y-1 transition-all group"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
+                      <Clock size={14} />
+                      <span>20:20 às 21:40</span>
                     </div>
+                    <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[9px] font-bold rounded uppercase tracking-wider">
+                      Do Zero
+                    </span>
+                  </div>
+                  <h4 className="text-base md:text-lg font-bold text-[#682c0b] group-hover:text-orange-700 transition-colors">Forró Eletrônico</h4>
+                </button>
+              </div>
+            </div>
+
+            {/* Day 3 */}
+            <div className="bg-orange-50/80 rounded-2xl md:rounded-[32px] p-5 md:p-8 shadow-sm border border-orange-100">
+              <div className="flex items-center gap-4 mb-5 border-b border-orange-200/50 pb-4">
+                <div className="bg-[#682c0b] text-white px-4 py-2 rounded-xl text-center shrink-0 shadow-sm">
+                  <span className="block text-2xl font-display font-bold leading-none">25</span>
+                  <span className="block text-[10px] uppercase tracking-wider font-bold mt-1 text-orange-200">JUL</span>
+                </div>
+                <div>
+                  <h3 className="text-xl md:text-2xl font-display font-bold text-[#682c0b]">Sábado</h3>
+                  <p className="text-orange-700 text-sm hidden md:block">Encerramento e Baile</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+                {/* Class 1 */}
+                <button 
+                  onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover:-translate-y-1 transition-all group"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
+                      <Clock size={14} />
+                      <span>14:40 às 16:00</span>
+                    </div>
+                    <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[9px] font-bold rounded uppercase tracking-wider">
+                      Do Zero
+                    </span>
+                  </div>
+                  <h4 className="text-base md:text-lg font-bold text-[#682c0b] group-hover:text-orange-700 transition-colors">Samba de Gafieira</h4>
+                </button>
+
+                {/* Class 2 */}
+                <button 
+                  onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover:-translate-y-1 transition-all group"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
+                      <Clock size={14} />
+                      <span>16:20 às 17:40</span>
+                    </div>
+                    <span className="inline-block px-2 py-0.5 bg-blue-100 text-blue-700 text-[9px] font-bold rounded uppercase tracking-wider">
+                      Intermediário
+                    </span>
+                  </div>
+                  <h4 className="text-base md:text-lg font-bold text-[#682c0b] group-hover:text-orange-700 transition-colors">Forró</h4>
+                </button>
+
+                {/* Baile */}
+                <div className="flex flex-col text-left bg-orange-600/10 rounded-xl p-4 shadow-sm border border-orange-200 relative overflow-hidden sm:col-span-2 lg:col-span-1">
+                  <div className="absolute top-2 right-2 bg-orange-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm uppercase tracking-widest flex items-center gap-1 z-10">
+                    <Music size={10} className="fill-white" />
+                    Aberto ao Público
+                  </div>
+                  <div className="relative z-10 mt-4 md:mt-0">
+                    <div className="flex items-center gap-1.5 text-orange-800 text-xs font-bold mb-1">
+                      <Clock size={14} />
+                      <span>Das 19:00 às 00:00</span>
+                    </div>
+                    <h4 className="text-base font-bold text-[#682c0b] mb-1">Baile Edição Julina</h4>
+                    <p className="text-xs text-orange-800 font-medium leading-snug">
+                      Com feira de festa julina na parte de fora!
+                    </p>
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
       </motion.section>
 
       {/* Festa, Arte e Liberdade */}
-      <section className="relative py-24 w-full bg-rose-600">
+      <section className="relative py-16 w-full bg-orange-600">
         {/* Soft Wave Top */}
-        <svg viewBox="0 0 1440 100" className="absolute top-0 left-0 w-full h-[4vh] md:h-[4vh] -translate-y-[99%] text-rose-600 fill-current preserve-3d" preserveAspectRatio="none">
+        <svg viewBox="0 0 1440 100" className="absolute top-0 left-0 w-full h-[4vh] md:h-[4vh] -translate-y-[99%] text-orange-600 fill-current preserve-3d" preserveAspectRatio="none">
           <path d="M0,50 Q360,100 720,50 T1440,50 L1440,100 L0,100 Z" />
         </svg>
 
@@ -233,17 +318,17 @@ export default function CursosIntensivos() {
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-4 uppercase tracking-wide">
               Festa, Arte e Liberdade
             </h2>
-            <p className="text-lg md:text-xl text-rose-100 font-medium max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-orange-100 font-medium max-w-2xl mx-auto">
               Mergulhe na folia criativa e no aprendizado divertido.
             </p>
-            <p className="text-rose-200 text-xs mt-3 font-bold uppercase tracking-widest animate-pulse">Arraste para os lados para ver mais</p>
+            <p className="text-orange-200 text-xs mt-3 font-bold uppercase tracking-widest animate-pulse">Arraste para os lados para ver mais</p>
           </div>
 
           <FestaCarousel />
         </div>
 
         {/* Soft Wave Bottom */}
-        <svg viewBox="0 0 1440 100" className="absolute bottom-0 left-0 w-full h-[4vh] md:h-[4vh] translate-y-[99%] text-rose-600 fill-current preserve-3d" preserveAspectRatio="none">
+        <svg viewBox="0 0 1440 100" className="absolute bottom-0 left-0 w-full h-[4vh] md:h-[4vh] translate-y-[99%] text-orange-600 fill-current preserve-3d" preserveAspectRatio="none">
           <path d="M0,0 L1440,0 L1440,50 Q1080,0 720,50 T0,50 Z" />
         </svg>
       </section>
@@ -254,7 +339,7 @@ export default function CursosIntensivos() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="relative py-24 px-6 bg-rose-50/50"
+        className="relative py-16 px-6 bg-orange-50/50"
       >
         <div className="max-w-6xl mx-auto">
           <div className="text-center shrink-0">
@@ -268,7 +353,7 @@ export default function CursosIntensivos() {
             {/* Localização Exata */}
             <div className="bg-white rounded-3xl shadow-lg border border-orange-100 p-8 flex flex-col">
               <div className="flex items-center gap-4 mb-4 shrink-0">
-                <div className="w-12 h-12 bg-rose-600 rounded-2xl flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 bg-orange-600 rounded-2xl flex items-center justify-center shrink-0">
                   <MapPin className="text-white w-6 h-6" />
                 </div>
                 <div>
@@ -293,7 +378,7 @@ export default function CursosIntensivos() {
                 ></iframe>
               </div>
 
-              <a href="https://maps.google.com/?q=Rua+Barao+de+Melgaco,+177,+Campo+Grande+-+MS" target="_blank" rel="noopener noreferrer" className="w-full bg-rose-600 text-white font-bold py-3 rounded-xl hover:bg-[#c45424] transition-colors flex justify-center items-center gap-2 shrink-0 text-sm">
+              <a href="https://maps.google.com/?q=Rua+Barao+de+Melgaco,+177,+Campo+Grande+-+MS" target="_blank" rel="noopener noreferrer" className="w-full bg-orange-600 text-white font-bold py-3 rounded-xl hover:bg-[#c45424] transition-colors flex justify-center items-center gap-2 shrink-0 text-sm">
                 <MapPin size={18} /> TRAÇAR ROTA
               </a>
             </div>
@@ -303,27 +388,27 @@ export default function CursosIntensivos() {
               <h3 className="text-2xl font-display font-bold text-[#682c0b] mb-6">Tira Dúvidas</h3>
               
               <div className="space-y-6 flex-1">
-                <div className="relative pl-4 border-l-2 border-rose-600/30">
-                  <div className="absolute left-[-5px] top-2 w-2 h-2 rounded-full bg-rose-600" />
-                  <h4 className="text-rose-700 font-bold mb-1 text-sm">Preciso saber dançar?</h4>
+                <div className="relative pl-4 border-l-2 border-orange-600/30">
+                  <div className="absolute left-[-5px] top-2 w-2 h-2 rounded-full bg-orange-600" />
+                  <h4 className="text-orange-700 font-bold mb-1 text-sm">Preciso saber dançar?</h4>
                   <p className="text-gray-500 text-xs shadow-none">Não. O curso é para iniciantes e experiêntes.</p>
                 </div>
 
-                <div className="relative pl-4 border-l-2 border-rose-600/30">
-                  <div className="absolute left-[-5px] top-2 w-2 h-2 rounded-full bg-rose-600" />
-                  <h4 className="text-rose-700 font-bold mb-1 text-sm">Preciso levar parceiro(a)?</h4>
+                <div className="relative pl-4 border-l-2 border-orange-600/30">
+                  <div className="absolute left-[-5px] top-2 w-2 h-2 rounded-full bg-orange-600" />
+                  <h4 className="text-orange-700 font-bold mb-1 text-sm">Preciso levar parceiro(a)?</h4>
                   <p className="text-gray-500 text-xs">Não precisa. Pode vir sozinho(a).</p>
                 </div>
 
-                <div className="relative pl-4 border-l-2 border-rose-600/30">
-                  <div className="absolute left-[-5px] top-2 w-2 h-2 rounded-full bg-rose-600" />
-                  <h4 className="text-rose-700 font-bold mb-1 text-sm">As aulas são difíceis?</h4>
+                <div className="relative pl-4 border-l-2 border-orange-600/30">
+                  <div className="absolute left-[-5px] top-2 w-2 h-2 rounded-full bg-orange-600" />
+                  <h4 className="text-orange-700 font-bold mb-1 text-sm">As aulas são difíceis?</h4>
                   <p className="text-gray-500 text-xs">Não. São divertidas e respeitam seu tempo.</p>
                 </div>
 
-                <div className="relative pl-4 border-l-2 border-rose-600/30">
-                  <div className="absolute left-[-5px] top-2 w-2 h-2 rounded-full bg-rose-600" />
-                  <h4 className="text-rose-700 font-bold mb-1 text-sm">Que roupa usar?</h4>
+                <div className="relative pl-4 border-l-2 border-orange-600/30">
+                  <div className="absolute left-[-5px] top-2 w-2 h-2 rounded-full bg-orange-600" />
+                  <h4 className="text-orange-700 font-bold mb-1 text-sm">Que roupa usar?</h4>
                   <p className="text-gray-500 text-xs">Roupas confortáveis que não limitem o movimento.</p>
                 </div>
               </div>
@@ -347,7 +432,7 @@ export default function CursosIntensivos() {
       {/* Matrícula / Seleção de Aulas */}
       <section 
         id="matricula"
-        className="relative py-24 px-6 bg-[#3d1c04]"
+        className="relative py-16 px-6 bg-[#3d1c04]"
       >
         <WaveDivider position="top" colorClass="fill-[#3d1c04]" />
         <div className="max-w-6xl mx-auto relative z-10">
@@ -358,11 +443,11 @@ export default function CursosIntensivos() {
       </section>
 
       {/* Testimonials */}
-      <section className="relative py-24 px-6 bg-[#fffdf0]">
+      <section className="relative py-16 px-6 bg-[#fffdf0]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 shrink-0">
             <h2 className="text-4xl md:text-5xl font-display font-bold text-[#682c0b] mb-4">O que dizem os alunos</h2>
-            <p className="text-rose-950/60 text-xs mt-3 font-bold uppercase tracking-widest animate-pulse">Arraste para os lados para ler mais</p>
+            <p className="text-orange-950/60 text-xs mt-3 font-bold uppercase tracking-widest animate-pulse">Arraste para os lados para ler mais</p>
           </div>
 
           <TestimonialCarousel />
@@ -388,19 +473,19 @@ function FestaCarousel() {
     {
       titleTop: 'Conforto e',
       titleBottom: 'Confiança.',
-      icon: <Heart className="text-rose-600 w-8 h-8 fill-current shrink-0 ml-2" />,
+      icon: <Heart className="text-orange-600 w-8 h-8 fill-current shrink-0 ml-2" />,
       desc: 'Você aprende desde a base. Com menos vergonha e mais segurança pra se soltar e curtir.'
     },
     {
       titleTop: 'Leve e',
       titleBottom: 'Divertido.',
-      icon: <Music className="text-rose-600 w-8 h-8 fill-current shrink-0 ml-2" />,
+      icon: <Music className="text-orange-600 w-8 h-8 fill-current shrink-0 ml-2" />,
       desc: 'Aulas dinâmicas que respeitam seu ritmo e trazem a alegria da arte para o seu dia.'
     },
     {
       titleTop: 'Vontade de',
       titleBottom: 'Continuar.',
-      icon: <Star className="text-rose-600 w-8 h-8 fill-current shrink-0 ml-2" />,
+      icon: <Star className="text-orange-600 w-8 h-8 fill-current shrink-0 ml-2" />,
       desc: 'O sentimento de conquista ao final de cada aula vai te motivar a ir além.'
     }
   ];
@@ -457,9 +542,9 @@ function TestimonialCarousel() {
       <div className="flex">
         {testimonials.map((test, idx) => (
           <div className="flex-[0_0_90%] md:flex-[0_0_45%] xl:flex-[0_0_33.333333%] min-w-0 pr-6" key={idx}>
-            <div className="bg-white p-8 rounded-[32px] shadow-lg border border-rose-50 hover:-translate-y-2 transition-transform duration-300 flex flex-col gap-6 h-full">
+            <div className="bg-white p-8 rounded-[32px] shadow-lg border border-orange-50 hover:-translate-y-2 transition-transform duration-300 flex flex-col gap-6 h-full">
               <div className="flex items-center gap-4 shrink-0">
-                <div className="w-14 h-14 rounded-full bg-rose-100 overflow-hidden relative">
+                <div className="w-14 h-14 rounded-full bg-orange-100 overflow-hidden relative">
                   <Image src={test.img} alt="Aluno" fill loading="lazy" className="object-cover" unoptimized/>
                 </div>
                 <div>

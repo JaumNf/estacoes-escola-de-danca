@@ -1,10 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Ticket, Users, User, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Ticket, Users, User, ArrowRight, Eye, EyeOff, Tag } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function BookingFlow() {
+  const [showPrices, setShowPrices] = useState(false);
+
   return (
     <div id="matricula" className="max-w-3xl mx-auto my-12 relative px-4 md:px-0">
       <Link href="/" className="inline-flex items-center gap-2 mb-6 text-[#a04e22] font-semibold hover:text-[#682c0b] transition-colors group">
@@ -17,31 +20,86 @@ export default function BookingFlow() {
         </span>
         
         <h2 className="text-4xl md:text-5xl font-display font-bold text-[#3d1c04] mb-4">Garanta seu lugar!</h2>
-        <p className="text-[#8c7438] mb-10 text-lg">Faça sua inscrição direto pelo nosso formulário e não fique de fora do Curso Intensivo.</p>
+        <p className="text-[#8c7438] mb-8 text-lg">Faça sua inscrição direto pelo nosso formulário e não fique de fora do Curso Intensivo.</p>
 
-        <div className="flex flex-col md:flex-row justify-center gap-6 mb-10">
-          <div className="bg-rose-50 border border-rose-100 rounded-3xl p-6 flex-1 max-w-[280px] mx-auto md:mx-0 shadow-sm hover:shadow-md transition-shadow">
-             <User className="text-rose-600 w-10 h-10 mx-auto mb-4" />
-             <h3 className="text-xl font-bold text-gray-800 mb-1">Individual</h3>
-             <p className="text-4xl font-display font-bold text-[#682c0b]">R$ 25</p>
+        {!showPrices ? (
+          <div className="mb-10 flex justify-center">
+            <button 
+              onClick={() => setShowPrices(true)}
+              className="inline-flex items-center justify-center gap-2 bg-orange-50 text-orange-700 px-5 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-orange-100 transition-all shadow-sm border border-orange-200"
+            >
+              <Tag size={16} />
+              <span>Consultar Valores</span>
+            </button>
           </div>
-          <div className="bg-rose-50 border border-rose-100 rounded-3xl p-6 flex-1 max-w-[280px] mx-auto md:mx-0 shadow-sm hover:shadow-md transition-shadow">
-             <Users className="text-rose-600 w-10 h-10 mx-auto mb-4" />
-             <h3 className="text-xl font-bold text-gray-800 mb-1">Casal</h3>
-             <p className="text-4xl font-display font-bold text-[#682c0b]">R$ 40</p>
-          </div>
+        ) : (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-10 max-w-4xl mx-auto"
+          >
+            {/* Diária */}
+            <div className="bg-orange-50/50 md:bg-orange-50 border border-orange-100 rounded-[24px] md:rounded-3xl p-5 md:p-8 shadow-sm">
+               <h3 className="text-xl md:text-2xl font-display font-bold text-[#682c0b] mb-4">Diária</h3>
+               <div className="flex justify-between items-center bg-white rounded-xl p-4 mb-3 border border-orange-100">
+                 <div className="flex items-center gap-2 text-gray-700">
+                   <User className="text-orange-500 w-5 h-5" />
+                   <span className="font-bold">Por pessoa</span>
+                 </div>
+                 <span className="text-xl font-display font-bold text-[#682c0b]">R$ 30</span>
+               </div>
+               <div className="flex justify-between items-center bg-white rounded-xl p-4 border border-orange-100">
+                 <div className="flex items-center gap-2 text-gray-700">
+                   <Users className="text-orange-500 w-5 h-5" />
+                   <span className="font-bold">Por dupla</span>
+                 </div>
+                 <span className="text-xl font-display font-bold text-[#682c0b]">R$ 50</span>
+               </div>
+            </div>
+
+            {/* Pacote */}
+            <div className="bg-orange-100 md:bg-orange-100/80 border-2 border-orange-300 rounded-[24px] md:rounded-3xl p-5 md:p-8 shadow-md relative">
+               <div className="absolute -top-3 right-4 bg-orange-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-widest border border-white">
+                 MAIS VENDIDO
+               </div>
+               <h3 className="text-xl md:text-2xl font-display font-bold text-[#682c0b] mb-4">Pacote 3 Dias</h3>
+               <div className="flex justify-between items-center bg-white rounded-xl p-4 mb-3 border border-orange-200">
+                 <div className="flex items-center gap-2 text-gray-700">
+                   <User className="text-orange-600 w-5 h-5" />
+                   <div className="flex flex-col text-left">
+                     <span className="font-bold leading-tight">Por pessoa</span>
+                     <span className="text-[10px] font-bold text-orange-600 uppercase tracking-wider">+ Baile Incluso</span>
+                   </div>
+                 </div>
+                 <span className="text-xl font-display font-bold text-[#682c0b]">R$ 70</span>
+               </div>
+               <div className="flex justify-between items-center bg-white rounded-xl p-4 border border-orange-200">
+                 <div className="flex items-center gap-2 text-gray-700">
+                   <Users className="text-orange-600 w-5 h-5" />
+                   <div className="flex flex-col text-left">
+                     <span className="font-bold leading-tight">Por dupla</span>
+                     <span className="text-[10px] font-bold text-orange-600 uppercase tracking-wider">+ Baile Incluso</span>
+                   </div>
+                 </div>
+                 <span className="text-xl font-display font-bold text-[#682c0b]">R$ 120</span>
+               </div>
+            </div>
+          </motion.div>
+        )}
+
+        <div className="relative inline-block w-full md:w-auto mt-2">
+          <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-[#d97706] blur-xl opacity-60 animate-pulse rounded-full"></div>
+          <a 
+            href="https://forms.gle/eNrECUruTq2c2US69" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="relative flex items-center justify-center gap-2 md:gap-3 bg-gradient-to-r from-orange-600 to-[#b55d05] text-white px-4 py-4 md:px-12 md:py-6 rounded-full font-bold tracking-wider md:tracking-widest uppercase hover:scale-[1.05] active:scale-[0.95] transition-all shadow-xl shadow-orange-900/30 hover:shadow-2xl hover:shadow-orange-700/40 w-full md:w-auto text-base md:text-xl border border-orange-500/50 group"
+          >
+            <Ticket size={24} className="md:w-8 md:h-8 shrink-0 group-hover:-rotate-12 transition-transform duration-300" />
+            <span className="whitespace-nowrap">Se inscreva aqui!</span>
+            <ArrowRight size={24} className="md:w-8 md:h-8 shrink-0 hidden md:block group-hover:translate-x-2 transition-transform duration-300" />
+          </a>
         </div>
-
-        <a 
-          href="https://forms.gle/eNrECUruTq2c2US69" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-3 bg-[#e11d48] text-white px-8 py-5 rounded-full font-bold tracking-widest uppercase hover:bg-[#be123c] transition-all shadow-lg shadow-rose-900/20 hover:shadow-xl hover:-translate-y-1 w-full md:w-auto text-lg"
-        >
-          <Ticket size={24} />
-          Preencher Formulário de Inscrição
-          <ArrowRight size={20} className="hidden md:block" />
-        </a>
 
         <p className="text-sm text-gray-400 mt-8 font-medium">As vagas são limitadas. Inscreva-se agora para não perder sua vaga no lote atual.</p>
       </div>

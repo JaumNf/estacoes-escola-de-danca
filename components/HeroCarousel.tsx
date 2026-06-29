@@ -40,7 +40,7 @@ export default function HeroCarousel() {
   const prev = () => setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
 
   return (
-    <div className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden bg-brown-950">
+    <div className="relative w-full h-[100dvh] overflow-hidden bg-brown-950">
       {/* Animated Images */}
       {images.map((img, idx) => (
         <div
@@ -54,8 +54,9 @@ export default function HeroCarousel() {
             alt={img.alt}
             fill
             className="object-cover"
-            referrerPolicy="no-referrer"
             priority={idx === 0}
+            loading={idx === 0 ? undefined : "lazy"}
+            referrerPolicy="no-referrer"
             unoptimized={true}
           />
         </div>
@@ -74,12 +75,12 @@ export default function HeroCarousel() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -20, opacity: 0 }}
             transition={{ duration: 0.8 }}
-            className="flex flex-col items-center max-w-4xl mx-auto"
+            className="flex flex-col items-center w-full max-w-7xl mx-auto mt-20"
           >
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-6 drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]">
               {images[currentIndex].title}
             </h1>
-            <p className="text-xl md:text-2xl text-white font-body max-w-2xl drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] mb-10 font-medium">
+            <p className="text-xl md:text-2xl text-white font-body max-w-2xl mx-auto drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] mb-10 font-medium px-4">
               {images[currentIndex].subtitle}
             </p>
             <div className="pointer-events-auto flex flex-col sm:flex-row gap-4 justify-center items-center">

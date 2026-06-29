@@ -17,8 +17,8 @@ export default function Countdown() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-    // Data alvo: 21 de junho de 2026 às 14:00
-    const targetDate = new Date('2026-06-21T14:00:00-03:00').getTime();
+    // Data alvo: 23 de julho de 2026 às 18:40
+    const targetDate = new Date('2026-07-23T18:40:00-04:00').getTime();
 
     const updateCountdown = () => {
       const now = new Date().getTime();
@@ -46,10 +46,10 @@ export default function Countdown() {
 
   const handleAddToCalendar = () => {
     const event = {
-      title: 'Curso de Outono Estações (Namorados)',
-      details: 'Não perca o curso intensivo focado em forró!',
+      title: 'Curso de Inverno Estações (Julino)',
+      details: 'Não perca o curso intensivo focado em dança para aquecer seu inverno!',
       location: 'Estações Escola de Dança',
-      dates: '20260621T170000Z/20260621T200000Z'
+      dates: '20260723T224000Z/20260724T014000Z'
     };
     const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&details=${encodeURIComponent(event.details)}&location=${encodeURIComponent(event.location)}&dates=${event.dates}`;
     window.open(googleCalendarUrl, '_blank');
@@ -58,8 +58,8 @@ export default function Countdown() {
   return (
     <div className="flex flex-col items-center justify-center w-full z-10 my-8">
       <div className="flex items-center gap-2 mb-6">
-        <ClockIcon className="w-5 h-5 text-pink-200" />
-        <span className="text-pink-200 font-bold tracking-widest uppercase text-sm md:text-base">COMEÇA EM</span>
+        <ClockIcon className="w-5 h-5 text-orange-200" />
+        <span className="text-orange-200 font-bold tracking-widest uppercase text-sm md:text-base">COMEÇA EM</span>
       </div>
       
       <div className="flex gap-3 md:gap-4 mb-8">
@@ -70,21 +70,21 @@ export default function Countdown() {
           { value: timeLeft.seconds, label: 'SEG' },
         ].map((unit, idx) => (
           <div key={idx} className="flex flex-col items-center">
-            <div className="bg-rose-700 text-white rounded-2xl md:rounded-3xl w-16 h-20 md:w-20 md:h-24 flex items-center justify-center shadow-lg border border-rose-600 mb-3">
+            <div className="bg-orange-700 text-white rounded-2xl md:rounded-3xl w-16 h-20 md:w-20 md:h-24 flex items-center justify-center shadow-lg border border-orange-600 mb-3">
               <span className="text-3xl md:text-4xl font-display font-bold">
                 {unit.value.toString().padStart(2, '0')}
               </span>
             </div>
-            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-rose-300">{unit.label}</span>
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-orange-300">{unit.label}</span>
           </div>
         ))}
       </div>
 
       <button 
         onClick={handleAddToCalendar}
-        className="flex items-center gap-2 border border-white/20 hover:bg-white/10 text-rose-100 px-6 py-3 rounded-full text-sm font-medium transition-colors"
+        className="flex items-center gap-2 border border-white/20 hover:bg-white/10 text-orange-100 px-6 py-3 rounded-full text-sm font-medium transition-colors"
       >
-        <Calendar size={18} className="text-pink-200" />
+        <Calendar size={18} className="text-orange-200" />
         Adicionar na Agenda do Google
       </button>
     </div>
