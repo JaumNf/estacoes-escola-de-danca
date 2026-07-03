@@ -10,14 +10,11 @@ import { motion, AnimatePresence } from 'motion/react';
 import { createPortal } from 'react-dom';
 
 export default function BailePage() {
-  const [ticketType, setTicketType] = useState<'individual' | 'dupla'>('individual');
   const [selectedEvent, setSelectedEvent] = useState('baile-julino');
   const [currentStep, setCurrentStep] = useState(1);
 
   const [nome1, setNome1] = useState('');
-  const [nome2, setNome2] = useState('');
   const [tel1, setTel1] = useState('');
-  const [tel2, setTel2] = useState('');
   const [formaPagamento, setFormaPagamento] = useState<'pix' | 'credito'>('pix');
   const [copied, setCopied] = useState(false);
   const [comprovante, setComprovante] = useState<File | null>(null);
@@ -47,24 +44,20 @@ export default function BailePage() {
       setTimeout(() => {
         setSubmitted(true);
         setNome1('');
-        setNome2('');
         setTel1('');
-        setTel2('');
         setComprovante(null);
         setIsSubmitting(false);
       }, 2000);
     } else {
       e.preventDefault();
       setIsSubmitting(true);
-      const msg = `*Compra de Ingresso Baile*%0A%0A*Evento:* ${eventName}%0A*Tipo de Ingresso:* ${ticketType === 'individual' ? 'Individual' : 'Dupla'}%0A*Forma de Pagamento:* Cartão de Crédito (Link)%0A%0A*Nome:* ${nome1}%0A*Telefone:* ${tel1}${ticketType === 'dupla' ? `%0A%0A*Nome 2:* ${nome2}%0A*Telefone 2:* ${tel2}` : ''}`;
+      const msg = `*Compra de Ingresso Baile*%0A%0A*Evento:* ${eventName}%0A*Tipo de Ingresso:* Individual%0A*Forma de Pagamento:* Cartão de Crédito (Link)%0A%0A*Nome:* ${nome1}%0A*Telefone:* ${tel1}`;
       
       const whatsappUrl = `https://wa.me/5567992630948?text=${msg}`;
       window.open(whatsappUrl, '_blank');
       setSubmitted(true);
       setNome1('');
-      setNome2('');
       setTel1('');
-      setTel2('');
       setComprovante(null);
       setIsSubmitting(false);
     }
@@ -237,7 +230,7 @@ export default function BailePage() {
                     <p className="text-orange-200 text-sm font-medium">Informações Importantes:</p>
                     <ul className="text-orange-400 text-xs space-y-1 list-disc list-inside">
                       <li>Vendas antecipadas encerram 2h antes do evento.</li>
-                      <li>Na hora: <strong className="text-orange-200">R$ 25,00</strong> (Dinheiro ou Pix).</li>
+                      <li>Na hora: <strong className="text-orange-200">R$ 20,00</strong> (Dinheiro ou Pix).</li>
                       <li>Acréscimo de taxas para pagamentos via link no Cartão.</li>
                     </ul>
                   </div>
@@ -259,7 +252,7 @@ export default function BailePage() {
               >
                 <input type="hidden" name="_captcha" value="false" />
                 <input type="hidden" name="Evento" value={events.find(ev => ev.id === selectedEvent)?.name || 'N/A'} />
-                <input type="hidden" name="Tipo de Ingresso" value={ticketType === 'individual' ? 'Individual' : 'Dupla'} />
+                <input type="hidden" name="Tipo de Ingresso" value="Individual" />
                 
                 {currentStep === 1 && (
                   <motion.div 
@@ -299,46 +292,19 @@ export default function BailePage() {
                   </div>
                 </div>
 
-                {/* Ticket Type Selection */}
                 <div className="space-y-3">
                   <label className="text-sm font-bold text-[#874c2e] uppercase tracking-wide">Tipo de Ingresso</label>
                   <div className="space-y-2">
                     <div
-                      onClick={() => setTicketType('individual')}
-                      className={`w-full p-4 rounded-xl border-2 transition-all flex items-center justify-between group cursor-pointer ${
-                        ticketType === 'individual' 
-                          ? 'border-rose-500 bg-rose-50' 
-                          : 'border-orange-100 hover:border-orange-200'
-                      }`}
+                      className="w-full p-4 rounded-xl border-2 transition-all flex items-center justify-between group border-rose-500 bg-rose-50"
                     >
                       <div className="flex items-center gap-3">
-                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                          ticketType === 'individual' ? 'border-rose-500' : 'border-orange-300'
-                        }`}>
-                          {ticketType === 'individual' && <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />}
+                        <div className="w-5 h-5 rounded-full border border-rose-500 flex items-center justify-center">
+                          <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />
                         </div>
                         <span className="font-bold text-[#682c0b]">Individual</span>
                       </div>
-                      <span className="text-xl font-bold text-[#682c0b]">R$ 20</span>
-                    </div>
-
-                    <div
-                      onClick={() => setTicketType('dupla')}
-                      className={`w-full p-4 rounded-xl border-2 transition-all flex items-center justify-between group cursor-pointer ${
-                        ticketType === 'dupla' 
-                          ? 'border-rose-500 bg-rose-50' 
-                          : 'border-orange-100 hover:border-orange-200'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                          ticketType === 'dupla' ? 'border-rose-500' : 'border-orange-300'
-                        }`}>
-                          {ticketType === 'dupla' && <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />}
-                        </div>
-                        <span className="font-bold text-[#682c0b]">Dupla</span>
-                      </div>
-                      <span className="text-xl font-bold text-[#682c0b]">R$ 35</span>
+                      <span className="text-xl font-bold text-[#682c0b]">R$ 15</span>
                     </div>
                   </div>
                 </div>
@@ -372,71 +338,26 @@ export default function BailePage() {
                     <div className="space-y-3 pt-2">
                   <label className="text-sm font-bold text-[#874c2e] uppercase tracking-wide">Dados</label>
                   
-                  {ticketType === 'individual' ? (
-                    <div className="space-y-3">
-                      <input 
-                        type="text" 
-                        name="Nome"
-                        required 
-                        placeholder="Seu Nome Completo"
-                        value={nome1}
-                        onChange={(e) => setNome1(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-orange-100 focus:outline-none focus:ring-2 focus:ring-rose-500 bg-[#fffcf5]/50 text-sm"
-                      />
-                      <input 
-                        type="tel" 
-                        name="Telefone"
-                        required 
-                        placeholder="Seu WhatsApp"
-                        value={tel1}
-                        onChange={(e) => setTel1(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-orange-100 focus:outline-none focus:ring-2 focus:ring-rose-500 bg-[#fffcf5]/50 text-sm"
-                      />
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      <div className="flex flex-col gap-3 md:flex-row">
-                        <input 
-                          type="text" 
-                          name="Nome da Pessoa 1"
-                          required 
-                          placeholder="Nome da Pessoa 1"
-                          value={nome1}
-                          onChange={(e) => setNome1(e.target.value)}
-                          className="flex-1 px-4 py-3 rounded-xl border border-orange-100 focus:outline-none focus:ring-2 focus:ring-rose-500 bg-[#fffcf5]/50 text-sm"
-                        />
-                        <input 
-                          type="tel" 
-                          name="Telefone da Pessoa 1"
-                          required 
-                          placeholder="WhatsApp Pessoa 1"
-                          value={tel1}
-                          onChange={(e) => setTel1(e.target.value)}
-                          className="flex-1 px-4 py-3 rounded-xl border border-orange-100 focus:outline-none focus:ring-2 focus:ring-rose-500 bg-[#fffcf5]/50 text-sm"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-3 md:flex-row">
-                        <input 
-                          type="text" 
-                          name="Nome da Pessoa 2"
-                          required 
-                          placeholder="Nome da Pessoa 2"
-                          value={nome2}
-                          onChange={(e) => setNome2(e.target.value)}
-                          className="flex-1 px-4 py-3 rounded-xl border border-orange-100 focus:outline-none focus:ring-2 focus:ring-rose-500 bg-[#fffcf5]/50 text-sm"
-                        />
-                        <input 
-                          type="tel" 
-                          name="Telefone da Pessoa 2"
-                          required 
-                          placeholder="WhatsApp Pessoa 2"
-                          value={tel2}
-                          onChange={(e) => setTel2(e.target.value)}
-                          className="flex-1 px-4 py-3 rounded-xl border border-orange-100 focus:outline-none focus:ring-2 focus:ring-rose-500 bg-[#fffcf5]/50 text-sm"
-                        />
-                      </div>
-                    </div>
-                  )}
+                  <div className="space-y-3">
+                    <input 
+                      type="text" 
+                      name="Nome"
+                      required 
+                      placeholder="Seu Nome Completo"
+                      value={nome1}
+                      onChange={(e) => setNome1(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl border border-orange-100 focus:outline-none focus:ring-2 focus:ring-rose-500 bg-[#fffcf5]/50 text-sm"
+                    />
+                    <input 
+                      type="tel" 
+                      name="Telefone"
+                      required 
+                      placeholder="Seu WhatsApp"
+                      value={tel1}
+                      onChange={(e) => setTel1(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl border border-orange-100 focus:outline-none focus:ring-2 focus:ring-rose-500 bg-[#fffcf5]/50 text-sm"
+                    />
+                  </div>
                 </div>
 
                 {/* Pagamento */}
