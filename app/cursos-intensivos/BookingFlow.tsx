@@ -16,7 +16,7 @@ export default function BookingFlow() {
       
       <div className="bg-white rounded-[40px] shadow-[0_12px_40px_-15px_rgba(0,0,0,0.1)] border border-black/5 overflow-hidden p-8 md:p-12 text-center">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#fffcf5] text-[#d97706] text-sm font-bold tracking-widest uppercase border border-[#fcd34d] mb-6">
-          ✨ Lote Promocional
+          ✨ Segundo Lote
         </span>
         
         <h2 className="text-4xl md:text-5xl font-display font-bold text-[#3d1c04] mb-4">Garanta seu lugar!</h2>
@@ -46,14 +46,14 @@ export default function BookingFlow() {
                    <User className="text-orange-500 w-5 h-5" />
                    <span className="font-bold">Por pessoa</span>
                  </div>
-                 <span className="text-xl font-display font-bold text-[#682c0b]">R$ 30</span>
+                 <span className="text-xl font-display font-bold text-[#682c0b]">R$ 40</span>
                </div>
                <div className="flex justify-between items-center bg-white rounded-xl p-4 border border-orange-100">
                  <div className="flex items-center gap-2 text-gray-700">
                    <Users className="text-orange-500 w-5 h-5" />
                    <span className="font-bold">Por dupla</span>
                  </div>
-                 <span className="text-xl font-display font-bold text-[#682c0b]">R$ 50</span>
+                 <span className="text-xl font-display font-bold text-[#682c0b]">R$ 60</span>
                </div>
             </div>
 
@@ -71,7 +71,7 @@ export default function BookingFlow() {
                      <span className="text-[10px] font-bold text-orange-600 uppercase tracking-wider">+ Baile Incluso</span>
                    </div>
                  </div>
-                 <span className="text-xl font-display font-bold text-[#682c0b]">R$ 70</span>
+                 <span className="text-xl font-display font-bold text-[#682c0b]">R$ 90</span>
                </div>
                <div className="flex justify-between items-center bg-white rounded-xl p-4 border border-orange-200">
                  <div className="flex items-center gap-2 text-gray-700">
@@ -81,7 +81,7 @@ export default function BookingFlow() {
                      <span className="text-[10px] font-bold text-orange-600 uppercase tracking-wider">+ Baile Incluso</span>
                    </div>
                  </div>
-                 <span className="text-xl font-display font-bold text-[#682c0b]">R$ 120</span>
+                 <span className="text-xl font-display font-bold text-[#682c0b]">R$ 140</span>
                </div>
             </div>
           </motion.div>
