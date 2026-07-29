@@ -148,25 +148,16 @@ export default function Home() {
             <p className="text-terracotta text-xs md:text-sm max-w-2xl mx-auto italic">* Os endereços abaixo são espaços parceiros que utilizamos para a realização das nossas aulas e cursos.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-1 max-w-2xl mx-auto gap-8">
             {[
               {
-                name: 'Unidade 1 - Centro',
+                name: 'Teatro do Mundo',
                 address: 'R. Barão de Melgaço, 177 - Centro, Campo Grande - MS, 79002-090',
                 mapLink: 'https://maps.app.goo.gl/vXB9ezPd49HmbC9eA',
                 phone: '(67) 99263-0948',
                 whatsappLink: 'https://wa.me/5567992630948',
                 email: 'cursodeverao67@gmail.com',
                 img: 'https://lh3.googleusercontent.com/d/1-G5rU0kTPGyQe8wOwArb756R9FX_17rc'
-              },
-              {
-                name: 'Unidade 2 - Oeste',
-                address: 'R. Carvalho, 319 - Cidade Jardim, Campo Grande - MS, 79040-660',
-                mapLink: 'https://maps.app.goo.gl/dtnrdk3MXYSwZsdc8',
-                phone: '(67) 99263-0948',
-                whatsappLink: 'https://wa.me/5567992630948',
-                email: 'cursodeverao67@gmail.com',
-                img: 'https://lh3.googleusercontent.com/d/1tj8o79FcqiMRoIdZfr1hKlLSobPCyhkK'
               }
             ].map((unit, idx) => (
               <div key={idx} className="bg-brown-950/60 rounded-[32px] overflow-hidden border border-brown-800/50 backdrop-blur-sm hover:border-brown-700 transition-colors">

@@ -5,11 +5,12 @@ import { User, Users, GraduationCap, CheckCircle2 } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const TURMAS = [
-  { id: 'v_u1', nome: 'Vanera e Chamamé', unidade: 'Teatro do Mundo' },
-  { id: 'f_u1', nome: 'Forró', unidade: 'Teatro do Mundo' },
-  { id: 'b_u1', nome: 'Bachata', unidade: 'Teatro do Mundo', esgotado: true },
-  { id: 'd_u2', nome: 'Dança de Salão', unidade: 'Templo Nambei' },
-  { id: 'f_u2', nome: 'Forró', unidade: 'Templo Nambei' },
+  { id: 'f_seg', nome: 'Forró', unidade: 'Teatro do Mundo (Segunda-feira)', esgotado: false },
+  { id: 'b_seg1', nome: 'Bachata (Do zero)', unidade: 'Teatro do Mundo (Segunda-feira)', esgotado: false },
+  { id: 'b_seg2', nome: 'Bachata (Iniciado)', unidade: 'Teatro do Mundo (Segunda-feira)', esgotado: false },
+  { id: 's_ter', nome: 'Samba de Gafieira', unidade: 'Teatro do Mundo (Terça-feira)', esgotado: false },
+  { id: 'f_ter', nome: 'Forró (Iniciado)', unidade: 'Teatro do Mundo (Terça-feira)', esgotado: false },
+  { id: 'z_ter', nome: 'Zouk', unidade: 'Teatro do Mundo (Terça-feira)', esgotado: false },
 ];
 
 export default function InvestmentCalculator() {

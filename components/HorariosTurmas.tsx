@@ -15,11 +15,12 @@ interface Turma {
 }
 
 const turmasOriginal: Turma[] = [
-  { id: '1', ritmo: 'Vanera e Chamamé', nivel: 'Do zero', horario: '18h20 - 19h20', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: false },
-  { id: '2', ritmo: 'Forró', nivel: 'Do zero', horario: '19h30 - 20h30', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: false },
-  { id: '3', ritmo: 'Bachata', nivel: 'Do zero', horario: '20h40 - 21h40', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: true },
-  { id: '4', ritmo: 'Dança de Salão em Geral', nivel: 'Vanera, Chamamé, Bolero, etc.', horario: '18h20 - 19h20', unidade: 'Templo Nambei', dia: 'Quinta-feira', esgotada: false },
-  { id: '5', ritmo: 'Forró', nivel: 'Do zero', horario: '19h30 - 20h30', unidade: 'Templo Nambei', dia: 'Quinta-feira', esgotada: false },
+  { id: '1', ritmo: 'Forró', nivel: 'Do zero', horario: '18h40 - 19h40', unidade: 'Teatro do Mundo', dia: 'Segunda-feira', esgotada: false },
+  { id: '2', ritmo: 'Bachata', nivel: 'Do zero', horario: '19h50 - 20h50', unidade: 'Teatro do Mundo', dia: 'Segunda-feira', esgotada: false },
+  { id: '3', ritmo: 'Bachata', nivel: 'Iniciado', horario: '21h00 - 22h00', unidade: 'Teatro do Mundo', dia: 'Segunda-feira', esgotada: false },
+  { id: '4', ritmo: 'Samba de Gafieira', nivel: 'Do zero', horario: '18h40 - 19h40', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: false },
+  { id: '5', ritmo: 'Forró', nivel: 'Iniciado', horario: '19h50 - 20h50', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: false },
+  { id: '6', ritmo: 'Zouk', nivel: 'Do zero', horario: '21h00 - 22h00', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: false },
 ];
 
 export default function HorariosTurmas() {
@@ -97,9 +98,6 @@ export default function HorariosTurmas() {
         ) : (
           Object.entries(turmasAgrupadas).map(([grupo, turmas]) => (
             <div key={grupo} className="group bg-white rounded-[40px] p-8 md:p-12 shadow-xl shadow-orange-900/5 border border-orange-100 hover:-translate-y-2 hover:shadow-2xl hover:border-terracotta transition-all duration-300 relative">
-              {grupo.includes('Templo Nambei') && (
-                <div className="absolute -top-4 -right-4 bg-terracotta text-white font-bold text-sm px-4 py-1.5 rounded-full shadow-lg transform rotate-12 z-10">NOVIDADE!</div>
-              )}
               
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8 border-b border-orange-100 pb-6">
                 <div className="w-12 h-12 rounded-full border-2 border-orange-600 group-hover:border-terracotta flex items-center justify-center shrink-0 transition-colors duration-300">

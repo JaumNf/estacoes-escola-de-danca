@@ -8,25 +8,21 @@ interface AulaExperimentalModalProps {
 }
 
 export default function AulaExperimentalModal({ isOpen, onClose }: AulaExperimentalModalProps) {
-  const [unidade, setUnidade] = useState<'unidade1' | 'unidade2'>('unidade1');
   const [turma, setTurma] = useState('');
 
-  const turmasPorUnidade = {
-    unidade1: [
-      { horario: '18h20 - 19h20', nome: 'Vanera e Chamamé', detalhe: 'Do zero', esgotada: false },
-      { horario: '19h30 - 20h30', nome: 'Forró', detalhe: 'Do zero', esgotada: false },
-      { horario: '20h40 - 21h40', nome: 'Bachata', detalhe: 'Do zero', esgotada: true },
-    ],
-    unidade2: [
-      { horario: '18h20 - 19h20', nome: 'Dança de Salão em Geral', detalhe: 'Vanera, Chamamé, Bolero, etc.', esgotada: false },
-      { horario: '19h30 - 20h30', nome: 'Forró', detalhe: 'Do zero', esgotada: false },
-    ],
-  };
+  const turmas = [
+    { horario: '18h40 - 19h40', nome: 'Forró', detalhe: 'Do zero (Segunda-feira)', esgotada: false },
+    { horario: '19h50 - 20h50', nome: 'Bachata', detalhe: 'Do zero (Segunda-feira)', esgotada: false },
+    { horario: '21h00 - 22h00', nome: 'Bachata', detalhe: 'Iniciado (Segunda-feira)', esgotada: false },
+    { horario: '18h40 - 19h40', nome: 'Samba de Gafieira', detalhe: 'Do zero (Terça-feira)', esgotada: false },
+    { horario: '19h50 - 20h50', nome: 'Forró', detalhe: 'Iniciado (Terça-feira)', esgotada: false },
+    { horario: '21h00 - 22h00', nome: 'Zouk', detalhe: 'Do zero (Terça-feira)', esgotada: false },
+  ];
 
   const handleWhatsApp = () => {
     if (!turma) return;
-
-    const unidadeNome = unidade === 'unidade1' ? 'Unidade 1 - Teatro do Mundo (Terça-feira)' : 'Unidade 2 - Templo Nambei (Quinta-feira)';
+    
+    const unidadeNome = 'Teatro do Mundo';
     const mensagem = `Olá! Gostaria de agendar minha aula experimental!%0A%0A*Unidade:* ${unidadeNome}%0A*Turma:* ${turma}`;
     
     const whatsappUrl = `https://wa.me/5567992630948?text=${mensagem}`;
@@ -61,73 +57,34 @@ export default function AulaExperimentalModal({ isOpen, onClose }: AulaExperimen
 
             <div className="text-center mb-8 pr-12">
               <h2 className="text-3xl font-display font-bold text-orange-900 mb-2">Agendar Aula Experimental</h2>
-              <p className="text-orange-700">Escolha a unidade e a turma que deseja participar.</p>
+              <p className="text-orange-700">Escolha a turma que deseja participar.</p>
               <p className="text-sm font-bold text-green-600 mt-2 bg-green-50 inline-block px-3 py-1 rounded-full border border-green-200">
                 ✨ A aula experimental é gratuita!
               </p>
             </div>
 
             <div className="space-y-6 flex-grow">
-              {/* Unidade */}
-              <div className="space-y-3">
-                <label className="block text-sm font-bold tracking-wide uppercase text-orange-800">Unidade</label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setUnidade('unidade1');
-                      setTurma('');
-                    }}
-                    className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
-                      unidade === 'unidade1' 
-                        ? 'border-orange-600 text-orange-900 bg-orange-50' 
-                        : 'border-orange-200 text-orange-500 hover:border-orange-400 hover:bg-orange-50/50'
-                    }`}
-                  >
-                    <MapPin size={28} />
-                    <span className="font-bold text-center">Unidade 1 - Centro<br/><span className="text-sm font-normal">(Teatro do Mundo)</span></span>
-                    <span className="text-xs">Terça-feira</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setUnidade('unidade2');
-                      setTurma('');
-                    }}
-                    className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
-                      unidade === 'unidade2' 
-                        ? 'border-fuchsia-500 text-fuchsia-900 bg-fuchsia-50' 
-                        : 'border-orange-200 text-orange-500 hover:border-orange-400 hover:bg-orange-50/50'
-                    }`}
-                  >
-                    <MapPin size={28} />
-                    <span className="font-bold text-center">Unidade 2 - Cidade Jardim<br/><span className="text-sm font-normal">(Templo Nambei)</span></span>
-                    <span className="text-xs">Quinta-feira</span>
-                  </button>
-                </div>
-              </div>
-
               {/* Turmas */}
               <div className="space-y-3">
                 <label className="block text-sm font-bold tracking-wide uppercase text-orange-800">Turma</label>
                 <div className="space-y-3">
-                  {turmasPorUnidade[unidade].map((t) => (
+                  {turmas.map((t, index) => (
                     <button
-                      key={t.nome}
+                      key={`${t.nome}-${index}`}
                       type="button"
                       disabled={t.esgotada}
-                      onClick={() => setTurma(t.nome)}
+                      onClick={() => setTurma(`${t.nome} - ${t.detalhe}`)}
                       className={`w-full text-left flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl border-2 transition-all ${
                         t.esgotada
                           ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
-                          : turma === t.nome
-                            ? (unidade === 'unidade1' ? 'border-orange-600 bg-orange-50' : 'border-fuchsia-500 bg-fuchsia-50')
+                          : turma === `${t.nome} - ${t.detalhe}`
+                            ? 'border-orange-600 bg-orange-50'
                             : 'border-orange-200 hover:border-orange-400 hover:bg-orange-50/50 text-orange-900'
                       }`}
                     >
                       <div className="flex items-center gap-3 min-w-[150px]">
-                        <Clock className={t.esgotada ? 'text-gray-400' : turma === t.nome ? (unidade === 'unidade1' ? 'text-orange-600' : 'text-fuchsia-500') : 'text-orange-400'} size={20} />
-                        <span className={`font-bold ${t.esgotada ? 'text-gray-500' : turma === t.nome ? (unidade === 'unidade1' ? 'text-orange-600' : 'text-fuchsia-500') : 'text-orange-600'}`}>
+                        <Clock className={t.esgotada ? 'text-gray-400' : turma === `${t.nome} - ${t.detalhe}` ? 'text-orange-600' : 'text-orange-400'} size={20} />
+                        <span className={`font-bold ${t.esgotada ? 'text-gray-500' : turma === `${t.nome} - ${t.detalhe}` ? 'text-orange-600' : 'text-orange-600'}`}>
                           {t.horario}
                         </span>
                       </div>

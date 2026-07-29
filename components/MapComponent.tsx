@@ -21,17 +21,10 @@ const customIcon = new L.Icon({
 const LOCATIONS = [
   {
     id: 'unidade1',
-    name: 'Unidade 1 - Teatro do Mundo',
+    name: 'Teatro do Mundo',
     address: 'R. Barão de Melgaço, 177 - Centro, Campo Grande - MS',
     position: [-20.464686, -54.61439] as [number, number], // Approx coordinates for Centro
     mapLink: 'https://maps.app.goo.gl/vXB9ezPd49HmbC9eA'
-  },
-  {
-    id: 'unidade2',
-    name: 'Unidade 2 - Templo Nambei',
-    address: 'R. Carvalho, 319 - Cidade Jardim, Campo Grande - MS',
-    position: [-20.458923, -54.583091] as [number, number], // Approx coordinates for Cidade Jardim
-    mapLink: 'https://maps.app.goo.gl/dtnrdk3MXYSwZsdc8'
   }
 ];
 
