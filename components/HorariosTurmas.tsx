@@ -12,15 +12,16 @@ interface Turma {
   unidade: string;
   dia: string;
   esgotada: boolean;
+  nova?: boolean;
 }
 
 const turmasOriginal: Turma[] = [
-  { id: '1', ritmo: 'Forró', nivel: 'Do zero', horario: '18h40 - 19h40', unidade: 'Teatro do Mundo', dia: 'Segunda-feira', esgotada: false },
-  { id: '2', ritmo: 'Bachata', nivel: 'Do zero', horario: '19h50 - 20h50', unidade: 'Teatro do Mundo', dia: 'Segunda-feira', esgotada: false },
+  { id: '1', ritmo: 'Forró', nivel: 'Do zero', horario: '18h40 - 19h40', unidade: 'Teatro do Mundo', dia: 'Segunda-feira', esgotada: false, nova: true },
+  { id: '2', ritmo: 'Bachata', nivel: 'Do zero', horario: '19h50 - 20h50', unidade: 'Teatro do Mundo', dia: 'Segunda-feira', esgotada: false, nova: true },
   { id: '3', ritmo: 'Bachata', nivel: 'Iniciado', horario: '21h00 - 22h00', unidade: 'Teatro do Mundo', dia: 'Segunda-feira', esgotada: false },
-  { id: '4', ritmo: 'Samba de Gafieira', nivel: 'Do zero', horario: '18h40 - 19h40', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: false },
+  { id: '4', ritmo: 'Samba de Gafieira', nivel: 'Do zero', horario: '18h40 - 19h40', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: false, nova: true },
   { id: '5', ritmo: 'Forró', nivel: 'Iniciado', horario: '19h50 - 20h50', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: false },
-  { id: '6', ritmo: 'Zouk', nivel: 'Do zero', horario: '21h00 - 22h00', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: false },
+  { id: '6', ritmo: 'Zouk', nivel: 'Do zero', horario: '21h00 - 22h00', unidade: 'Teatro do Mundo', dia: 'Terça-feira', esgotada: false, nova: true },
 ];
 
 export default function HorariosTurmas() {
@@ -129,16 +130,24 @@ export default function HorariosTurmas() {
                         <span className={`text-xl font-bold ${turma.esgotada ? 'text-orange-400 line-through decoration-2' : 'text-orange-600'}`}>{turma.horario}</span>
                       </div>
                       <div className="flex-grow">
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-3">
                           <h4 className="text-xl font-bold text-orange-900 group-hover/item:text-orange-600 transition-colors">{turma.ritmo}</h4>
-                          {turma.esgotada ? (
-                            <span className="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide">Esgotada</span>
-                          ) : (
-                            <span className="flex items-center gap-1.5 bg-green-50 text-green-700 text-[10px] sm:text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide border border-green-200">
-                              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_5px_rgba(34,197,94,0.6)]"></span>
-                              Abertas
-                            </span>
-                          )}
+                          <div className="flex flex-wrap items-center gap-2">
+                            {turma.esgotada ? (
+                              <span className="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide">Esgotada</span>
+                            ) : (
+                              <span className="flex items-center gap-1.5 bg-green-50 text-green-700 text-[10px] sm:text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide border border-green-200 shrink-0">
+                                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_5px_rgba(34,197,94,0.6)]"></span>
+                                Abertas
+                              </span>
+                            )}
+                            {turma.nova && (
+                              <span className="bg-blue-100 text-blue-700 text-[10px] sm:text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide border border-blue-200 shrink-0 flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_5px_rgba(59,130,246,0.6)]"></span>
+                                Turma Nova
+                              </span>
+                            )}
+                          </div>
                         </div>
                         <p className="text-orange-700">{turma.nivel}</p>
                       </div>
