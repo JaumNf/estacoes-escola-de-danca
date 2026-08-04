@@ -198,7 +198,13 @@ export default function InvestmentCalculator() {
 
           <motion.button 
             whileTap={selectedTurmas.length > 0 ? { scale: 0.95 } : {}}
-            onClick={() => window.open('https://wa.me/5567992630948?text=Olá! Gostaria de fazer minha matrícula!', '_blank', 'noopener,noreferrer')}
+            onClick={() => {
+              if (type === 'individual') {
+                window.open('https://docs.google.com/forms/d/e/1FAIpQLSe9p4fSEneZCjxJZLSj593_RCgG3l3FJ9czO3g43FtkljUKLw/viewform', '_blank', 'noopener,noreferrer');
+              } else {
+                window.open('https://docs.google.com/forms/d/e/1FAIpQLSelVRP-I1la61IPX5hyXIrMbqwR32LqBpHZkncafmjGR5XYVg/viewform', '_blank', 'noopener,noreferrer');
+              }
+            }}
             disabled={selectedTurmas.length === 0}
             className={`w-full py-4 mt-8 rounded-xl font-bold tracking-widest uppercase transition-all flex items-center justify-center ${selectedTurmas.length > 0 ? 'bg-orange-600 text-white hover:bg-orange-500 shadow-xl shadow-orange-900/20 cursor-pointer' : 'bg-orange-900/20 text-orange-700 cursor-not-allowed'}`}
           >
