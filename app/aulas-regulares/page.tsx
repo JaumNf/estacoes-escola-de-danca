@@ -67,7 +67,7 @@ export default function AulasRegulares() {
               Agendar aula experimental
             </button>
             <button 
-              onClick={() => document.getElementById('horarios')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
               className="bg-orange-600 text-orange-50 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-800 transition-colors duration-300 shadow-lg inline-flex items-center gap-2"
             >
               Quero Começar <ArrowRight size={20} />
