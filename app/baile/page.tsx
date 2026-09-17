@@ -8,9 +8,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import { createPortal } from 'react-dom';
+import EdicaoEmBreve from '@/components/EdicaoEmBreve';
+
+// Troque para true quando o próximo baile tiver data definida
+// (e atualize a lista de events abaixo com o novo baile).
+const BAILE_ATIVO = false;
 
 export default function BailePage() {
-  const [selectedEvent, setSelectedEvent] = useState('baile-julino');
+  const [selectedEvent, setSelectedEvent] = useState('proximo-baile');
   const [currentStep, setCurrentStep] = useState(1);
 
   const [nome1, setNome1] = useState('');
@@ -22,9 +27,9 @@ export default function BailePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  // Atualize esta lista (e BAILE_ATIVO acima) quando a próxima edição for anunciada.
   const events = [
-    { id: 'baile-julino', name: 'Baile Edição Julina: Teatro do Mundo (25/07)', active: true },
-    { id: 'baile-unidade-2', name: 'Baile Unidade 2 (Em breve)', active: false },
+    { id: 'proximo-baile', name: 'Próximo baile (data a definir)', active: BAILE_ATIVO },
   ];
 
   const handleCopyPix = () => {
@@ -118,7 +123,7 @@ export default function BailePage() {
             }}
             className="bg-rose-600 text-white px-8 py-4 rounded-full font-bold tracking-wide hover:bg-rose-800 transition-colors duration-300 shadow-lg inline-flex items-center gap-2 relative z-50 pointer-events-auto"
           >
-            Garanta seu Ingresso <Ticket size={20} />
+            {BAILE_ATIVO ? 'Garanta seu Ingresso' : 'Quero ser avisado'} <Ticket size={20} />
           </motion.button>
         </div>
         
@@ -178,18 +183,32 @@ export default function BailePage() {
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="bg-[#fffcf5] rounded-xl p-3 text-center min-w-[70px] border border-orange-100">
-                    <span className="block text-xl font-bold text-[#682c0b]">25</span>
-                    <span className="block text-xs font-bold text-orange-500 uppercase">JUL</span>
+                    {BAILE_ATIVO ? (
+                      <>
+                        <span className="block text-xl font-bold text-[#682c0b]">25</span>
+                        <span className="block text-xs font-bold text-orange-500 uppercase">JUL</span>
+                      </>
+                    ) : (
+                      <Calendar className="text-orange-400 mx-auto" size={24} />
+                    )}
                   </div>
                   <div>
-                    <h4 className="text-xl font-display font-bold text-[#682c0b] mb-1">Baile Edição Julina!</h4>
+                    <h4 className="text-xl font-display font-bold text-[#682c0b] mb-1">
+                      {BAILE_ATIVO ? 'Baile Edição Julina!' : 'Próximo baile em breve!'}
+                    </h4>
                     <p className="text-[#874c2e] text-sm mb-2">
-                      Venha se divertir na nossa festa julina! <strong>Haverá uma feira de festa julina na parte de fora do baile.</strong>
+                      {BAILE_ATIVO ? (
+                        <>Venha se divertir na nossa festa julina! <strong>Haverá uma feira de festa julina na parte de fora do baile.</strong></>
+                      ) : (
+                        <>Estamos organizando a próxima edição. <strong>Assim que a data for definida, anunciamos aqui e na nossa comunidade no WhatsApp.</strong></>
+                      )}
                     </p>
-                    <div className="flex items-center gap-2 text-xs text-orange-500">
-                      <Clock size={14} />
-                      <span>Das 19h às 00h</span>
-                    </div>
+                    {BAILE_ATIVO && (
+                      <div className="flex items-center gap-2 text-xs text-orange-500">
+                        <Clock size={14} />
+                        <span>Das 19h às 00h</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -216,14 +235,16 @@ export default function BailePage() {
             
             <div className="space-y-8 md:sticky md:top-32">
               <div>
-                <span className="text-rose-500 font-bold tracking-widest uppercase text-sm mb-2 block">Venda Antecipada</span>
-                <h2 className="text-4xl md:text-5xl font-display font-bold text-orange-50 mb-4">Garanta seu Ingresso</h2>
+                <span className="text-rose-500 font-bold tracking-widest uppercase text-sm mb-2 block">{BAILE_ATIVO ? 'Venda Antecipada' : 'Fique por dentro'}</span>
+                <h2 className="text-4xl md:text-5xl font-display font-bold text-orange-50 mb-4">{BAILE_ATIVO ? 'Garanta seu Ingresso' : 'Novas edições em breve'}</h2>
                 <p className="text-orange-200 text-lg leading-relaxed">
-                  Compre antecipado e garanta o melhor valor para curtir o Baile de Encerramento.
+                  {BAILE_ATIVO
+                    ? 'Compre antecipado e garanta o melhor valor para curtir o Baile de Encerramento.'
+                    : 'Nossos bailes acontecem em edições especiais ao longo do ano. A venda de ingressos abre quando a próxima data é anunciada.'}
                 </p>
               </div>
 
-              <div className="bg-orange-900/50 rounded-2xl p-6 border border-orange-800 space-y-4">
+              <div className={`bg-orange-900/50 rounded-2xl p-6 border border-orange-800 space-y-4 ${BAILE_ATIVO ? '' : 'hidden'}`}>
                 <div className="flex items-start gap-3">
                   <AlertCircle className="text-rose-500 shrink-0 mt-0.5" size={20} />
                   <div className="space-y-2">
@@ -238,7 +259,16 @@ export default function BailePage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-[32px] p-8 text-[#682c0b] shadow-2xl shadow-black/20">
+            {!BAILE_ATIVO && (
+              <div className="bg-white/5 border border-white/10 rounded-[32px] shadow-2xl shadow-black/20">
+                <EdicaoEmBreve
+                  titulo="Ingressos ainda não disponíveis"
+                  descricao="Assim que a data do próximo baile for confirmada, os ingressos ficam disponíveis aqui mesmo. Entre na comunidade do WhatsApp para não perder o anúncio."
+                />
+              </div>
+            )}
+
+            <div className={`bg-white rounded-[32px] p-8 text-[#682c0b] shadow-2xl shadow-black/20 ${BAILE_ATIVO ? '' : 'hidden'}`}>
               <h3 className="text-2xl font-display font-bold mb-6 text-center">Selecione seu Ingresso</h3>
               
               <iframe name="hidden_iframe" id="hidden_iframe" style={{ display: 'none' }}></iframe>

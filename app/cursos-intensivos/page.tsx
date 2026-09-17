@@ -12,6 +12,11 @@ import Autoplay from 'embla-carousel-autoplay';
 import BookingFlow from './BookingFlow';
 import Countdown from './Countdown';
 import Footer from '@/components/Footer';
+import EdicaoEmBreve from '@/components/EdicaoEmBreve';
+
+// Troque para true quando as inscrições da próxima edição abrirem
+// (e atualize o título, a data em Countdown.tsx e as turmas em BookingFlow.tsx).
+const EDICAO_ATIVA = false;
 
 
 export default function CursosIntensivos() {
@@ -52,7 +57,7 @@ export default function CursosIntensivos() {
                 </h2>
                 
                 <p className="text-[#8a2f07] text-lg md:text-xl font-medium leading-relaxed">
-                  Futuramente traremos mais informações sobre esta edição do nosso Curso de Inverno.
+                  Estamos preparando as próximas edições dos nossos cursos intensivos. Em breve, novidades!
                 </p>
 
                 <div className="mt-8 flex justify-center gap-2">
@@ -104,21 +109,23 @@ export default function CursosIntensivos() {
         <div className="max-w-4xl w-full mx-auto text-center relative z-10 px-6 py-16 flex flex-col items-center justify-center h-full">
           
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold mb-6 text-white leading-tight mt-8">
-            Curso de Inverno:<br className="hidden md:block"/> 1ª Edição
+            {EDICAO_ATIVA ? <>Curso de Inverno:<br className="hidden md:block"/> 1ª Edição</> : 'Cursos Intensivos'}
           </h1>
           
           <p className="text-xl md:text-2xl text-[#fcd34d] font-bold max-w-2xl mx-auto mb-10">
-            Dias 23, 24 e 25 de Julho. Venha aquecer o inverno dançando com a gente!
+            {EDICAO_ATIVA
+              ? 'Dias 23, 24 e 25 de Julho. Venha aquecer o inverno dançando com a gente!'
+              : 'Novas edições em breve. Fins de semana intensivos para aprender um ritmo do zero.'}
           </p>
           
           {/* Countdown Timer */}
-          <Countdown />
+          {EDICAO_ATIVA && <Countdown />}
 
           <button 
             onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
             className="bg-[#fbbf24] text-[#682c0b] px-8 py-5 rounded-xl font-bold tracking-widest hover:bg-[#f59e0b] shadow-xl transition-all duration-300 w-full md:w-auto mt-4 text-lg md:text-xl uppercase"
           >
-            GARANTIR MINHA VAGA
+            {EDICAO_ATIVA ? 'GARANTIR MINHA VAGA' : 'QUERO SER AVISADO'}
           </button>
         </div>
         
@@ -179,7 +186,8 @@ export default function CursosIntensivos() {
         </div>
       </motion.section>
 
-      {/* Cronograma Section */}
+      {/* Cronograma Section — só aparece quando há edição aberta */}
+      {EDICAO_ATIVA && (
       <motion.section 
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -369,6 +377,7 @@ export default function CursosIntensivos() {
           </div>
         </div>
       </motion.section>
+      )}
 
       {/* Festa, Arte e Liberdade */}
       <section className="relative py-16 w-full bg-orange-600">
@@ -501,7 +510,14 @@ export default function CursosIntensivos() {
         <WaveDivider position="top" colorClass="fill-[#3d1c04]" />
         <div className="max-w-6xl mx-auto relative z-10">
         <div className="w-full bg-white/5 border border-white/10 rounded-[32px] overflow-hidden shadow-2xl backdrop-blur-sm">
-           <BookingFlow />
+           {EDICAO_ATIVA ? (
+             <BookingFlow />
+           ) : (
+             <EdicaoEmBreve
+               titulo="Novas edições em breve!"
+               descricao="As inscrições do próximo curso intensivo ainda não abriram. Entre na nossa comunidade no WhatsApp e seja a primeira pessoa a saber quando as vagas forem liberadas."
+             />
+           )}
         </div>
       </div>
       </section>
