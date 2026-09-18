@@ -1,8 +1,8 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Replace this with your actual production domain if different
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.escoladancaestacoes.com.br';
+  // Defina NEXT_PUBLIC_BASE_URL na Vercel quando o domínio próprio entrar no ar.
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://escoladedancaestacoes.vercel.app';
 
   return [
     {

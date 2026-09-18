@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     siteName: 'Estações Escola de Dança',
     images: [
       {
-        url: 'https://escoladedancaestacoes.vercel.app/URL_DA_SUA_IMAGEM.jpg', // TODO: SUBSTITUIR PELO LINK DA SUA IMAGEM
+        url: '/og.jpg',
         width: 1200,
         height: 630,
         alt: 'Turma animada dançando na Estações Escola de Dança',
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Estações Escola de Dança | Vem dançar em Campo Grande/MS!',
     description: 'Aprenda Forró, Vanera, Chamamé e mais em um ambiente sem julgamentos. Dança a dois para se divertir, fazer novos amigos e relaxar.',
-    images: ['https://escoladedancaestacoes.vercel.app/URL_DA_SUA_IMAGEM.jpg'], // TODO: SUBSTITUIR PELO LINK DA SUA IMAGEM
+    images: ['/og.jpg'],
   },
   verification: {
     google: 'FzN2VszccJtpegzgYnqaZxplGVnzROU3O1gbqC1akdU',
@@ -70,27 +70,23 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
               "name": "Estações Escola de Dança",
-              "image": "https://escoladedancaestacoes.vercel.app/icon.png",
+              "image": "https://escoladedancaestacoes.vercel.app/og.jpg",
               "url": "https://escoladedancaestacoes.vercel.app/",
-              "telephone": "+5567993444005",
-              "address": [
-                {
-                  "@type": "PostalAddress",
-                  "streetAddress": "Rua Barão de Melgaço, 177 - Centro",
-                  "addressLocality": "Campo Grande",
-                  "addressRegion": "MS",
-                  "postalCode": "79002-090",
-                  "addressCountry": "BR"
-                },
-                {
-                  "@type": "PostalAddress",
-                  "streetAddress": "R. Carvalho, 319 - Cidade Jardim",
-                  "addressLocality": "Campo Grande",
-                  "addressRegion": "MS",
-                  "postalCode": "79040-620",
-                  "addressCountry": "BR"
-                }
-              ],
+              "telephone": "+5567992630948",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Rua Barão de Melgaço, 177 - Centro",
+                "addressLocality": "Campo Grande",
+                "addressRegion": "MS",
+                "postalCode": "79002-090",
+                "addressCountry": "BR"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": -20.4649,
+                "longitude": -54.6156
+              },
+              "priceRange": "R$$",
               "openingHoursSpecification": [
                 {
                   "@type": "OpeningHoursSpecification",
