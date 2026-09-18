@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Star, Send, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, Send, CheckCircle } from 'lucide-react';
 
 export default function FeedbackSection() {
   const [name, setName] = useState('');
@@ -13,75 +13,6 @@ export default function FeedbackSection() {
   const [success, setSuccess] = useState(false);
   const [showForm, setShowForm] = useState(false);
   
-  const carouselRef = useRef<HTMLDivElement>(null);
-
-  const feedbacks = [
-    {
-      id: 1,
-      name: 'Mariana Silva',
-      rating: 5,
-      content: 'Ambiente maravilhoso e super acolhedor! Os professores são fantásticos e têm uma paciência incrível para ensinar quem está começando do zero.'
-    },
-    {
-      id: 2,
-      name: 'João Pedro',
-      rating: 5,
-      content: 'Nunca pensei que conseguiria aprender a dançar tão rápido. A metodologia deles me deu muita confiança no salão.'
-    },
-    {
-      id: 3,
-      name: 'Ana Laura',
-      rating: 5,
-      content: 'Fiz o curso intensivo e amei! A didática dos professores é diferente de tudo que já vi, a aula passa voando e quando você vê, já está dançando.'
-    },
-    {
-      id: 4,
-      name: 'Carlos Mendes',
-      rating: 5,
-      content: 'As aulas são muito divertidas e a turma é super animada. Já recomendei para todos os meus amigos e familiares!'
-    },
-    {
-      id: 5,
-      name: 'Beatriz Costa',
-      rating: 4,
-      content: 'Ótima escola! Os professores são muito atenciosos e ajustam o ensino ao ritmo de cada aluno, sem pressão.'
-    },
-    {
-      id: 6,
-      name: 'Fernando Oliveira',
-      rating: 5,
-      content: 'A melhor escola de dança da cidade! A infraestrutura é excelente e a paciência dos instrutores é maravilhosa.'
-    }
-  ];
-
-  const scrollLeft = () => {
-    if (carouselRef.current) {
-      const scrollAmount = carouselRef.current.clientWidth / (window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3);
-      carouselRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    if (carouselRef.current) {
-      const scrollAmount = carouselRef.current.clientWidth / (window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3);
-      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (carouselRef.current) {
-        const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-        if (scrollLeft + clientWidth >= scrollWidth - 10) {
-          carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          scrollRight();
-        }
-      }
-    }, 6000);
-    return () => clearInterval(timer);
-  }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !feedback) return;
@@ -121,51 +52,20 @@ export default function FeedbackSection() {
         <div className="text-center mb-8">
           <h2 className="text-3xl md:text-4xl font-display font-bold text-brown-900 mb-4">O que dizem sobre nós</h2>
           <p className="text-lg text-brown-700 max-w-2xl mx-auto">
-            Acompanhe a experiência de quem já faz parte da nossa escola e aproveite para deixar sua avaliação.
+            Já dançou com a gente? Conte como foi. As avaliações de quem passou por aqui aparecem nesta página.
           </p>
         </div>
 
-        {/* Carousel de Feedbacks */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl md:text-2xl font-display font-bold text-brown-900 border-b-2 border-terracotta inline-block pb-1">Feedbacks Recentes</h3>
-            <div className="flex gap-2">
-              <button onClick={scrollLeft} className="p-2 rounded-full bg-white border border-brown-200 text-brown-700 hover:bg-brown-100 transition-colors">
-                <ChevronLeft size={20} />
-              </button>
-              <button onClick={scrollRight} className="p-2 rounded-full bg-white border border-brown-200 text-brown-700 hover:bg-brown-100 transition-colors">
-                <ChevronRight size={20} />
-              </button>
-            </div>
-          </div>
-          
-          <div 
-            ref={carouselRef}
-            className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-          >
-            {feedbacks.map((fb) => (
-              <div 
-                key={fb.id}
-                className="snap-start shrink-0 w-[85%] md:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
-              >
-                <div className="bg-white p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-lg border border-brown-100 flex flex-col gap-3 md:gap-5 h-full hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-                  <div className="flex justify-between items-start gap-2">
-                    <span className="font-display font-bold text-lg md:text-xl text-brown-900 leading-tight">{fb.name}</span>
-                    <div className="flex gap-0.5 shrink-0 mt-0.5 md:mt-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star 
-                          key={star} 
-                          size={14} 
-                          className={star <= fb.rating ? "fill-ochre text-ochre" : "text-brown-200"} 
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <p className="text-brown-700 text-sm md:text-base leading-relaxed italic">&quot;{fb.content}&quot;</p>
-                </div>
-              </div>
-            ))}
-          </div>
+        {/* Sem depoimentos publicados ainda — o formulário abaixo é a origem deles. */}
+        <div className="max-w-3xl mx-auto mb-8 text-center bg-white/60 border border-dashed border-brown-200 rounded-3xl px-6 py-10">
+          <Star size={28} className="mx-auto mb-4 text-ochre" />
+          <h3 className="text-xl md:text-2xl font-display font-bold text-brown-900 mb-2">
+            Nenhuma avaliação publicada ainda
+          </h3>
+          <p className="text-brown-700 max-w-md mx-auto">
+            Estamos reunindo as avaliações dos nossos alunos. Se você já dançou com a gente, sua
+            opinião pode ser a primeira a aparecer aqui.
+          </p>
         </div>
 
         {/* Formulário de Feedback */}

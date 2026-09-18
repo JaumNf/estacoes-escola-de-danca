@@ -522,18 +522,6 @@ export default function CursosIntensivos() {
       </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="relative py-16 px-6 bg-[#fffdf0]">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12 shrink-0">
-            <h2 className="text-4xl md:text-5xl font-display font-bold text-[#682c0b] mb-4">O que dizem os alunos</h2>
-            <p className="text-orange-950/60 text-xs mt-3 font-bold uppercase tracking-widest animate-pulse">Arraste para os lados para ler mais</p>
-          </div>
-
-          <TestimonialCarousel />
-        </div>
-      </section>
-
       {/* Footer Minimal */}
       <Footer />
       
@@ -585,53 +573,6 @@ function FestaCarousel() {
               <p className="text-[#8a2f07]/80 text-lg md:text-xl font-medium leading-relaxed">
                 {card.desc}
               </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function TestimonialCarousel() {
-  const [emblaRef] = useEmblaCarousel(
-    { loop: true, align: 'start' }, 
-    [Autoplay({ delay: 10000, stopOnInteraction: false })]
-  );
-
-  const testimonials = [
-    {
-      img: 'https://i.pravatar.cc/150?img=32',
-      name: 'Mariana Silva',
-      text: '"Participar do intensivo foi um divisor de águas pra mim! O ambiente é super acolhedor e os professores explicam de um jeito muito didático. Em apenas um fim de semana consegui pegar a base e já dancei no baile. Recomendo muito!"'
-    },
-    {
-      img: 'https://i.pravatar.cc/150?img=33',
-      name: 'Carlos Eduardo',
-      text: '"Eu achava que nunca ia aprender a dançar, sou muito duro! Mas a didática da Estações me fez soltar e perder a vergonha. A turma era super animada e agora não quero mais parar as aulas. Valeu cada centavo!"'
-    },
-    {
-      img: 'https://i.pravatar.cc/150?img=34',
-      name: 'Luciana Marques',
-      text: '"Uma experiência fantástica! Consegui aprender vários ritmos e a interagir com muitas pessoas legais. A energia do lugar é surreal, recomendo para qualquer um que quer dar os primeiros passos."'
-    }
-  ];
-
-  return (
-    <div className="overflow-hidden cursor-grab active:cursor-grabbing w-full pb-8" ref={emblaRef}>
-      <div className="flex">
-        {testimonials.map((test, idx) => (
-          <div className="flex-[0_0_90%] md:flex-[0_0_45%] xl:flex-[0_0_33.333333%] min-w-0 pr-6" key={idx}>
-            <div className="bg-white p-8 rounded-[32px] shadow-lg border border-orange-50 hover:-translate-y-2 transition-transform duration-300 flex flex-col gap-6 h-full">
-              <div className="flex items-center gap-4 shrink-0">
-                <div className="w-14 h-14 rounded-full bg-orange-100 overflow-hidden relative">
-                  <Image src={test.img} alt="Aluno" fill loading="lazy" className="object-cover" unoptimized/>
-                </div>
-                <div>
-                  <h4 className="font-bold text-[#a04e22] text-xl">{test.name}</h4>
-                </div>
-              </div>
-              <p className="text-[#a04e22] italic leading-relaxed text-lg">{test.text}</p>
             </div>
           </div>
         ))}
