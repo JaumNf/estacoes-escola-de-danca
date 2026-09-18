@@ -18,6 +18,70 @@
   
   --font-display: var(--font-playfair);
   --font-body: var(--font-dm-sans);
+
+  /* ── Movimento ─────────────────────────────────────────────────────────
+     Escala de duração (o Tailwind 4 não tem namespace de duration; use os
+     utilitários numéricos e mantenha-se nesta escala):
+       duration-120  toque, ícone que desliza
+       duration-160  botões, links, mudanças de cor        ← padrão
+       duration-200  tooltips, popovers
+       duration-240  cards, cabeçalho ao rolar
+       duration-320  modais e sobreposições (teto da interface)
+     Acima de 320ms é conteúdo, não interface: justifique em comentário.   */
+  --ease-out-soft: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-soft: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* Redefine o padrão de TODO transition-* sem ease ou duration explícitos. */
+  --default-transition-timing-function: var(--ease-out-soft);
+  --default-transition-duration: 160ms;
+}
+
+/* Efeitos de hover baseados em transform só em ponteiro de verdade e para
+   quem não pediu menos movimento. O hover: do Tailwind 4 já vem dentro de
+   @media (hover: hover); aqui acrescentamos (pointer: fine) por causa dos
+   notebooks com tela de toque. */
+@custom-variant hover-fine {
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    &:hover { @slot; }
+  }
+}
+
+/* Resposta ao toque. O ':active:active' é proposital: sobe a especificidade
+   para (0,3,0) e vence qualquer hover:scale-* (0,2,0), independente da ordem
+   em que as utilidades forem emitidas. */
+@utility pressable {
+  transition-property: transform, translate, scale, rotate, color, background-color, border-color, box-shadow;
+  transition-timing-function: var(--ease-out-soft);
+  transition-duration: 140ms;
+  &:active:active { scale: 0.97; }
+  &:disabled:active, &[aria-disabled='true']:active { scale: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    &:active:active { scale: 1; }
+  }
+}
+
+/* Botões redondos pequenos (até 48px): 3% seria quase imperceptível. */
+@utility pressable-sm {
+  transition-property: transform, translate, scale, rotate, color, background-color, border-color, box-shadow;
+  transition-timing-function: var(--ease-out-soft);
+  transition-duration: 140ms;
+  &:active:active { scale: 0.94; }
+  &:disabled:active, &[aria-disabled='true']:active { scale: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    &:active:active { scale: 1; }
+  }
+}
+
+/* Linhas e cards largos: 3% num bloco de 600px vira balanço. */
+@utility pressable-lg {
+  transition-property: transform, translate, scale, rotate, color, background-color, border-color, box-shadow;
+  transition-timing-function: var(--ease-out-soft);
+  transition-duration: 140ms;
+  &:active:active { scale: 0.99; }
+  &:disabled:active, &[aria-disabled='true']:active { scale: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    &:active:active { scale: 1; }
+  }
 }
 
 body {
@@ -66,6 +130,21 @@ h1, h2, h3, h4, h5, h6 {
 @keyframes wiggle {
   0%, 100% { transform: rotate(-3deg) scale(1.02); }
   50% { transform: rotate(3deg) scale(0.98); }
+}
+
+/* Movimento reduzido: para as animações em laço (pulse, ping, bounce, wiggle).
+   Transições de cor e opacidade continuam no tempo normal — o problema é o
+   movimento, não o esmaecimento.
+   ATENÇÃO: não zere transform/translate/scale aqui. O site usa -translate-x-1/2
+   e -translate-y-1/2 para CENTRALIZAR elementos; zerar quebraria o layout. O
+   movimento é contido pela variante hover-fine, pelos utilitários pressable e
+   pelo MotionConfig reducedMotion="user". */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
 
 /* Accessibility */

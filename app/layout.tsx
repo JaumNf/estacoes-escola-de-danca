@@ -3,6 +3,7 @@ import { Playfair_Display, DM_Sans } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css'; // Global styles
 import CookieBanner from '@/components/CookieBanner';
+import MotionProvider from '@/components/MotionProvider';
 import Chatbot from '@/components/Chatbot';
 import BackToTop from '@/components/BackToTop';
 
@@ -103,10 +104,12 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         </Script>
       </head>
       <body suppressHydrationWarning className="antialiased selection:bg-brown-300 selection:text-brown-950">
-        {children}
-        <CookieBanner />
-        <Chatbot />
-        <BackToTop />
+        <MotionProvider>
+          {children}
+          <CookieBanner />
+          <Chatbot />
+          <BackToTop />
+        </MotionProvider>
         <Script id="service-worker-registration" strategy="afterInteractive">
           {`
             if ('serviceWorker' in navigator) {
