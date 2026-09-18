@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import WaveDivider from '@/components/WaveDivider';
 import Tooltip from '@/components/Tooltip';
 import { Calendar, MapPin, Clock, ArrowRight, Check, Sparkles, Trophy, Heart, Music, Star, TrendingUp } from 'lucide-react';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import BookingFlow from './BookingFlow';
@@ -20,72 +19,8 @@ const EDICAO_ATIVA = false;
 
 
 export default function CursosIntensivos() {
-  const [showOverlay, setShowOverlay] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowOverlay(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <main className="min-h-screen bg-orange-50 relative">
-      <AnimatePresence>
-        {showOverlay && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#3d1c04] overflow-hidden"
-          >
-            {/* Paper Texture Overlay */}
-            <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
-            
-            <div className="relative z-10 flex flex-col items-center justify-center px-6 text-center max-w-lg mx-auto">
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="bg-[#fffdf0] rounded-[40px] p-10 md:p-14 shadow-2xl border-4 border-[#e8a32a] relative overflow-hidden"
-              >
-                {/* Decorative Shape */}
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#e8a32a] rounded-full opacity-20 blur-2xl"></div>
-                
-                <h2 className="text-3xl md:text-5xl font-display font-bold text-[#682c0b] mb-6 leading-tight">
-                  Vem aí!
-                </h2>
-                
-                <p className="text-[#8a2f07] text-lg md:text-xl font-medium leading-relaxed">
-                  Estamos preparando as próximas edições dos nossos cursos intensivos. Em breve, novidades!
-                </p>
-
-                <div className="mt-8 flex justify-center gap-2">
-                  <motion.div 
-                    animate={{ y: [0, -10, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0 }}
-                  >
-                    <Sparkles className="text-[#e8a32a] w-6 h-6" />
-                  </motion.div>
-                  <motion.div 
-                    animate={{ y: [0, -10, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-                  >
-                    <Sparkles className="text-[#e8a32a] w-8 h-8" />
-                  </motion.div>
-                  <motion.div 
-                    animate={{ y: [0, -10, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
-                  >
-                    <Sparkles className="text-[#e8a32a] w-6 h-6" />
-                  </motion.div>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <Header />
       
       {/* Hero Section */}

@@ -51,9 +51,9 @@ export default function Chatbot() {
   }, [messages, isOpen]);
 
   const QUICK_REPLIES = [
-    "Comunidade WhatsApp",
-    "Quais as turmas de Outono?",
-    "Grupo Curso de Outono"
+    "Quero agendar aula experimental",
+    "Horários das turmas",
+    "Quanto custa?"
   ];
 
   const handleQuickReply = (text: string) => {
