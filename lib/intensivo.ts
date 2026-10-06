@@ -1,15 +1,14 @@
 /**
  * Fonte única de verdade da edição atual do Curso Intensivo.
  *
- * Tudo que muda de uma edição para a outra — datas, aulas, preços, chave PIX,
- * link do cartão — está neste arquivo. A página, o formulário de inscrição e a
- * rota /api/inscricao leem daqui, então editar aqui basta: não há preço nem
- * data escritos em nenhum componente.
+ * Tudo que muda de uma edição para a outra — datas, aulas, lotes de preço,
+ * chave PIX, link do cartão — está neste arquivo. A página, o formulário de
+ * inscrição e a rota /api/inscricao leem daqui, então editar aqui basta: não há
+ * preço nem data escritos em nenhum componente.
  *
- * ⚠️  OS VALORES MARCADOS COM "CONFIRMAR" SÃO UM ESQUELETO, NÃO A EDIÇÃO REAL.
- *     Enquanto `EDICAO.ativa` for false, nada disso aparece para o visitante:
- *     a página mostra o aviso de "novas edições em breve". Confirme os dados,
- *     troque `ativa` para true e o formulário entra no ar.
+ * ⚠️  Enquanto `EDICAO.ativa` for false, nada disso aparece para o visitante:
+ *     a página mostra o aviso de "novas edições em breve".
+ *     As linhas marcadas "CONFIRMAR" ainda esperam a informação da escola.
  */
 
 export type Nivel = 'Do Zero' | 'Intermediário' | 'Todos os níveis';
@@ -17,20 +16,19 @@ export type Nivel = 'Do Zero' | 'Intermediário' | 'Todos os níveis';
 export interface Aula {
   /** Identificador estável. Vai para a planilha e para o cálculo no servidor. */
   id: string;
-  /** Dia do mês, só o número. Ex.: '31'. */
+  /** Dia do mês, só o número. Ex.: '24'. */
   dia: string;
   /** Mês abreviado em maiúsculas. Ex.: 'OUT'. */
   mes: string;
   diaSemana: string;
-  /** Ex.: '18:40 às 20:00'. */
+  /** Ex.: '18:30 às 20:00'. */
   horario: string;
   nome: string;
   nivel: Nivel;
-  /** Preço por pessoa, em reais, na inscrição individual. */
-  preco: number;
-  /** Preço do casal — os dois juntos — na inscrição em dupla. */
-  precoDupla: number;
-  /** Baile e afins: entram na seleção, mas não contam como aula no desconto. */
+  /**
+   * Baile e afins: entram na seleção e têm preço próprio (ver `Lote`), mas não
+   * contam como aula para as faixas de desconto.
+   */
   evento?: boolean;
   /**
    * Intervalo e prática: aparece no cronograma para mostrar o ritmo do dia,
@@ -48,8 +46,7 @@ export function ehVendavel(aula: Aula): boolean {
 export const EDICAO = {
   /**
    * O interruptor geral. Com false, a página mostra "novas edições em breve"
-   * e o formulário não é montado. Vire para true só quando as linhas marcadas
-   * com CONFIRMAR estiverem conferidas.
+   * e o formulário não é montado.
    */
   ativa: true,
 
@@ -64,9 +61,98 @@ export const EDICAO = {
   cidade: 'Campo Grande, MS',
 } as const;
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Preços
+
+export type LoteId = 'promocional' | 'primeiro' | 'segundo';
+
+export interface Lote {
+  id: LoteId;
+  /** Como o lote aparece na etiqueta do formulário. */
+  nome: string;
+  /** Preço de uma aula, por pessoa, na inscrição individual. */
+  porAula: number;
+  /** Preço de uma aula para o casal — os dois juntos — na inscrição em dupla. */
+  porAulaDupla: number;
+}
+
 /**
- * As aulas da edição, na ordem em que aparecem no formulário.
- * CONFIRMAR: ritmos, horários, níveis e preços.
+ * O baile tem preço próprio, igual em todos os lotes: mais barato para quem
+ * compra adiantado, mais caro na portaria.
+ */
+export const BAILE = {
+  /** Por pessoa, comprando pelo site. */
+  antecipado: 15,
+  /** O casal, comprando pelo site. */
+  antecipadoDupla: 30,
+  /** Por pessoa, na portaria. Não se vende aqui: é só informação. */
+  naHora: 20,
+  /** Início do baile, em ISO — é a partir daqui que o prazo é contado. */
+  comecaEm: '2026-10-24T20:00:00-04:00',
+  /** A venda antecipada fecha este tanto de minutos antes do baile. */
+  fechaAntesEmMinutos: 60,
+} as const;
+
+/**
+ * A venda antecipada ainda está aberta? Depois do prazo, a entrada só na
+ * portaria — e o formulário para de oferecer o que não pode cumprir.
+ *
+ * Recebe o instante de propósito: assim o servidor e o navegador chegam ao
+ * mesmo resultado sem depender de quando a função foi chamada.
+ */
+export function vendaAntecipadaDoBaileAberta(agora: Date = new Date()): boolean {
+  const limite = new Date(BAILE.comecaEm).getTime() - BAILE.fechaAntesEmMinutos * 60_000;
+  return agora.getTime() < limite;
+}
+
+export const LOTES: Lote[] = [
+  {
+    id: 'promocional',
+    nome: 'Lote promocional',
+    porAula: 25,
+    porAulaDupla: 40,
+  },
+  {
+    id: 'primeiro',
+    nome: 'Primeiro lote',
+    porAula: 30,
+    porAulaDupla: 50,
+  },
+  {
+    id: 'segundo',
+    nome: 'Segundo lote',
+    porAula: 35,
+    porAulaDupla: 60,
+  },
+];
+
+/**
+ * O lote que está valendo. Vire para o próximo quando o anterior esgotar — é
+ * uma linha, e preço, QR Code do PIX e etiqueta do formulário acompanham.
+ */
+export const LOTE_ATIVO: LoteId = 'promocional';
+
+export function loteAtivo(): Lote {
+  return LOTES.find((lote) => lote.id === LOTE_ATIVO) ?? LOTES[0];
+}
+
+/**
+ * Faixas de desconto por quantidade de aulas. Valem em todos os lotes.
+ * O desconto incide sobre as aulas; a entrada do baile não é descontada —
+ * ou vem de brinde, na faixa que tem `incluiBaile`.
+ */
+export const DESCONTOS: {
+  minimoAulas: number;
+  percentual: number;
+  /** Ganha a entrada do baile junto. */
+  incluiBaile?: boolean;
+}[] = [
+  { minimoAulas: 3, percentual: 10 },
+  { minimoAulas: 4, percentual: 15, incluiBaile: true },
+];
+
+/**
+ * As aulas da edição, na ordem em que aparecem no cronograma e no formulário.
  */
 export const AULAS: Aula[] = [
   // ── Sexta, 23 de outubro — noite ──────────────────────────────────────────
@@ -78,8 +164,6 @@ export const AULAS: Aula[] = [
     horario: '18:30 às 20:00',
     nome: 'Bachata',
     nivel: 'Do Zero',
-    preco: 25, // CONFIRMAR
-    precoDupla: 40, // CONFIRMAR
   },
   {
     id: 'sex-intervalo',
@@ -89,8 +173,6 @@ export const AULAS: Aula[] = [
     horario: '20:00 às 20:30',
     nome: 'Intervalo e prática',
     nivel: 'Todos os níveis',
-    preco: 0,
-    precoDupla: 0,
     intervalo: true,
     descricao: 'Meia hora para respirar, treinar o que acabou de aprender e conversar.',
   },
@@ -102,8 +184,6 @@ export const AULAS: Aula[] = [
     horario: '20:30 às 22:00',
     nome: 'Zouk',
     nivel: 'Do Zero',
-    preco: 25, // CONFIRMAR
-    precoDupla: 40, // CONFIRMAR
   },
 
   // ── Sábado, 24 de outubro — tarde e noite ─────────────────────────────────
@@ -115,8 +195,6 @@ export const AULAS: Aula[] = [
     horario: '14:30 às 16:00',
     nome: 'Forró',
     nivel: 'Do Zero',
-    preco: 25, // CONFIRMAR
-    precoDupla: 40, // CONFIRMAR
   },
   {
     id: 'sab-intervalo',
@@ -126,8 +204,6 @@ export const AULAS: Aula[] = [
     horario: '16:00 às 16:30',
     nome: 'Intervalo e prática',
     nivel: 'Todos os níveis',
-    preco: 0,
-    precoDupla: 0,
     intervalo: true,
     descricao: 'Meia hora para respirar, treinar o que acabou de aprender e conversar.',
   },
@@ -139,8 +215,6 @@ export const AULAS: Aula[] = [
     horario: '16:30 às 18:00',
     nome: 'Lambada',
     nivel: 'Do Zero',
-    preco: 25, // CONFIRMAR
-    precoDupla: 40, // CONFIRMAR
   },
   {
     id: 'sab-baile',
@@ -150,24 +224,16 @@ export const AULAS: Aula[] = [
     horario: '20:00 às 01:00',
     nome: 'Baile de Halloween',
     nivel: 'Todos os níveis',
-    preco: 25, // CONFIRMAR
-    precoDupla: 40, // CONFIRMAR
     evento: true,
     descricao: 'Fantasia é opcional, mas a gente sabe que você quer.',
   },
 ];
 
-/**
- * Desconto progressivo por quantidade de aulas. O baile não conta como aula,
- * mas o valor dele entra no total antes do desconto.
- *
- * Deixe a lista vazia para cobrar a soma simples das aulas escolhidas.
- * CONFIRMAR.
- */
-export const DESCONTOS: { minimoAulas: number; percentual: number }[] = [
-  { minimoAulas: 2, percentual: 10 }, // CONFIRMAR
-  { minimoAulas: 4, percentual: 20 }, // CONFIRMAR
-];
+/** Quantas aulas de verdade a edição tem — o baile e os intervalos ficam fora. */
+export const TOTAL_DE_AULAS = AULAS.filter((a) => ehVendavel(a) && !a.evento).length;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Pagamento
 
 /**
  * Conta de recebimento. A chave e o nome precisam bater com a conta de
@@ -215,56 +281,98 @@ export const COMUNIDADE_WHATSAPP = 'https://chat.whatsapp.com/GleDoqpuQAh0K1Bo8f
 export const WHATSAPP_ESCOLA = '5567992630948';
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Cálculo
 
 export type Formato = 'individual' | 'dupla';
 
 export interface Orcamento {
-  /** Soma dos itens escolhidos, antes do desconto. */
+  lote: Lote;
+  /** Soma só das aulas, antes do desconto. */
+  subtotalAulas: number;
+  /** Entrada do baile, quando escolhida e não ganha de brinde. */
+  subtotalBaile: number;
+  /** Tudo somado, antes do desconto. */
   subtotal: number;
-  /** Percentual aplicado (0 quando nenhuma faixa foi atingida). */
   percentualDesconto: number;
-  /** Quanto o desconto tirou, em reais. */
+  /** Quanto o desconto tirou, em reais. Incide só sobre as aulas. */
   desconto: number;
   total: number;
   /** Quantas aulas de verdade — o baile não entra. */
   quantidadeAulas: number;
+  /** O baile foi escolhido? */
+  baileEscolhido: boolean;
+  /** O baile saiu de graça pela faixa de desconto? */
+  baileDeBrinde: boolean;
+  /** O que falta para a próxima faixa, para avisar quem está quase lá. */
+  proximaFaixa?: { faltam: number; percentual: number; incluiBaile: boolean };
 }
 
 export function aulaPorId(id: string): Aula | undefined {
   return AULAS.find((aula) => aula.id === id);
 }
 
+/** Preço de um item avulso, no lote que está valendo. */
+export function precoDe(aula: Aula, formato: Formato, lote: Lote = loteAtivo()): number {
+  if (aula.intervalo) return 0;
+  // O baile não acompanha o lote: tem preço próprio, de venda antecipada.
+  if (aula.evento) return formato === 'dupla' ? BAILE.antecipadoDupla : BAILE.antecipado;
+  return formato === 'dupla' ? lote.porAulaDupla : lote.porAula;
+}
+
 /**
  * Calcula o valor de uma inscrição. É a mesma função usada pelo formulário e
  * pela rota da API: o servidor nunca confia no total que o navegador mandou.
+ *
+ * Regras: o desconto incide sobre as aulas, não sobre a entrada do baile. Na
+ * faixa marcada com `incluiBaile`, a entrada do baile não é cobrada.
  */
 export function calcularOrcamento(ids: readonly string[], formato: Formato): Orcamento {
+  const lote = loteAtivo();
+
   const escolhidas = ids
     .map(aulaPorId)
     .filter((aula): aula is Aula => Boolean(aula))
     .filter(ehVendavel); // intervalo não se compra, nem por engano
 
-  const subtotal = escolhidas.reduce(
-    (soma, aula) => soma + (formato === 'dupla' ? aula.precoDupla : aula.preco),
-    0,
-  );
-
-  const quantidadeAulas = escolhidas.filter((aula) => !aula.evento).length;
+  const aulas = escolhidas.filter((aula) => !aula.evento);
+  const baile = escolhidas.find((aula) => aula.evento);
+  const quantidadeAulas = aulas.length;
 
   const faixa = DESCONTOS
     .filter((d) => quantidadeAulas >= d.minimoAulas)
-    .sort((a, b) => b.percentual - a.percentual)[0];
+    .sort((a, b) => b.minimoAulas - a.minimoAulas)[0];
+
+  const baileDeBrinde = Boolean(baile) && Boolean(faixa?.incluiBaile);
+
+  const subtotalAulas = aulas.reduce((soma, aula) => soma + precoDe(aula, formato, lote), 0);
+  const subtotalBaile = baile && !baileDeBrinde ? precoDe(baile, formato, lote) : 0;
 
   const percentualDesconto = faixa?.percentual ?? 0;
   // Arredonda para o real: ninguém paga centavo em inscrição de curso.
-  const desconto = Math.round((subtotal * percentualDesconto) / 100);
+  const desconto = Math.round((subtotalAulas * percentualDesconto) / 100);
+
+  const proxima = DESCONTOS
+    .filter((d) => quantidadeAulas < d.minimoAulas && d.minimoAulas <= TOTAL_DE_AULAS)
+    .sort((a, b) => a.minimoAulas - b.minimoAulas)[0];
 
   return {
-    subtotal,
+    lote,
+    subtotalAulas,
+    subtotalBaile,
+    subtotal: subtotalAulas + subtotalBaile,
     percentualDesconto,
     desconto,
-    total: subtotal - desconto,
+    total: subtotalAulas + subtotalBaile - desconto,
     quantidadeAulas,
+    baileEscolhido: Boolean(baile),
+    baileDeBrinde,
+    proximaFaixa: proxima
+      ? {
+          faltam: proxima.minimoAulas - quantidadeAulas,
+          percentual: proxima.percentual,
+          incluiBaile: Boolean(proxima.incluiBaile),
+        }
+      : undefined,
   };
 }
 

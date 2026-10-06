@@ -17,6 +17,7 @@ import {
   Loader2,
   Music,
   QrCode,
+  Tag,
   Trash2,
   User,
   Users,
@@ -25,6 +26,7 @@ import {
 
 import {
   AULAS,
+  BAILE,
   CREDITO,
   DESCONTOS,
   EDICAO,
@@ -34,6 +36,8 @@ import {
   calcularOrcamento,
   ehVendavel,
   formatarReais,
+  precoDe,
+  vendaAntecipadaDoBaileAberta,
   type Aula,
   type Formato,
 } from '@/lib/intensivo';
@@ -173,6 +177,15 @@ export default function InscricaoForm() {
   const [protocolo, setProtocolo] = useState('');
   const [qrCode, setQrCode] = useState('');
   const [copiado, setCopiado] = useState(false);
+  /**
+   * O prazo da venda antecipada do baile depende da hora atual, que o servidor
+   * e o navegador não compartilham. Começa aberto e se corrige depois da
+   * montagem: assim o HTML do servidor e o da primeira renderização batem.
+   */
+  const [antecipadaAberta, setAntecipadaAberta] = useState(true);
+  useEffect(() => {
+    setAntecipadaAberta(vendaAntecipadaDoBaileAberta());
+  }, []);
 
   const tituloEtapaRef = useRef<HTMLHeadingElement>(null);
   const inputArquivoRef = useRef<HTMLInputElement>(null);
@@ -185,10 +198,7 @@ export default function InscricaoForm() {
     [],
   );
 
-  const precoDe = useCallback(
-    (aula: Aula) => (formato === 'dupla' ? aula.precoDupla : aula.preco),
-    [formato],
-  );
+  const preco = useCallback((aula: Aula) => precoDe(aula, formato), [formato]);
 
   // ── PIX ───────────────────────────────────────────────────────────────────
   const payloadPix = useMemo(() => {
@@ -646,11 +656,19 @@ export default function InscricaoForm() {
                 >
                   Quais aulas você vai fazer?
                 </h2>
-                <p className="text-brown-700 mb-7">
+                <p className="text-brown-700 mb-4">
                   Monte do seu jeito.
                   {primeiraFaixa
                     ? ` A partir de ${primeiraFaixa.minimoAulas} aulas o desconto entra automático.`
                     : ''}
+                </p>
+
+                <p className="inline-flex items-center gap-2 mb-6 px-3 py-1.5 rounded-full bg-[#fffbeb] border border-[#fcd34d] text-[#92400e] text-xs font-bold">
+                  <Tag size={13} />
+                  {orcamento.lote.nome} · {formatarReais(orcamento.lote.porAula)} por aula
+                  <span className="font-medium text-[#a16207]">
+                    ({formatarReais(orcamento.lote.porAulaDupla)} a dupla)
+                  </span>
                 </p>
 
                 <div className="space-y-5">
@@ -708,6 +726,30 @@ export default function InscricaoForm() {
                               );
                             }
 
+                            // Passado o prazo, a entrada do baile só na portaria:
+                            // o formulário para de vender o que não pode cumprir.
+                            if (aula.evento && !antecipadaAberta) {
+                              return (
+                                <div
+                                  key={aula.id}
+                                  className="flex items-center gap-3 px-4 py-3.5 bg-brown-50/40"
+                                >
+                                  <span aria-hidden className="w-5 shrink-0 grid place-items-center">
+                                    <Music size={14} className="text-brown-400" />
+                                  </span>
+                                  <span className="flex-1 min-w-0">
+                                    <span className="font-bold text-brown-600">{aula.nome}</span>
+                                    <span className="block text-xs text-brown-600 mt-0.5">
+                                      A venda antecipada fechou. Entrada na portaria.
+                                    </span>
+                                  </span>
+                                  <span className="font-display font-bold text-brown-700 shrink-0 tabular-nums">
+                                    {formatarReais(BAILE.naHora)}
+                                  </span>
+                                </div>
+                              );
+                            }
+
                             const marcada = selecionadas.includes(aula.id);
                             return (
                               <label
@@ -758,10 +800,25 @@ export default function InscricaoForm() {
                                     {aula.horario}
                                     {aula.descricao ? ` · ${aula.descricao}` : ''}
                                   </span>
+                                  {aula.evento && (
+                                    <span className="block text-xs text-brown-500 mt-0.5">
+                                      {formatarReais(BAILE.naHora)} na portaria · antecipado só até
+                                      1h antes
+                                    </span>
+                                  )}
                                 </span>
 
-                                <span className="font-display font-bold text-[#682c0b] shrink-0 tabular-nums">
-                                  {formatarReais(precoDe(aula))}
+                                <span className="font-display font-bold shrink-0 tabular-nums text-right">
+                                  {aula.evento && orcamento.baileDeBrinde ? (
+                                    <>
+                                      <span className="block text-brown-400 line-through text-sm font-body font-medium">
+                                        {formatarReais(preco(aula))}
+                                      </span>
+                                      <span className="block text-green-700 text-sm">grátis</span>
+                                    </>
+                                  ) : (
+                                    <span className="text-[#682c0b]">{formatarReais(preco(aula))}</span>
+                                  )}
                                 </span>
                               </label>
                             );
@@ -785,23 +842,51 @@ export default function InscricaoForm() {
                     <div className="space-y-1.5">
                       <div className="flex justify-between text-sm text-orange-200">
                         <span>
-                          {selecionadas.length} {selecionadas.length === 1 ? 'item' : 'itens'}
+                          {orcamento.quantidadeAulas}{' '}
+                          {orcamento.quantidadeAulas === 1 ? 'aula' : 'aulas'}
                           {formato === 'dupla' ? ' · preço de dupla' : ''}
                         </span>
-                        <span className="tabular-nums">{formatarReais(orcamento.subtotal)}</span>
+                        <span className="tabular-nums">{formatarReais(orcamento.subtotalAulas)}</span>
                       </div>
+
                       {orcamento.desconto > 0 && (
                         <div className="flex justify-between text-sm text-[#fbbf24] font-bold">
                           <span>Desconto de {orcamento.percentualDesconto}%</span>
                           <span className="tabular-nums">− {formatarReais(orcamento.desconto)}</span>
                         </div>
                       )}
+
+                      {orcamento.baileEscolhido && (
+                        <div
+                          className={`flex justify-between text-sm ${
+                            orcamento.baileDeBrinde ? 'text-[#fbbf24] font-bold' : 'text-orange-200'
+                          }`}
+                        >
+                          <span>Baile de Halloween</span>
+                          <span className="tabular-nums">
+                            {orcamento.baileDeBrinde
+                              ? 'incluso'
+                              : formatarReais(orcamento.subtotalBaile)}
+                          </span>
+                        </div>
+                      )}
+
                       <div className="flex justify-between items-baseline pt-2 border-t border-white/15">
                         <span className="font-bold">Total</span>
                         <span className="text-2xl font-display font-bold text-[#fbbf24] tabular-nums">
                           {formatarReais(orcamento.total)}
                         </span>
                       </div>
+
+                      {/* Quem está a uma aula da próxima faixa merece saber. */}
+                      {orcamento.proximaFaixa && (
+                        <p className="text-xs text-orange-200/90 pt-2 border-t border-white/10 mt-2">
+                          {orcamento.proximaFaixa.faltam === 1 ? 'Falta 1 aula' : `Faltam ${orcamento.proximaFaixa.faltam} aulas`}{' '}
+                          para{' '}
+                          {orcamento.proximaFaixa.percentual}% de desconto
+                          {orcamento.proximaFaixa.incluiBaile ? ' e o baile de graça' : ''}.
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>

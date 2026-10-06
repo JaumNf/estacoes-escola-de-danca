@@ -24,10 +24,17 @@ const CONFIG = {
   TOKEN: 'COLE_O_MESMO_TOKEN_DA_VERCEL_AQUI',
 };
 
+/**
+ * Uma coluna por campo, como na planilha de respostas de um formulário Google.
+ * A ordem aqui manda: é ela que monta o cabeçalho e a linha.
+ * Se você mexer nesta lista, apague o cabeçalho antigo da planilha para o
+ * script criar o novo — senão os valores entram em colunas trocadas.
+ */
 const COLUNAS = [
   'Recebido em',
   'Protocolo',
   'Edição',
+  'Lote',
   'Formato',
   'Nome 1',
   'WhatsApp 1',
@@ -35,7 +42,9 @@ const COLUNAS = [
   'WhatsApp 2',
   'Aulas',
   'Qtd. aulas',
-  'Subtotal',
+  'Baile',
+  'Subtotal aulas',
+  'Baile (R$)',
   'Desconto %',
   'Desconto',
   'Total',
@@ -80,6 +89,7 @@ function doPost(e) {
       formatarData(dados.enviadoEm),
       dados.protocolo || '',
       dados.edicao || '',
+      dados.lote || '',
       dados.formato || '',
       dados.nome1 || '',
       formatarWhatsapp(dados.whatsapp1),
@@ -87,7 +97,9 @@ function doPost(e) {
       formatarWhatsapp(dados.whatsapp2),
       dados.aulas || '',
       dados.quantidadeAulas || 0,
-      dados.subtotal || 0,
+      dados.baile || '',
+      dados.subtotalAulas || 0,
+      dados.subtotalBaile || 0,
       dados.percentualDesconto || 0,
       dados.desconto || 0,
       dados.total || 0,
@@ -133,10 +145,12 @@ function obterAba() {
     cabecalho.setBackground('#3d1c04');
     cabecalho.setFontColor('#ffffff');
     aba.setFrozenRows(1);
-    aba.setColumnWidth(9, 420); // a coluna "Aulas" é longa
-    // Subtotal, desconto e total como moeda.
-    aba.getRange(1, 11, aba.getMaxRows(), 1).setNumberFormat('R$ #,##0.00');
-    aba.getRange(1, 13, aba.getMaxRows(), 2).setNumberFormat('R$ #,##0.00');
+    aba.setColumnWidth(COLUNAS.indexOf('Aulas') + 1, 420); // essa coluna é longa
+    // As colunas de dinheiro saem como moeda, para somar direto na planilha.
+    ['Subtotal aulas', 'Baile (R$)', 'Desconto', 'Total'].forEach(function (nome) {
+      aba.getRange(1, COLUNAS.indexOf(nome) + 1, aba.getMaxRows(), 1)
+        .setNumberFormat('R$ #,##0.00');
+    });
   }
 
   return aba;
@@ -204,14 +218,13 @@ function responder(objeto) {
 function testarConfiguracao() {
   const aba = obterAba();
   DriveApp.getFolderById(CONFIG.PASTA_COMPROVANTES_ID); // estoura se o ID estiver errado
-  aba.appendRow([
-    formatarData(new Date().toISOString()),
-    'EST-TESTE',
-    'teste de configuração',
-    'Individual',
-    'Linha de teste — pode apagar',
-    formatarWhatsapp('5567992630948'),
-    '', '', 'nenhuma', 0, 0, 0, 0, 0, 'PIX', '', 'Teste',
-  ]);
+  const linha = COLUNAS.map(function () { return ''; });
+  linha[COLUNAS.indexOf('Recebido em')] = formatarData(new Date().toISOString());
+  linha[COLUNAS.indexOf('Protocolo')] = 'EST-TESTE';
+  linha[COLUNAS.indexOf('Edição')] = 'teste de configuração';
+  linha[COLUNAS.indexOf('Nome 1')] = 'Linha de teste — pode apagar';
+  linha[COLUNAS.indexOf('WhatsApp 1')] = formatarWhatsapp('5567992630948');
+  linha[COLUNAS.indexOf('Status')] = 'Teste';
+  aba.appendRow(linha);
   Logger.log('Tudo certo: planilha e pasta acessíveis. Apague a linha de teste.');
 }

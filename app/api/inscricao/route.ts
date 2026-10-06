@@ -176,6 +176,7 @@ export async function POST(request: NextRequest) {
     protocolo,
     enviadoEm: new Date().toISOString(),
     edicao: EDICAO.nome,
+    lote: orcamento.lote.nome,
     formato: formato === 'dupla' ? 'Dupla' : 'Individual',
     nome1,
     whatsapp1,
@@ -183,7 +184,13 @@ export async function POST(request: NextRequest) {
     whatsapp2,
     aulas: descricaoAulas,
     quantidadeAulas: orcamento.quantidadeAulas,
-    subtotal: orcamento.subtotal,
+    baile: orcamento.baileEscolhido
+      ? orcamento.baileDeBrinde
+        ? 'Sim (brinde das 4 aulas)'
+        : 'Sim (pago)'
+      : 'Não',
+    subtotalAulas: orcamento.subtotalAulas,
+    subtotalBaile: orcamento.subtotalBaile,
     percentualDesconto: orcamento.percentualDesconto,
     desconto: orcamento.desconto,
     total: orcamento.total,
