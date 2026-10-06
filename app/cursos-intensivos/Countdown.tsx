@@ -82,7 +82,7 @@ export default function Countdown() {
 
       <button 
         onClick={handleAddToCalendar}
-        className="flex items-center gap-2 border border-white/20 hover:bg-white/10 text-orange-100 px-6 py-3 rounded-full text-sm font-medium transition-colors"
+        className="pressable flex items-center gap-2 border border-white/20 hover:bg-white/10 text-orange-100 px-6 py-3 rounded-full text-sm font-medium"
       >
         <Calendar size={18} className="text-orange-200" />
         Adicionar na Agenda do Google

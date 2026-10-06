@@ -26,7 +26,7 @@ export default function BookingFlow() {
           <div className="mb-10 flex justify-center">
             <button 
               onClick={() => setShowPrices(true)}
-              className="inline-flex items-center justify-center gap-2 bg-orange-50 text-orange-700 px-5 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-orange-100 transition-all shadow-sm border border-orange-200"
+              className="pressable inline-flex items-center justify-center gap-2 bg-orange-50 text-orange-700 px-5 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-orange-100 shadow-sm border border-orange-200"
             >
               <Tag size={16} />
               <span>Consultar Valores</span>
@@ -93,11 +93,11 @@ export default function BookingFlow() {
             href="https://forms.gle/eNrECUruTq2c2US69" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="relative flex items-center justify-center gap-2 md:gap-3 bg-gradient-to-r from-orange-600 to-[#b55d05] text-white px-4 py-4 md:px-12 md:py-6 rounded-full font-bold tracking-wider md:tracking-widest uppercase hover:scale-[1.05] active:scale-[0.95] transition-all shadow-xl shadow-orange-900/30 hover:shadow-2xl hover:shadow-orange-700/40 w-full md:w-auto text-base md:text-xl border border-orange-500/50 group"
+            className="pressable relative flex items-center justify-center gap-2 md:gap-3 bg-gradient-to-r from-orange-600 to-[#b55d05] text-white px-4 py-4 md:px-12 md:py-6 rounded-full font-bold tracking-wider md:tracking-widest uppercase active:scale-[0.95] shadow-xl shadow-orange-900/30 hover:shadow-2xl hover:shadow-orange-700/40 w-full md:w-auto text-base md:text-xl border border-orange-500/50 group"
           >
-            <Ticket size={24} className="md:w-8 md:h-8 shrink-0 group-hover:-rotate-12 transition-transform duration-300" />
+            <Ticket size={24} className="md:w-8 md:h-8 shrink-0 group-hover:-rotate-12 transition-transform" />
             <span className="whitespace-nowrap">Se inscreva aqui!</span>
-            <ArrowRight size={24} className="md:w-8 md:h-8 shrink-0 hidden md:block group-hover:translate-x-2 transition-transform duration-300" />
+            <ArrowRight size={24} className="md:w-8 md:h-8 shrink-0 hidden md:block group-hover:translate-x-2 transition-transform" />
           </a>
         </div>
 

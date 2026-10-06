@@ -98,14 +98,14 @@ export default function HorariosTurmas() {
           </div>
         ) : (
           Object.entries(turmasAgrupadas).map(([grupo, turmas]) => (
-            <div key={grupo} className="group bg-white rounded-[40px] p-8 md:p-12 shadow-xl shadow-orange-900/5 border border-orange-100 hover:-translate-y-2 hover:shadow-2xl hover:border-terracotta transition-all duration-300 relative">
+            <div key={grupo} className="group bg-white rounded-[40px] p-8 md:p-12 shadow-xl shadow-orange-900/5 border border-orange-100 hover-fine:-translate-y-2 hover:shadow-2xl hover:border-terracotta transition-[border-color,box-shadow,translate,scale,rotate] duration-240 relative">
               
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8 border-b border-orange-100 pb-6">
-                <div className="w-12 h-12 rounded-full border-2 border-orange-600 group-hover:border-terracotta flex items-center justify-center shrink-0 transition-colors duration-300">
-                  <MapPin className="text-orange-600 group-hover:text-terracotta transition-colors duration-300" size={24} />
+                <div className="w-12 h-12 rounded-full border-2 border-orange-600 group-hover:border-terracotta flex items-center justify-center shrink-0 transition-colors">
+                  <MapPin className="text-orange-600 group-hover:text-terracotta transition-colors" size={24} />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-display font-bold text-orange-900 group-hover:text-terracotta transition-colors duration-300">
+                  <h3 className="text-2xl font-display font-bold text-orange-900 group-hover:text-terracotta transition-colors">
                     {grupo.split(' - ')[0].toUpperCase()} <span className="font-normal opacity-80 text-xl">- {grupo.split(' - ')[1]}</span>
                   </h3>
                 </div>
@@ -123,7 +123,7 @@ export default function HorariosTurmas() {
                           if (el) el.scrollIntoView({ behavior: 'smooth' });
                         }
                       }}
-                      className={`w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 bg-white hover:bg-orange-50 transition-all duration-200 active:scale-[0.98] group/item ${turma.esgotada ? 'opacity-80' : ''}`}
+                      className={`pressable-lg w-full text-left flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-4 bg-white hover:bg-orange-50 active:scale-[0.98] group/item ${turma.esgotada ? 'opacity-80' : ''}`}
                     >
                       <div className="flex items-center gap-3 min-w-[150px]">
                         <Clock className={turma.esgotada ? 'text-orange-400' : 'text-orange-600'} size={24} />
@@ -159,7 +159,7 @@ export default function HorariosTurmas() {
                             Avise-me
                           </div>
                         ) : (
-                          <ArrowRight className="text-orange-300 group-hover/item:text-orange-600 transition-all group-hover/item:translate-x-2" size={24} />
+                          <ArrowRight className="text-orange-300 group-hover/item:text-orange-600 transition-[color,background-color,translate,scale,rotate] group-hover/item:translate-x-2" size={24} />
                         )}
                       </div>
                     </button>
@@ -190,7 +190,7 @@ export default function HorariosTurmas() {
                                 <button
                                   type="submit"
                                   disabled={submitting}
-                                  className="bg-terracotta text-white font-bold px-6 py-2.5 rounded-xl hover:bg-orange-700 transition-colors disabled:opacity-70 flex items-center justify-center min-w-[120px]"
+                                  className="pressable bg-terracotta text-white font-bold px-6 py-2.5 rounded-xl hover:bg-orange-700 disabled:opacity-70 flex items-center justify-center min-w-[120px]"
                                 >
                                   {submitting ? <Loader2 className="animate-spin" size={20} /> : 'Me avise!'}
                                 </button>

@@ -46,7 +46,7 @@ export default function AccessibilityMenu() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-28 lg:bottom-32 right-6 lg:right-10 z-40 p-4 rounded-full bg-orange-100 text-orange-900 border-2 border-orange-300 shadow-lg hover:bg-orange-200 hover:scale-105 transition-all outline-none focus:ring-4 focus:ring-orange-400"
+        className="pressable fixed bottom-28 lg:bottom-32 right-6 lg:right-10 z-40 p-4 rounded-full bg-orange-100 text-orange-900 border-2 border-orange-300 shadow-lg hover:bg-orange-200 outline-none focus:ring-4 focus:ring-orange-400"
         aria-label="Menu de Acessibilidade"
       >
         <Accessibility size={24} />
@@ -58,7 +58,7 @@ export default function AccessibilityMenu() {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed bottom-48 lg:bottom-52 right-6 lg:right-10 z-50 w-72 bg-white rounded-2xl shadow-2xl border border-orange-100 overflow-hidden"
+            className="fixed bottom-48 lg:bottom-52 right-6 lg:right-10 z-50 w-72 origin-bottom-right bg-white rounded-2xl shadow-2xl border border-orange-100 overflow-hidden"
           >
             <div className="bg-orange-600 text-white p-4 flex items-center justify-between">
               <h3 className="font-bold flex items-center gap-2">
@@ -67,7 +67,7 @@ export default function AccessibilityMenu() {
               </h3>
               <button 
                 onClick={() => setIsOpen(false)}
-                className="p-1 hover:bg-orange-500 rounded-md transition-colors"
+                className="pressable p-1 hover:bg-orange-500 rounded-md"
                 aria-label="Fechar menu"
               >
                 <X size={18} />
@@ -81,14 +81,14 @@ export default function AccessibilityMenu() {
                 <div className="flex gap-2">
                   <button 
                     onClick={decreaseFontSize}
-                    className="flex-1 flex items-center justify-center gap-1 p-2 bg-orange-50 text-orange-900 rounded-lg hover:bg-orange-100 border border-orange-200"
+                    className="pressable flex-1 flex items-center justify-center gap-1 p-2 bg-orange-50 text-orange-900 rounded-lg hover:bg-orange-100 border border-orange-200"
                     aria-label="Diminuir texto"
                   >
                     <ZoomOut size={16} /> A-
                   </button>
                   <button 
                     onClick={increaseFontSize}
-                    className="flex-1 flex items-center justify-center gap-1 p-2 bg-orange-50 text-orange-900 rounded-lg hover:bg-orange-100 border border-orange-200"
+                    className="pressable flex-1 flex items-center justify-center gap-1 p-2 bg-orange-50 text-orange-900 rounded-lg hover:bg-orange-100 border border-orange-200"
                     aria-label="Aumentar texto"
                   >
                     <ZoomIn size={16} /> A+
@@ -99,7 +99,7 @@ export default function AccessibilityMenu() {
               {/* Contraste */}
               <button 
                 onClick={() => setHighContrast(!highContrast)}
-                className={`w-full flex items-center justify-between p-3 rounded-lg border transition-colors ${
+                className={`pressable-lg w-full flex items-center justify-between p-3 rounded-lg border ${
                   highContrast 
                     ? 'border-orange-600 bg-orange-600 text-white' 
                     : 'border-orange-200 bg-orange-50 text-orange-900 hover:bg-orange-100'
@@ -110,14 +110,14 @@ export default function AccessibilityMenu() {
                   Alto Contraste
                 </span>
                 <div className={`w-10 h-5 rounded-full relative transition-colors ${highContrast ? 'bg-orange-400' : 'bg-gray-300'}`}>
-                  <div className={`absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 bg-white rounded-full transition-all ${highContrast ? 'left-[22px]' : 'left-1'}`} />
+                  <div className={`absolute top-1/2 left-1 -translate-y-1/2 w-3.5 h-3.5 bg-white rounded-full transition-transform duration-160 ${highContrast ? 'translate-x-[18px]' : 'translate-x-0'}`} />
                 </div>
               </button>
 
               {/* Fonte Disléxica */}
               <button 
                 onClick={() => setDyslexicFont(!dyslexicFont)}
-                className={`w-full flex items-center justify-between p-3 rounded-lg border transition-colors ${
+                className={`pressable-lg w-full flex items-center justify-between p-3 rounded-lg border ${
                   dyslexicFont 
                     ? 'border-orange-600 bg-orange-600 text-white' 
                     : 'border-orange-200 bg-orange-50 text-orange-900 hover:bg-orange-100'
@@ -128,13 +128,13 @@ export default function AccessibilityMenu() {
                   Fonte para Dislexia
                 </span>
                 <div className={`w-10 h-5 rounded-full relative transition-colors ${dyslexicFont ? 'bg-orange-400' : 'bg-gray-300'}`}>
-                  <div className={`absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 bg-white rounded-full transition-all ${dyslexicFont ? 'left-[22px]' : 'left-1'}`} />
+                  <div className={`absolute top-1/2 left-1 -translate-y-1/2 w-3.5 h-3.5 bg-white rounded-full transition-transform duration-160 ${dyslexicFont ? 'translate-x-[18px]' : 'translate-x-0'}`} />
                 </div>
               </button>
 
               <button 
                 onClick={resetAccessibility}
-                className="w-full mt-4 flex items-center justify-center gap-2 text-sm text-gray-500 hover:text-orange-600 transition-colors py-2 font-medium"
+                className="pressable w-full mt-4 flex items-center justify-center gap-2 text-sm text-gray-500 hover:text-orange-600 py-2 font-medium"
               >
                 <RefreshCcw size={14} /> Restaurar Padrões
               </button>

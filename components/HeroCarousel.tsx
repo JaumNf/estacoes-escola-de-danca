@@ -7,19 +7,19 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const images = [
   {
-    src: 'https://lh3.googleusercontent.com/d/1H-LpcgnZQSK73r8QE-RavxRJaN9wYOl4',
+    src: '/images/herocarousel-movimente-se-com-confianca.webp',
     alt: 'Dançarinos em movimento',
     title: 'Movimente-se com Confiança',
     subtitle: 'Mais do que passos, desenvolva consciência corporal, conexão e o prazer em dançar.',
   },
   {
-    src: 'https://lh3.googleusercontent.com/d/15KLdRiza4jdyG4akwtYL5c2if0NAd886',
+    src: '/images/herocarousel-para-todos-os-niveis.webp',
     alt: 'Aula de dança',
     title: 'Para Todos os Níveis',
     subtitle: 'Comece do zero ou encontre novos desafios. O foco é a vontade de viver algo novo.',
   },
   {
-    src: 'https://lh3.googleusercontent.com/d/1vTR_7aMlT9YnfnHbZ2rx8Vm4-evWECdo',
+    src: '/images/herocarousel-conexao-e-diversao.webp',
     alt: 'Apresentação de dança',
     title: 'Conexão e Diversão',
     subtitle: 'Um ambiente leve onde a gente se diverte, ri e compartilha momentos inesquecíveis.',
@@ -53,11 +53,10 @@ export default function HeroCarousel() {
             src={img.src}
             alt={img.alt}
             fill
+            sizes="100vw"
             className="object-cover"
             priority={idx === 0}
             loading={idx === 0 ? undefined : "lazy"}
-            referrerPolicy="no-referrer"
-            unoptimized={true}
           />
         </div>
       ))}
@@ -86,7 +85,7 @@ export default function HeroCarousel() {
             <div className="pointer-events-auto flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a 
                 href="#trabalhos"
-                className="bg-transparent border border-white/50 text-white px-8 py-4 rounded-full font-medium tracking-wide hover:bg-white/10 transition-colors shadow-lg backdrop-blur-sm"
+                className="pressable bg-transparent border border-white/50 text-white px-8 py-4 rounded-full font-medium tracking-wide hover:bg-white/10 shadow-lg backdrop-blur-sm"
               >
                 Conheça a Escola
               </a>
@@ -97,13 +96,13 @@ export default function HeroCarousel() {
 
       <button 
         onClick={prev}
-        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-brown-300/30 flex items-center justify-center text-brown-100 hover:bg-brown-800/50 transition-colors z-10"
+        className="pressable-sm absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-brown-300/30 flex items-center justify-center text-brown-100 hover:bg-brown-800/50 z-10"
       >
         <ChevronLeft size={24} />
       </button>
       <button 
         onClick={next}
-        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-brown-300/30 flex items-center justify-center text-brown-100 hover:bg-brown-800/50 transition-colors z-10"
+        className="pressable-sm absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-brown-300/30 flex items-center justify-center text-brown-100 hover:bg-brown-800/50 z-10"
       >
         <ChevronRight size={24} />
       </button>
@@ -113,7 +112,7 @@ export default function HeroCarousel() {
           <button
             key={idx}
             onClick={() => setCurrentIndex(idx)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+            className={`w-3 h-3 rounded-full transition-[width,background-color] duration-200 ${
               idx === currentIndex ? 'bg-terracotta w-8' : 'bg-brown-300/50 hover:bg-brown-300'
             }`}
           />

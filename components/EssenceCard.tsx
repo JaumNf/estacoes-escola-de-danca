@@ -18,10 +18,10 @@ export default function EssenceCard({ title, desc, icon }: EssenceCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       onClick={() => setIsOpen(!isOpen)}
-      className={`bg-brown-50 p-8 rounded-[32px] shadow-sm border border-brown-200/50 hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col items-center text-center relative overflow-hidden ${isOpen ? 'ring-2 ring-terracotta/50' : ''}`}
+      className={`bg-brown-50 p-8 rounded-[32px] shadow-sm border border-brown-200/50 hover:shadow-xl transition-[box-shadow] cursor-pointer h-full flex flex-col items-center text-center relative overflow-hidden ${isOpen ? 'ring-2 ring-terracotta/50' : ''}`}
     >
       <div className="flex-1 flex flex-col items-center w-full">
-        <div className={`text-4xl mb-6 bg-brown-100 w-20 h-20 flex items-center justify-center rounded-full transition-colors duration-300 ${isOpen ? 'bg-terracotta text-white' : 'group-hover:bg-terracotta/10'}`}>
+        <div className={`text-4xl mb-6 bg-brown-100 w-20 h-20 flex items-center justify-center rounded-full transition-colors ${isOpen ? 'bg-terracotta text-white' : 'group-hover:bg-terracotta/10'}`}>
           {icon}
         </div>
         <h3 className="text-2xl font-display font-bold text-brown-900 mb-2">{title}</h3>

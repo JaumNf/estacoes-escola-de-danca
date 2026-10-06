@@ -45,7 +45,7 @@ export default function EdicaoEmBreve({
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="bg-[#fbbf24] text-[#682c0b] px-8 py-4 rounded-xl font-bold tracking-widest uppercase hover:bg-[#f59e0b] shadow-xl transition-colors duration-300 inline-flex items-center gap-2"
+        className="bg-[#fbbf24] text-[#682c0b] px-8 py-4 rounded-xl font-bold tracking-widest uppercase hover:bg-[#f59e0b] shadow-xl transition-colors inline-flex items-center gap-2"
       >
         {textoBotao} <MessageCircle size={20} />
       </a>

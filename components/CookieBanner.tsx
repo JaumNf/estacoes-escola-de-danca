@@ -19,8 +19,7 @@ export default function CookieBanner() {
     setShowBanner(false);
   };
 
-  if (!showBanner) return null;
-
+  // Sem early return: o AnimatePresence abaixo precisa do desmonte para animar a saída.
   return (
     <AnimatePresence>
       {showBanner && (
@@ -43,7 +42,7 @@ export default function CookieBanner() {
             <div className="flex shrink-0 w-full md:w-auto">
               <button
                 onClick={acceptCookies}
-                className="w-full md:w-auto px-8 py-3 bg-terracotta text-white font-medium rounded-full hover:bg-brown-800 transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5 duration-200"
+                className="pressable w-full md:w-auto px-8 py-3 bg-terracotta text-white font-medium rounded-full hover:bg-brown-800 shadow-md hover:shadow-lg transform hover-fine:-translate-y-0.5"
               >
                 Aceitar e Fechar
               </button>

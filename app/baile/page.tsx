@@ -82,13 +82,12 @@ export default function BailePage() {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://lh3.googleusercontent.com/d/1UBqXIC4Xy9jtx8D63VJVdtE5vPPNmddN"
+            src="/images/baile-baile-de-danca.webp"
             alt="Baile de Dança"
             fill
+            sizes="100vw"
             className="object-cover"
-            referrerPolicy="no-referrer"
             priority
-            unoptimized
           />
         </div>
         
@@ -121,7 +120,7 @@ export default function BailePage() {
               e.preventDefault();
               document.getElementById('ingressos')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="bg-rose-600 text-white px-8 py-4 rounded-full font-bold tracking-wide hover:bg-rose-800 transition-colors duration-300 shadow-lg inline-flex items-center gap-2 relative z-50 pointer-events-auto"
+            className="pressable bg-rose-600 text-white px-8 py-4 rounded-full font-bold tracking-wide hover:bg-rose-800 shadow-lg inline-flex items-center gap-2 relative z-50 pointer-events-auto"
           >
             {BAILE_ATIVO ? 'Garanta seu Ingresso' : 'Quero ser avisado'} <Ticket size={20} />
           </motion.button>
@@ -299,7 +298,7 @@ export default function BailePage() {
                       <div
                         key={event.id}
                         onClick={() => event.active && setSelectedEvent(event.id)}
-                        className={`w-full p-4 rounded-xl border-2 transition-all flex items-center justify-between group cursor-pointer ${
+                        className={`w-full p-4 rounded-xl border-2 transition-[color,background-color,border-color,opacity] flex items-center justify-between group cursor-pointer ${
                           selectedEvent === event.id
                             ? 'border-rose-500 bg-rose-50'
                             : event.active 
@@ -326,7 +325,7 @@ export default function BailePage() {
                   <label className="text-sm font-bold text-[#874c2e] uppercase tracking-wide">Tipo de Ingresso</label>
                   <div className="space-y-2">
                     <div
-                      className="w-full p-4 rounded-xl border-2 transition-all flex items-center justify-between group border-rose-500 bg-rose-50"
+                      className="w-full p-4 rounded-xl border-2 flex items-center justify-between group border-rose-500 bg-rose-50"
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-5 h-5 rounded-full border border-rose-500 flex items-center justify-center">
@@ -342,7 +341,7 @@ export default function BailePage() {
                     <button
                       type="button"
                       onClick={() => setCurrentStep(2)}
-                      className="w-full bg-rose-600 text-white py-4 mt-6 rounded-xl font-bold text-lg hover:bg-rose-800 transition-colors shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2 cursor-pointer"
+                      className="pressable w-full bg-rose-600 text-white py-4 mt-6 rounded-xl font-bold text-lg hover:bg-rose-800 shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2 cursor-pointer"
                     >
                       Continuar para Pagamento
                       <ArrowRight size={20} />
@@ -360,7 +359,7 @@ export default function BailePage() {
                     <button 
                       type="button" 
                       onClick={() => setCurrentStep(1)}
-                      className="text-sm font-bold text-[#874c2e] hover:text-[#682c0b] flex items-center gap-1 transition-colors -mt-2 mb-2"
+                      className="pressable text-sm font-bold text-[#874c2e] hover:text-[#682c0b] flex items-center gap-1 -mt-2 mb-2"
                     >
                       <ArrowLeft size={16} /> Voltar
                     </button>
@@ -396,7 +395,7 @@ export default function BailePage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div 
                       onClick={() => setFormaPagamento('pix')}
-                      className={`p-3 rounded-xl border-2 text-center cursor-pointer transition-all ${
+                      className={`p-3 rounded-xl border-2 text-center cursor-pointer transition-colors ${
                         formaPagamento === 'pix' ? 'border-rose-500 bg-rose-50 text-[#682c0b]' : 'border-orange-100 hover:border-orange-200 text-[#874c2e]'
                       }`}
                     >
@@ -405,7 +404,7 @@ export default function BailePage() {
                     </div>
                     <div 
                       onClick={() => setFormaPagamento('credito')}
-                      className={`p-3 rounded-xl border-2 text-center cursor-pointer transition-all ${
+                      className={`p-3 rounded-xl border-2 text-center cursor-pointer transition-colors ${
                         formaPagamento === 'credito' ? 'border-rose-500 bg-rose-50 text-[#682c0b]' : 'border-orange-100 hover:border-orange-200 text-[#874c2e]'
                       }`}
                     >
@@ -429,7 +428,7 @@ export default function BailePage() {
                             <button 
                               type="button" 
                               onClick={handleCopyPix} 
-                              className="bg-orange-100 text-[#644230] hover:bg-orange-200 px-3 py-2 rounded-md font-bold text-xs flex items-center gap-1 transition-colors shrink-0"
+                              className="pressable bg-orange-100 text-[#644230] hover:bg-orange-200 px-3 py-2 rounded-md font-bold text-xs flex items-center gap-1 shrink-0"
                             >
                               {copied ? <Check size={14} /> : <Copy size={14} />} 
                               {copied ? 'Copiada' : 'Copiar'}
@@ -470,7 +469,7 @@ export default function BailePage() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-rose-600 text-white py-4 mt-6 rounded-xl font-bold text-lg hover:bg-rose-800 transition-colors shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-wait"
+                      className="pressable w-full bg-rose-600 text-white py-4 mt-6 rounded-xl font-bold text-lg hover:bg-rose-800 shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-wait"
                     >
                       <Ticket size={20} />
                       {isSubmitting ? 'Enviando...' : 'Confirmar Ingresso'}
@@ -506,14 +505,14 @@ export default function BailePage() {
               <Link
                 href="https://chat.whatsapp.com/GleDoqpuQAh0K1Bo8fho7T"
                 target="_blank"
-                className="w-full bg-[#25D366] text-white font-bold py-3 px-6 rounded-full hover:bg-[#128C7E] transition-colors flex items-center justify-center gap-2"
+                className="pressable w-full bg-[#25D366] text-white font-bold py-3 px-6 rounded-full hover:bg-[#128C7E] flex items-center justify-center gap-2"
               >
                 <Smartphone size={20} />
                 Entrar na Comunidade
               </Link>
               <button 
                 onClick={closeModal}
-                className="w-full bg-orange-100 text-[#644230] font-bold py-3 px-6 rounded-full hover:bg-orange-200 transition-colors"
+                className="pressable w-full bg-orange-100 text-[#644230] font-bold py-3 px-6 rounded-full hover:bg-orange-200"
               >
                 Entendido!
               </button>

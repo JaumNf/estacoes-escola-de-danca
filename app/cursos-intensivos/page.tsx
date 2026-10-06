@@ -28,12 +28,12 @@ export default function CursosIntensivos() {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://lh3.googleusercontent.com/d/1URzYQjUA6RL0bn783UvqPyQ2txodm-kB"
+            src="/images/cursos-intensivos-curso-de-inverno-estacoes.webp"
             alt="Curso de Inverno - Estações"
             fill
+            sizes="100vw"
             className="object-cover"
             priority
-            unoptimized
           />
         </div>
         
@@ -58,7 +58,7 @@ export default function CursosIntensivos() {
 
           <button 
             onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-[#fbbf24] text-[#682c0b] px-8 py-5 rounded-xl font-bold tracking-widest hover:bg-[#f59e0b] shadow-xl transition-all duration-300 w-full md:w-auto mt-4 text-lg md:text-xl uppercase"
+            className="pressable bg-[#fbbf24] text-[#682c0b] px-8 py-5 rounded-xl font-bold tracking-widest hover:bg-[#f59e0b] shadow-xl w-full md:w-auto mt-4 text-lg md:text-xl uppercase"
           >
             {EDICAO_ATIVA ? 'GARANTIR MINHA VAGA' : 'QUERO SER AVISADO'}
           </button>
@@ -108,12 +108,12 @@ export default function CursosIntensivos() {
             <div className="absolute top-4 -right-4 md:top-8 md:-right-8 w-full h-[80%] bg-[#e8a32a] rounded-[40px] md:rounded-[60px]" />
             <div className="relative h-[80%] w-full rounded-[40px] md:rounded-[60px] overflow-hidden border-4 border-orange-50 bg-gray-200">
               <Image 
-                src="https://i.ibb.co/5XDbwVrd/Screenshot-20260129-194726-Instagram-2.jpg" 
+                src="/images/cursos-intensivos-turma-estacoes.webp" 
                 alt="Turma Estações" 
-                fill 
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw" 
                 loading="lazy"
-                className="object-cover" 
-                unoptimized
+                className="object-cover"
               />
             </div>
           </div>
@@ -159,7 +159,7 @@ export default function CursosIntensivos() {
                 {/* Class 1 */}
                 <button 
                   onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover:-translate-y-1 transition-all group"
+                  className="pressable flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover-fine:-translate-y-1 group"
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
@@ -176,7 +176,7 @@ export default function CursosIntensivos() {
                 {/* Class 2 */}
                 <button 
                   onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover:-translate-y-1 transition-all group"
+                  className="pressable flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover-fine:-translate-y-1 group"
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
@@ -209,7 +209,7 @@ export default function CursosIntensivos() {
                 {/* Class 1 */}
                 <button 
                   onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover:-translate-y-1 transition-all group"
+                  className="pressable flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover-fine:-translate-y-1 group"
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
@@ -226,7 +226,7 @@ export default function CursosIntensivos() {
                 {/* Class 2 */}
                 <button 
                   onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover:-translate-y-1 transition-all group"
+                  className="pressable flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover-fine:-translate-y-1 group"
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
@@ -259,7 +259,7 @@ export default function CursosIntensivos() {
                 {/* Class 1 */}
                 <button 
                   onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover:-translate-y-1 transition-all group"
+                  className="pressable flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover-fine:-translate-y-1 group"
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
@@ -276,7 +276,7 @@ export default function CursosIntensivos() {
                 {/* Class 2 */}
                 <button 
                   onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover:-translate-y-1 transition-all group"
+                  className="pressable flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover-fine:-translate-y-1 group"
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
@@ -386,7 +386,7 @@ export default function CursosIntensivos() {
                 ></iframe>
               </div>
 
-              <a href="https://maps.google.com/?q=Rua+Barao+de+Melgaco,+177,+Campo+Grande+-+MS" target="_blank" rel="noopener noreferrer" className="w-full bg-orange-600 text-white font-bold py-3 rounded-xl hover:bg-[#c45424] transition-colors flex justify-center items-center gap-2 shrink-0 text-sm">
+              <a href="https://maps.google.com/?q=Rua+Barao+de+Melgaco,+177,+Campo+Grande+-+MS" target="_blank" rel="noopener noreferrer" className="pressable w-full bg-orange-600 text-white font-bold py-3 rounded-xl hover:bg-[#c45424] flex justify-center items-center gap-2 shrink-0 text-sm">
                 <MapPin size={18} /> TRAÇAR ROTA
               </a>
             </div>
@@ -426,7 +426,7 @@ export default function CursosIntensivos() {
                   href="https://wa.me/5567992630948?text=Ol%C3%A1%21%20Tenho%20uma%20d%C3%BAvida%20sobre%20os%20Cursos%20Intensivos." 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="px-6 py-2 rounded-full border-2 border-green-200 text-green-600 font-bold hover:bg-green-50 transition-colors text-sm"
+                  className="pressable px-6 py-2 rounded-full border-2 border-green-200 text-green-600 font-bold hover:bg-green-50 text-sm"
                 >
                   Falar no WhatsApp
                 </a>
@@ -498,7 +498,7 @@ function FestaCarousel() {
       <div className="flex">
         {cards.map((card, idx) => (
           <div className="flex-[0_0_90%] md:flex-[0_0_45%] lg:flex-[0_0_33.333333%] min-w-0 pr-6" key={idx}>
-            <div className="bg-[#fff7d6] border-4 border-[#ffb100] rounded-[32px] p-8 shadow-xl hover:-translate-y-2 transition-transform duration-300 h-full">
+            <div className="bg-[#fff7d6] border-4 border-[#ffb100] rounded-[32px] p-8 shadow-xl hover-fine:-translate-y-2 transition-transform h-full">
               <div className="flex justify-between items-start mb-4">
                 <h3 className="text-2xl md:text-3xl font-display font-bold text-[#8a2f07] leading-tight">
                   {card.titleTop}<br/>{card.titleBottom}

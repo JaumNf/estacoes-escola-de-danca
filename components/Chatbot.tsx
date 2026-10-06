@@ -144,7 +144,7 @@ export default function Chatbot() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.9 }}
               transition={{ duration: 0.2 }}
-              className={`mb-4 bg-white rounded-2xl shadow-2xl border border-orange-100 overflow-hidden flex flex-col ${isDancing ? 'animate-[wiggle_0.3s_ease-in-out_infinite]' : ''}`}
+              className={`mb-4 origin-bottom-right bg-white rounded-2xl shadow-2xl border border-orange-100 overflow-hidden flex flex-col ${isDancing ? 'animate-[wiggle_0.3s_ease-in-out_infinite]' : ''}`}
               style={{ width: 'calc(100vw - 48px)', maxWidth: '380px', height: '500px', maxHeight: 'calc(100vh - 120px)' }}
             >
               {/* Header */}
@@ -160,7 +160,7 @@ export default function Chatbot() {
                 </div>
                 <button 
                   onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded-full transition-colors"
+                  className="pressable-sm w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded-full"
                 >
                   <X size={20} />
                 </button>
@@ -199,7 +199,7 @@ export default function Chatbot() {
                       <button
                         key={i}
                         onClick={() => handleQuickReply(reply)}
-                        className="text-xs bg-white border border-[#ea5d35] text-[#ea5d35] px-3 py-1.5 rounded-full hover:bg-orange-50 transition-colors shadow-sm"
+                        className="pressable text-xs bg-white border border-[#ea5d35] text-[#ea5d35] px-3 py-1.5 rounded-full hover:bg-orange-50 shadow-sm"
                       >
                         {reply}
                       </button>
@@ -223,7 +223,7 @@ export default function Chatbot() {
                   <button 
                     type="submit"
                     disabled={isLoading || !input.trim()}
-                    className="w-10 h-10 flex items-center justify-center bg-[#ea5d35] text-white rounded-full hover:bg-[#c44e2b] disabled:opacity-50 transition-colors shrink-0"
+                    className="pressable-sm w-10 h-10 flex items-center justify-center bg-[#ea5d35] text-white rounded-full hover:bg-[#c44e2b] disabled:opacity-50 shrink-0"
                   >
                     <Send size={16} className="-ml-0.5 mt-0.5" />
                   </button>
@@ -250,11 +250,11 @@ export default function Chatbot() {
                 )}
               </AnimatePresence>
               <motion.button
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
                 onClick={() => setIsOpen(true)}
-                className="w-14 h-14 bg-[#ea5d35] text-white rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex items-center justify-center z-50 relative"
+                className="pressable-sm w-14 h-14 bg-[#ea5d35] text-white rounded-full shadow-lg hover:shadow-xl hover-fine:-translate-y-1 flex items-center justify-center z-50 relative"
               >
                 <div className="absolute inset-0 bg-[#ea5d35] rounded-full animate-ping opacity-20" />
                 <MessageCircle size={24} />

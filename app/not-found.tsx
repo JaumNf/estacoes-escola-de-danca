@@ -51,7 +51,7 @@ export default function NotFound() {
           >
             <Link 
               href="/"
-              className="inline-flex items-center justify-center px-8 py-4 bg-terracotta text-white rounded-full font-bold text-lg hover:bg-ochre transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+              className="pressable inline-flex items-center justify-center px-8 py-4 bg-terracotta text-white rounded-full font-bold text-lg hover:bg-ochre shadow-lg hover:shadow-xl"
             >
               Voltar para o Início
             </Link>

@@ -46,7 +46,7 @@ export default function Header() {
   return (
     <>
       <header 
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 w-full z-50 transition-[background-color,box-shadow,backdrop-filter,padding] duration-240 ${
           isScrolled ? 'bg-brown-50/80 backdrop-blur-lg shadow-md py-4' : 'bg-transparent py-6'
         }`}
       >
@@ -54,12 +54,11 @@ export default function Header() {
           <Link href="/" className={`flex items-center gap-3 font-display font-bold text-2xl tracking-wider ${isScrolled ? 'text-brown-950' : 'text-brown-50'}`}>
             <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-current">
               <Image 
-                src="https://lh3.googleusercontent.com/d/1yyUUbZp4PQVHmec_yjwgk4MJmd2RcbVu" 
+                src="/images/header-logo-estacoes.webp" 
                 alt="Logo Estações" 
-                fill 
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw" 
                 className="object-cover"
-                referrerPolicy="no-referrer"
-                unoptimized
               />
             </div>
             <span>ESTAÇÕES</span>
@@ -85,7 +84,7 @@ export default function Header() {
               href="https://chat.whatsapp.com/GleDoqpuQAh0K1Bo8fho7T" 
               target="_blank" 
               rel="noopener noreferrer"
-              className={`flex items-center justify-center rounded-full p-2 hover:bg-black/10 transition-colors ${isScrolled ? 'text-[#25D366]' : 'text-[#25D366] bg-white/10'}`}
+              className={`pressable-sm flex items-center justify-center rounded-full p-2 hover:bg-black/10 ${isScrolled ? 'text-[#25D366]' : 'text-[#25D366] bg-white/10'}`}
               aria-label="Comunidade WhatsApp"
               title="Entrar na Comunidade WhatsApp"
             >
@@ -94,13 +93,13 @@ export default function Header() {
               </svg>
             </a>
             <button 
-              className={`lg:hidden z-50 relative ${isMobileMenuOpen ? 'text-brown-950' : (isScrolled ? 'text-brown-950' : 'text-brown-50')}`}
+              className={`pressable lg:hidden z-50 relative ${isMobileMenuOpen ? 'text-brown-950' : (isScrolled ? 'text-brown-950' : 'text-brown-50')}`}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
             <button 
-              className={`hidden lg:flex z-50 relative ${isMobileMenuOpen ? 'text-brown-950' : (isScrolled ? 'text-brown-950' : 'text-brown-50')}`}
+              className={`pressable hidden lg:flex z-50 relative ${isMobileMenuOpen ? 'text-brown-950' : (isScrolled ? 'text-brown-950' : 'text-brown-50')}`}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
@@ -157,10 +156,10 @@ export default function Header() {
                       <Link 
                         href={item.href}
                         onClick={(e) => handleLinkClick(e, item.label)}
-                        className="group flex items-center justify-between text-xl font-display font-medium text-brown-800 hover:text-terracotta transition-all duration-300 py-4 px-4 rounded-xl hover:bg-brown-100/50"
+                        className="pressable-lg group flex items-center justify-between text-xl font-display font-medium text-brown-800 hover:text-terracotta py-4 px-4 rounded-xl hover:bg-brown-100/50"
                       >
-                        <span className="group-hover:translate-x-2 transition-transform duration-300">{item.label}</span>
-                        <span className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-terracotta">→</span>
+                        <span className="group-hover:translate-x-2 transition-transform">{item.label}</span>
+                        <span className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-[opacity,translate] duration-160 text-terracotta">→</span>
                       </Link>
                     </motion.div>
                   ))}

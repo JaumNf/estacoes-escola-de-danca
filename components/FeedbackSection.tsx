@@ -78,7 +78,7 @@ export default function FeedbackSection() {
               <p className="text-brown-700 mb-6">Sua opinião é muito importante para continuarmos melhorando!</p>
               <button 
                 onClick={() => setShowForm(true)}
-                className="bg-terracotta text-white px-8 py-4 rounded-full font-bold tracking-wide hover:bg-ochre transition-colors shadow-lg cursor-pointer"
+                className="pressable bg-terracotta text-white px-8 py-4 rounded-full font-bold tracking-wide hover:bg-ochre shadow-lg cursor-pointer"
               >
                 Adicionar Feedback
               </button>
@@ -107,7 +107,7 @@ export default function FeedbackSection() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 md:px-5 md:py-4 text-sm md:text-base rounded-xl border border-brown-200 focus:outline-none focus:ring-2 focus:ring-terracotta focus:border-transparent transition-all bg-brown-50/50"
+                className="w-full px-4 py-3 md:px-5 md:py-4 text-sm md:text-base rounded-xl border border-brown-200 focus:outline-none focus:ring-2 focus:ring-terracotta focus:border-transparent transition-[border-color,box-shadow] bg-brown-50/50"
                 placeholder="Como gostaria de ser chamado?"
               />
             </div>
@@ -122,7 +122,7 @@ export default function FeedbackSection() {
                     onClick={() => setRating(star)}
                     onMouseEnter={() => setHoveredRating(star)}
                     onMouseLeave={() => setHoveredRating(0)}
-                    className="p-1 p-1 md:p-2 transition-transform hover:scale-110 focus:outline-none"
+                    className="pressable p-1 p-1 md:p-2 focus:outline-none"
                   >
                     <Star 
                       className={`w-8 h-8 md:w-10 md:h-10 transition-colors ${(hoveredRating ? star <= hoveredRating : star <= rating) ? "fill-ochre text-ochre" : "text-brown-200"}`} 
@@ -141,7 +141,7 @@ export default function FeedbackSection() {
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
                 rows={3}
-                className="w-full px-4 py-3 md:px-5 md:py-4 text-sm md:text-base rounded-xl border border-brown-200 focus:outline-none focus:ring-2 focus:ring-terracotta focus:border-transparent transition-all bg-brown-50/50 resize-none"
+                className="w-full px-4 py-3 md:px-5 md:py-4 text-sm md:text-base rounded-xl border border-brown-200 focus:outline-none focus:ring-2 focus:ring-terracotta focus:border-transparent transition-[border-color,box-shadow] bg-brown-50/50 resize-none"
                 placeholder="Escreva aqui sua experiência..."
               ></textarea>
             </div>
@@ -149,7 +149,7 @@ export default function FeedbackSection() {
             <button 
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-brown-900 text-brown-50 py-3.5 md:py-4 rounded-xl font-bold tracking-wide text-base md:text-lg hover:bg-terracotta transition-colors duration-300 flex items-center justify-center gap-2 md:gap-3 shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full bg-brown-900 text-brown-50 py-3.5 md:py-4 rounded-xl font-bold tracking-wide text-base md:text-lg hover:bg-terracotta transition-colors flex items-center justify-center gap-2 md:gap-3 shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
             >
               <span>{isSubmitting ? 'Enviando...' : 'Enviar Feedback'}</span>
               {!isSubmitting && <Send size={18} className="md:w-5 md:h-5 w-4 h-4" />}
@@ -168,8 +168,8 @@ export default function FeedbackSection() {
             className="fixed inset-0 z-50 flex items-center justify-center bg-brown-950/80 backdrop-blur-sm px-4"
           >
             <motion.div 
-              initial={{ scale: 0.8, y: 50 }}
-              animate={{ scale: 1, y: 0 }}
+              initial={{ scale: 0.95, opacity: 0, y: 16 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.8, y: 50 }}
               className="bg-white rounded-[40px] p-8 md:p-12 max-w-md w-full shadow-2xl border-4 border-green-500 text-center flex flex-col items-center gap-6"
             >
@@ -182,7 +182,7 @@ export default function FeedbackSection() {
               </div>
               <button 
                 onClick={() => setSuccess(false)}
-                className="mt-4 px-8 py-4 bg-terracotta text-white rounded-full font-bold tracking-wide hover:bg-ochre transition-colors w-full"
+                className="pressable mt-4 px-8 py-4 bg-terracotta text-white rounded-full font-bold tracking-wide hover:bg-ochre w-full"
               >
                 Fechar
               </button>

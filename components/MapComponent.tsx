@@ -82,7 +82,7 @@ export default function MapComponent({ selectedUnidade = 'unidade1' }: { selecte
                   href={location.mapLink} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors no-underline"
+                  className="pressable bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 no-underline"
                 >
                   <Navigation size={14} /> Traçar Rota
                 </a>

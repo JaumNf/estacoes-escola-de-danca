@@ -54,7 +54,7 @@ export default function InvestmentCalculator() {
         <div className="flex justify-center max-w-md mx-auto bg-black/40 rounded-xl p-1 border border-orange-900/30 relative">
           <button 
             onClick={() => setViewMode('regular')}
-            className={`flex-1 py-3 text-sm font-bold tracking-wide rounded-lg transition-colors relative z-10 ${viewMode === 'regular' ? 'text-white' : 'text-orange-400 hover:text-orange-200'}`}
+            className={`pressable flex-1 py-3 text-sm font-bold tracking-wide rounded-lg relative z-10 ${viewMode === 'regular' ? 'text-white' : 'text-orange-400 hover:text-orange-200'}`}
           >
             {viewMode === 'regular' && (
               <motion.div
@@ -67,7 +67,7 @@ export default function InvestmentCalculator() {
           </button>
           <button 
             onClick={() => setViewMode('grupo')}
-            className={`flex-1 py-3 text-sm font-bold tracking-wide rounded-lg transition-colors relative z-10 ${viewMode === 'grupo' ? 'text-white' : 'text-orange-400 hover:text-orange-200'}`}
+            className={`pressable flex-1 py-3 text-sm font-bold tracking-wide rounded-lg relative z-10 ${viewMode === 'grupo' ? 'text-white' : 'text-orange-400 hover:text-orange-200'}`}
           >
             {viewMode === 'grupo' && (
               <motion.div
@@ -89,13 +89,13 @@ export default function InvestmentCalculator() {
             <div className="flex bg-black/40 rounded-xl p-1 border border-orange-900/30">
               <button 
                 onClick={() => setIsUniversitario(false)}
-                className={`flex-1 py-3 text-sm font-bold tracking-wide rounded-lg transition-all ${!isUniversitario ? 'bg-orange-600 text-white shadow-md' : 'text-orange-400 hover:text-orange-200'}`}
+                className={`pressable flex-1 py-3 text-sm font-bold tracking-wide rounded-lg ${!isUniversitario ? 'bg-orange-600 text-white shadow-md' : 'text-orange-400 hover:text-orange-200'}`}
               >
                 Público Geral
               </button>
               <button 
                 onClick={() => setIsUniversitario(true)}
-                className={`flex-1 py-3 flex items-center justify-center gap-2 text-sm font-bold tracking-wide rounded-lg transition-all ${isUniversitario ? 'bg-orange-600 text-white shadow-md' : 'text-orange-400 hover:text-orange-200'}`}
+                className={`pressable flex-1 py-3 flex items-center justify-center gap-2 text-sm font-bold tracking-wide rounded-lg ${isUniversitario ? 'bg-orange-600 text-white shadow-md' : 'text-orange-400 hover:text-orange-200'}`}
               >
                 <GraduationCap size={18} /> Universitário
               </button>
@@ -107,14 +107,14 @@ export default function InvestmentCalculator() {
             <div className="grid grid-cols-2 gap-3">
               <button 
                 onClick={() => setType('individual')}
-                className={`flex flex-col items-center justify-center p-4 border rounded-xl transition-all duration-300 ${type === 'individual' ? 'border-orange-500 bg-orange-900/40 text-orange-50' : 'border-orange-900/50 hover:border-orange-700/50 text-orange-400'}`}
+                className={`pressable flex flex-col items-center justify-center p-4 border rounded-xl ${type === 'individual' ? 'border-orange-500 bg-orange-900/40 text-orange-50' : 'border-orange-900/50 hover:border-orange-700/50 text-orange-400'}`}
               >
                 <User size={28} className={type === 'individual' ? 'text-orange-400 mb-2' : 'mb-2 opacity-70'} />
                 <span className="font-bold">Individual</span>
               </button>
               <button 
                 onClick={() => setType('dupla')}
-                className={`flex flex-col items-center justify-center p-4 border rounded-xl transition-all duration-300 ${type === 'dupla' ? 'border-orange-500 bg-orange-900/40 text-orange-50' : 'border-orange-900/50 hover:border-orange-700/50 text-orange-400'}`}
+                className={`pressable flex flex-col items-center justify-center p-4 border rounded-xl ${type === 'dupla' ? 'border-orange-500 bg-orange-900/40 text-orange-50' : 'border-orange-900/50 hover:border-orange-700/50 text-orange-400'}`}
               >
                 <Users size={28} className={type === 'dupla' ? 'text-orange-400 mb-2' : 'mb-2 opacity-70'} />
                 <span className="font-bold">Em Dupla</span>
@@ -132,7 +132,7 @@ export default function InvestmentCalculator() {
                     key={turma.id}
                     disabled={turma.esgotado}
                     onClick={() => toggleTurma(turma.id)}
-                    className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all text-left ${turma.esgotado ? 'opacity-50 cursor-not-allowed bg-black/40 border-orange-900/10' : isSelected ? 'bg-orange-800/40 border-orange-500' : 'bg-black/20 border-orange-900/30 hover:border-orange-700 hover:bg-black/40'}`}
+                    className={`pressable-lg w-full flex items-center justify-between p-4 rounded-xl border text-left ${turma.esgotado ? 'opacity-50 cursor-not-allowed bg-black/40 border-orange-900/10' : isSelected ? 'bg-orange-800/40 border-orange-500' : 'bg-black/20 border-orange-900/30 hover:border-orange-700 hover:bg-black/40'}`}
                   >
                     <div>
                       <div className={`font-bold ${turma.esgotado ? 'text-orange-500/50 line-through' : isSelected ? 'text-orange-100' : 'text-orange-300'}`}>
@@ -206,7 +206,7 @@ export default function InvestmentCalculator() {
               }
             }}
             disabled={selectedTurmas.length === 0}
-            className={`w-full py-4 mt-8 rounded-xl font-bold tracking-widest uppercase transition-all flex items-center justify-center ${selectedTurmas.length > 0 ? 'bg-orange-600 text-white hover:bg-orange-500 shadow-xl shadow-orange-900/20 cursor-pointer' : 'bg-orange-900/20 text-orange-700 cursor-not-allowed'}`}
+            className={`w-full py-4 mt-8 rounded-xl font-bold tracking-widest uppercase transition-colors flex items-center justify-center ${selectedTurmas.length > 0 ? 'bg-orange-600 text-white hover:bg-orange-500 shadow-xl shadow-orange-900/20 cursor-pointer' : 'bg-orange-900/20 text-orange-700 cursor-not-allowed'}`}
           >
             Quero me matricular
           </motion.button>
@@ -255,7 +255,7 @@ export default function InvestmentCalculator() {
           <motion.button 
             whileTap={{ scale: 0.95 }}
             onClick={() => window.open('https://wa.me/5567992630948?text=Olá! Gostaria de fazer minha matrícula para um Plano Especial (Grupo)!', '_blank', 'noopener,noreferrer')}
-            className="w-full py-4 mt-8 rounded-xl font-bold tracking-widest uppercase transition-all flex items-center justify-center bg-orange-600 text-white hover:bg-orange-500 shadow-xl shadow-orange-900/20 cursor-pointer"
+            className="w-full py-4 mt-8 rounded-xl font-bold tracking-widest uppercase transition-colors flex items-center justify-center bg-orange-600 text-white hover:bg-orange-500 shadow-xl shadow-orange-900/20 cursor-pointer"
           >
             Quero me matricular
           </motion.button>

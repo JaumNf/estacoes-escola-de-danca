@@ -166,7 +166,7 @@ export default function Contato() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   onBlur={() => setTouched({ ...touched, name: true })}
-                  className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-all bg-brown-50/50 ${
+                  className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-[border-color,box-shadow] bg-brown-50/50 ${
                     errors.name ? 'border-red-400 focus:ring-red-400' : 'border-brown-200 focus:ring-terracotta'
                   }`}
                   placeholder="Seu nome"
@@ -184,7 +184,7 @@ export default function Contato() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   onBlur={() => setTouched({ ...touched, email: true })}
-                  className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-all bg-brown-50/50 ${
+                  className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-[border-color,box-shadow] bg-brown-50/50 ${
                     errors.email ? 'border-red-400 focus:ring-red-400' : 'border-brown-200 focus:ring-terracotta'
                   }`}
                   placeholder="seu@email.com"
@@ -202,7 +202,7 @@ export default function Contato() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   onBlur={() => setTouched({ ...touched, phone: true })}
-                  className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-all bg-brown-50/50 ${
+                  className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-[border-color,box-shadow] bg-brown-50/50 ${
                     errors.phone ? 'border-red-400 focus:ring-red-400' : 'border-brown-200 focus:ring-terracotta'
                   }`}
                   placeholder="(00) 00000-0000"
@@ -220,7 +220,7 @@ export default function Contato() {
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
                     onBlur={() => setTouched({ ...touched, reason: true })}
-                    className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-all bg-brown-50/50 appearance-none text-brown-800 ${
+                    className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-[border-color,box-shadow] bg-brown-50/50 appearance-none text-brown-800 ${
                       errors.reason ? 'border-red-400 focus:ring-red-400' : 'border-brown-200 focus:ring-terracotta'
                     }`}
                   >
@@ -248,7 +248,7 @@ export default function Contato() {
                   onChange={(e) => setMessage(e.target.value)}
                   onBlur={() => setTouched({ ...touched, message: true })}
                   rows={5}
-                  className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-all bg-brown-50/50 resize-none ${
+                  className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:border-transparent transition-[border-color,box-shadow] bg-brown-50/50 resize-none ${
                     errors.message ? 'border-red-400 focus:ring-red-400' : 'border-brown-200 focus:ring-terracotta'
                   }`}
                   placeholder="Como podemos te ajudar?"
@@ -259,7 +259,7 @@ export default function Contato() {
               <button 
                 type="submit"
                 disabled={isSubmitting || (!isFormValid && Object.values(touched).some(Boolean))}
-                className="w-full bg-brown-900 text-brown-50 py-5 rounded-2xl font-bold tracking-wide text-lg hover:bg-terracotta transition-colors duration-300 flex items-center justify-center gap-3 shadow-lg shadow-brown-900/20 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full bg-brown-900 text-brown-50 py-5 rounded-2xl font-bold tracking-wide text-lg hover:bg-terracotta transition-colors flex items-center justify-center gap-3 shadow-lg shadow-brown-900/20 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 <span>{isSubmitting ? 'Enviando...' : 'Enviar Mensagem'}</span>
                 {!isSubmitting && <Send size={20} />}
@@ -287,7 +287,7 @@ export default function Contato() {
               Nossa proposta é mostrar que todo mundo pode dançar. Venha desenvolver sua consciência corporal, musicalidade e o prazer em dançar em um ambiente acolhedor.
             </p>
             <div className="flex gap-4">
-              <a href="https://chat.whatsapp.com/GleDoqpuQAh0K1Bo8fho7T" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-brown-800 flex items-center justify-center text-brown-100 hover:bg-terracotta hover:text-white transition-colors animate-pulse hover:animate-none shadow-[0_0_15px_rgba(217,119,87,0.5)]">
+              <a href="https://chat.whatsapp.com/GleDoqpuQAh0K1Bo8fho7T" target="_blank" rel="noopener noreferrer" className="pressable-sm w-12 h-12 rounded-full bg-brown-800 flex items-center justify-center text-brown-100 hover:bg-terracotta hover:text-white animate-pulse hover:animate-none shadow-[0_0_15px_rgba(217,119,87,0.5)]">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
                   <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />

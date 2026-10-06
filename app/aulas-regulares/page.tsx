@@ -40,13 +40,12 @@ export default function AulasRegulares() {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://lh3.googleusercontent.com/d/1mPdWjaRxmRZOiSJ-A3ttHvc3n-eL1-47"
+            src="/images/aulas-regulares-aulas-regulares.webp"
             alt="Aulas Regulares"
             fill
+            sizes="100vw"
             className="object-cover"
-            referrerPolicy="no-referrer"
             priority
-            unoptimized
           />
         </div>
         
@@ -62,13 +61,13 @@ export default function AulasRegulares() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="bg-white text-orange-700 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-100 transition-colors duration-300 shadow-lg inline-flex items-center gap-2 cursor-pointer"
+              className="pressable bg-white text-orange-700 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-100 shadow-lg inline-flex items-center gap-2 cursor-pointer"
             >
               Agendar aula experimental
             </button>
             <button 
               onClick={() => document.getElementById('investimento')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-orange-600 text-orange-50 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-800 transition-colors duration-300 shadow-lg inline-flex items-center gap-2"
+              className="pressable bg-orange-600 text-orange-50 px-8 py-4 rounded-full font-bold tracking-wide hover:bg-orange-800 shadow-lg inline-flex items-center gap-2"
             >
               Quero Começar <ArrowRight size={20} />
             </button>
@@ -153,7 +152,7 @@ export default function AulasRegulares() {
                 href="https://docs.google.com/forms/d/1dFNLj91v5MmDWxBsLkG0ahtzBCAXL5zJPwp7juv99nw"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center justify-center p-8 border-2 border-orange-200 rounded-2xl hover:bg-orange-50 hover:border-orange-400 transition-all duration-300 group"
+                className="pressable flex flex-col items-center justify-center p-8 border-2 border-orange-200 rounded-2xl hover:bg-orange-50 hover:border-orange-400 group"
               >
                 <div className="w-16 h-16 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <User size={32} />
@@ -164,7 +163,7 @@ export default function AulasRegulares() {
                 href="https://docs.google.com/forms/d/1OXWr0dlm5laEC8D8NzOUOHQopgTedmGbhrOeiSEqo4o"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center justify-center p-8 border-2 border-orange-200 rounded-2xl hover:bg-orange-50 hover:border-orange-400 transition-all duration-300 group"
+                className="pressable flex flex-col items-center justify-center p-8 border-2 border-orange-200 rounded-2xl hover:bg-orange-50 hover:border-orange-400 group"
               >
                 <div className="w-16 h-16 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <Users size={32} />
@@ -186,7 +185,7 @@ export default function AulasRegulares() {
               Nossa proposta é mostrar que todo mundo pode dançar. Venha desenvolver sua consciência corporal, musicalidade e o prazer em dançar em um ambiente acolhedor.
             </p>
             <div className="flex gap-4">
-              <a href="https://chat.whatsapp.com/GleDoqpuQAh0K1Bo8fho7T" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-orange-800 flex items-center justify-center text-orange-100 hover:bg-orange-600 hover:text-white transition-colors animate-pulse hover:animate-none shadow-[0_0_15px_rgba(234,88,12,0.5)]">
+              <a href="https://chat.whatsapp.com/GleDoqpuQAh0K1Bo8fho7T" target="_blank" rel="noopener noreferrer" className="pressable-sm w-12 h-12 rounded-full bg-orange-800 flex items-center justify-center text-orange-100 hover:bg-orange-600 hover:text-white animate-pulse hover:animate-none shadow-[0_0_15px_rgba(234,88,12,0.5)]">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
                   <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />

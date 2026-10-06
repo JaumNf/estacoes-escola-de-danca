@@ -57,7 +57,7 @@ export default function Home() {
               </p>
               <button 
                 onClick={() => setIsModalOpen(true)}
-                className="inline-block bg-brown-900 text-brown-50 px-6 py-3 rounded-full font-medium tracking-wide hover:bg-terracotta transition-colors duration-300 shadow-lg shadow-brown-900/20 cursor-pointer"
+                className="pressable inline-block bg-brown-900 text-brown-50 px-6 py-3 rounded-full font-medium tracking-wide hover:bg-terracotta shadow-lg shadow-brown-900/20 cursor-pointer"
               >
                 Agende sua aula experimental
               </button>
@@ -66,13 +66,12 @@ export default function Home() {
           <div className="relative h-[300px] md:h-[400px] w-full">
             <div className="absolute inset-0 bg-ochre/20 rounded-[40px] rounded-tr-none transform translate-x-4 translate-y-4"></div>
             <Image
-              src="https://lh3.googleusercontent.com/d/1s4pxsblj1XCqcLd02lJN4yuXz4zNRlop"
+              src="/images/home-sobre-nos.webp"
               alt="Sobre nós"
               fill
+              sizes="(max-width: 768px) 100vw, 50vw"
               loading="lazy"
               className="object-cover rounded-[40px] rounded-tl-none shadow-xl"
-              referrerPolicy="no-referrer"
-              unoptimized
             />
           </div>
         </div>
@@ -157,7 +156,7 @@ export default function Home() {
                 phone: '(67) 99263-0948',
                 whatsappLink: 'https://wa.me/5567992630948',
                 email: 'cursodeverao67@gmail.com',
-                img: 'https://lh3.googleusercontent.com/d/1-G5rU0kTPGyQe8wOwArb756R9FX_17rc'
+                img: '/images/home.webp'
               }
             ].map((unit, idx) => (
               <div key={idx} className="bg-brown-950/60 rounded-[32px] overflow-hidden border border-brown-800/50 backdrop-blur-sm hover:border-brown-700 transition-colors">
@@ -166,10 +165,9 @@ export default function Home() {
                     src={unit.img}
                     alt={unit.name}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     loading="lazy"
-                    className="object-cover opacity-70 mix-blend-luminosity hover:mix-blend-normal hover:opacity-100 transition-all duration-700"
-                    referrerPolicy="no-referrer"
-                    unoptimized
+                    className="object-cover opacity-70 mix-blend-luminosity hover:mix-blend-normal hover:opacity-100 transition-opacity duration-240"
                   />
                 </a>
                 <div className="p-6 md:p-8 space-y-4">
@@ -209,10 +207,10 @@ export default function Home() {
           
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
             {[
-              { name: 'Estação Cultural Teatro do Mundo', img: 'https://lh3.googleusercontent.com/d/1sT2v-sCt4aSmqeCOn4rVYRt0nrHbOz2a', link: 'https://www.instagram.com/estacaoculturalteatrodomundo' },
-              { name: 'Movimentaê', img: 'https://lh3.googleusercontent.com/d/1lh0BSQXlSaA4I6c9RnT1OjGdHBWKHH6w', link: 'https://www.instagram.com/movimentae.ms' },
-              { name: 'Projeto Guardião Azul', img: 'https://lh3.googleusercontent.com/d/1zvIs2-AlTr2jyuil27fq8UH-AoRYI7wu', link: 'https://www.instagram.com/guardiaoazulms' },
-              { name: 'Nambei Honganji', img: 'https://lh3.googleusercontent.com/d/10rzNw6aAw5E6fQrov-gQEdRJZlbRtKFO', link: 'https://www.instagram.com/nambeihonganjicgr' }
+              { name: 'Estação Cultural Teatro do Mundo', img: '/images/home-estacao-cultural-teatro-do-mundo.webp', link: 'https://www.instagram.com/estacaoculturalteatrodomundo' },
+              { name: 'Movimentaê', img: '/images/home-movimentae.webp', link: 'https://www.instagram.com/movimentae.ms' },
+              { name: 'Projeto Guardião Azul', img: '/images/home-movimentae-2.webp', link: 'https://www.instagram.com/guardiaoazulms' },
+              { name: 'Nambei Honganji', img: '/images/home-projeto-guardiao-azul.webp', link: 'https://www.instagram.com/nambeihonganjicgr' }
             ].map((partner, idx) => (
               <a 
                 key={idx} 
@@ -221,15 +219,14 @@ export default function Home() {
                 rel={partner.link !== '#' ? "noopener noreferrer" : undefined}
                 className="flex flex-col items-center gap-3 group cursor-pointer w-28 md:w-40"
               >
-                <div className="relative w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden border-2 border-brown-200 group-hover:border-terracotta transition-colors duration-300 shadow-sm group-hover:shadow-md">
+                <div className="relative w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden border-2 border-brown-200 group-hover:border-terracotta transition-colors shadow-sm group-hover:shadow-md">
                   <Image
                     src={partner.img}
                     alt={partner.name}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     loading="lazy"
-                    className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                    referrerPolicy="no-referrer"
-                    unoptimized
+                    className="object-cover grayscale group-hover:grayscale-0 transition-[filter] duration-320"
                   />
                 </div>
                 <span className="font-display text-base font-medium text-brown-700 group-hover:text-brown-900 transition-colors text-center leading-tight">
@@ -291,9 +288,9 @@ function WorksCarousel() {
   );
 
   const works = [
-    { title: 'Bailes', img: 'https://lh3.googleusercontent.com/d/1T5ZAhkOeGQZqnJv-at2WV4kCQLHdifJW', href: '/baile' },
-    { title: 'Aulas Regulares', img: 'https://lh3.googleusercontent.com/d/1jJqHjC6tiWATMhA7zrZM4IUlxd3p7xGC', href: '/aulas-regulares' },
-    { title: 'Cursos intensivos', img: 'https://lh3.googleusercontent.com/d/1URzYQjUA6RL0bn783UvqPyQ2txodm-kB', href: '/cursos-intensivos' }
+    { title: 'Bailes', img: '/images/home-aulas-regulares.webp', href: '/baile' },
+    { title: 'Aulas Regulares', img: '/images/home-cursos-intensivos.webp', href: '/aulas-regulares' },
+    { title: 'Cursos intensivos', img: '/images/cursos-intensivos-curso-de-inverno-estacoes.webp', href: '/cursos-intensivos' }
   ];
 
   return (
@@ -309,18 +306,17 @@ function WorksCarousel() {
           >
             <Link 
               href={work.href}
-              className="group relative h-[250px] md:h-[350px] rounded-[32px] overflow-hidden cursor-pointer shadow-lg transition-transform duration-300 hover:-translate-y-2 block"
+              className="group relative h-[250px] md:h-[350px] rounded-[32px] overflow-hidden cursor-pointer shadow-lg transition-transform hover-fine:-translate-y-2 block"
             >
               <Image
                 src={work.img}
                 alt={work.title}
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 loading="lazy"
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
-                referrerPolicy="no-referrer"
-                unoptimized
+                className="object-cover transition-transform duration-320 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-brown-950/90 via-brown-900/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-brown-950/90 via-brown-900/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-240"></div>
               <div className="absolute bottom-0 left-0 w-full p-6 md:p-8">
                 <h3 className="text-2xl md:text-3xl font-display font-bold text-brown-50 mb-2">{work.title}</h3>
                 <div className="w-12 h-1 bg-ochre rounded-full mb-3"></div>

@@ -63,7 +63,7 @@ export default function FAQSection() {
               >
                 <button
                   onClick={() => toggleOpen(index)}
-                  className="w-full flex items-center justify-between p-4 md:p-5 text-left hover:bg-brown-50 transition-colors"
+                  className="pressable-lg w-full flex items-center justify-between p-4 md:p-5 text-left hover:bg-brown-50"
                 >
                   <span className="font-bold text-brown-900 text-base md:text-lg pr-4">{faq.question}</span>
                   <motion.div
