@@ -32,20 +32,46 @@ React Leaflet · `@google/genai`.
 
 - `app/` — uma pasta por rota: `aulas-regulares`, `cursos-intensivos`, `baile`, `contato`,
   `politica-de-privacidade`. Componentes específicos de rota ficam junto dela
-  (`BookingFlow.tsx`, `Countdown.tsx`, `AulaExperimentalModal.tsx`).
+  (`InscricaoForm.tsx`, `Countdown.tsx`, `AulaExperimentalModal.tsx`).
 - `components/` — compartilhados: Header, Footer, Chatbot, FAQ, Feedback, mapa, banner de
   cookies, menu de acessibilidade.
-- **Não há backend nem rotas de API.** Formulários enviam para `formsubmit.co` e WhatsApp
-  (`wa.me`); pagamento é PIX manual.
-- Imagens são remotas (sobretudo `lh3.googleusercontent.com`); só os hosts listados em
-  `next.config.ts > images.remotePatterns` funcionam com `next/image`.
-- `public/` tem só `manifest.json` e `sw.js`.
+- **Duas rotas de API**, ambas só de servidor: `app/api/chat` (Gemini) e
+  `app/api/inscricao` (inscrições do intensivo). Os outros formulários ainda enviam para
+  `formsubmit.co` e WhatsApp (`wa.me`).
+- Imagens ficam em `public/images/` como WebP e passam pelo otimizador do Next. Não há
+  `remotePatterns`: imagem nova entra no repositório, não por hotlink.
+- `public/` tem `manifest.json`, `sw.js`, `og.jpg` e `images/`.
+
+## A edição do Curso Intensivo mora num arquivo só
+
+`lib/intensivo.ts` é a fonte de verdade: nome e datas da edição, aulas com horário, nível
+e preço, faixas de desconto, chave PIX e link do cartão. A página, o formulário e a rota
+da API leem daqui — **não escreva data nem preço direto em componente.**
+
+- `EDICAO.ativa` é o interruptor geral. Com `false`, a página mostra "novas edições em
+  breve" (`components/EdicaoEmBreve.tsx`) e o formulário nem é montado.
+- Linhas marcadas `// CONFIRMAR` são valores que ainda precisam ser conferidos com a
+  escola antes de publicar.
+- Item com `intervalo: true` aparece no cronograma mas não é vendido; com `evento: true`
+  (o baile) é vendido, mas não conta para a faixa de desconto.
+- O preço é recalculado no servidor em `app/api/inscricao/route.ts`: o total que o
+  navegador manda é ignorado de propósito.
+
+**Inscrições → Google Sheets:** o formulário faz `POST /api/inscricao` (multipart, com o
+comprovante). A rota valida, recalcula o preço, gera o protocolo e repassa em JSON para um
+Google Apps Script, que grava a linha e salva o comprovante no Drive. O script e o passo a
+passo de instalação estão em `scripts/planilha-inscricoes/`. Sem as variáveis de ambiente,
+a rota responde 503 e o formulário oferece o caminho do WhatsApp — nunca finge sucesso.
 
 ## Variáveis de ambiente
+
+Modelo comentado em `.env.example`.
 
 | Variável | Uso |
 |---|---|
 | `GEMINI_API_KEY` | `app/api/chat/route.ts` — só servidor. Sem ela a rota responde 503 e o chat mostra aviso. |
+| `INSCRICOES_WEBHOOK_URL` | `app/api/inscricao/route.ts` — URL `/exec` do Apps Script. |
+| `INSCRICOES_TOKEN` | Segredo compartilhado com o Apps Script; tem que ser idêntico ao `CONFIG.TOKEN` de `Codigo.gs`. |
 | `NEXT_PUBLIC_BASE_URL` | `robots.ts`, `sitemap.ts` (opcional) |
 
 **Chatbot:** `components/Chatbot.tsx` (cliente) faz `POST /api/chat` com `{ history, message }`.
@@ -60,7 +86,7 @@ Até 12/09/2026 a chave era `NEXT_PUBLIC_GEMINI_API_KEY` e vazou no bundle de pr
   scripts de edição pontual que o agente do AI Studio usou; não fazem parte do app.
 - `metadata.json` e o bloco `DISABLE_HMR` do webpack em `next.config.ts` só servem ao
   AI Studio.
-- `layout.tsx` tem `TODO: SUBSTITUIR PELO LINK DA SUA IMAGEM` na imagem de Open Graph.
+- A imagem de Open Graph já existe (`public/og.jpg`); o `TODO` do AI Studio saiu.
 
 ## Git
 

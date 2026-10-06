@@ -8,14 +8,16 @@ import Image from 'next/image';
 import { motion } from 'motion/react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
-import BookingFlow from './BookingFlow';
+import InscricaoForm from './InscricaoForm';
 import Countdown from './Countdown';
 import Footer from '@/components/Footer';
 import EdicaoEmBreve from '@/components/EdicaoEmBreve';
+import { EDICAO, aulasPorDia } from '@/lib/intensivo';
 
-// Troque para true quando as inscrições da próxima edição abrirem
-// (e atualize o título, a data em Countdown.tsx e as turmas em BookingFlow.tsx).
-const EDICAO_ATIVA = false;
+// O título, as datas, as aulas, os preços e a chave PIX vivem todos em
+// lib/intensivo.ts — inclusive este interruptor. Nada de data ou preço
+// escrito à mão nesta página.
+const EDICAO_ATIVA = EDICAO.ativa;
 
 
 export default function CursosIntensivos() {
@@ -44,12 +46,12 @@ export default function CursosIntensivos() {
         <div className="max-w-4xl w-full mx-auto text-center relative z-10 px-6 py-16 flex flex-col items-center justify-center h-full">
           
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold mb-6 text-white leading-tight mt-8">
-            {EDICAO_ATIVA ? <>Curso de Inverno:<br className="hidden md:block"/> 1ª Edição</> : 'Cursos Intensivos'}
+            {EDICAO_ATIVA ? EDICAO.nome : 'Cursos Intensivos'}
           </h1>
-          
+
           <p className="text-xl md:text-2xl text-[#fcd34d] font-bold max-w-2xl mx-auto mb-10">
             {EDICAO_ATIVA
-              ? 'Dias 23, 24 e 25 de Julho. Venha aquecer o inverno dançando com a gente!'
+              ? `${EDICAO.periodo}. ${EDICAO.chamada}`
               : 'Novas edições em breve. Fins de semana intensivos para aprender um ritmo do zero.'}
           </p>
           
@@ -135,180 +137,69 @@ export default function CursosIntensivos() {
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-[#682c0b] mb-4">Cronograma do Evento</h2>
             <p className="text-lg md:text-xl text-[#645c58] font-medium max-w-2xl mx-auto flex items-center justify-center gap-2">
               <Sparkles className="text-[#e8a32a] fill-[#e8a32a]" size={24} />
-              No Teatro do Mundo, 3 dias incríveis para aquecer o inverno dançando!
+              {EDICAO.periodo}, no Teatro do Mundo.
               <Sparkles className="text-[#e8a32a] fill-[#e8a32a]" size={24} />
             </p>
           </div>
 
-          <div className="relative max-w-4xl mx-auto mt-8 md:mt-12 space-y-6 md:space-y-8 relative z-10">
-            
-            {/* Day 1 */}
-            <div className="bg-orange-50/80 rounded-2xl md:rounded-[32px] p-5 md:p-8 shadow-sm border border-orange-100">
-              <div className="flex items-center gap-4 mb-5 border-b border-orange-200/50 pb-4">
-                <div className="bg-[#682c0b] text-white px-4 py-2 rounded-xl text-center shrink-0 shadow-sm">
-                  <span className="block text-2xl font-display font-bold leading-none">23</span>
-                  <span className="block text-[10px] uppercase tracking-wider font-bold mt-1 text-orange-200">JUL</span>
+          <div className="max-w-4xl mx-auto mt-8 md:mt-12 space-y-6 md:space-y-8 relative z-10">
+            {aulasPorDia().map((dia) => (
+              <div key={`${dia.dia}-${dia.mes}`} className="bg-orange-50/80 rounded-2xl md:rounded-[32px] p-5 md:p-8 shadow-sm border border-orange-100">
+                <div className="flex items-center gap-4 mb-5 border-b border-orange-200/50 pb-4">
+                  <div className="bg-[#682c0b] text-white px-4 py-2 rounded-xl text-center shrink-0 shadow-sm">
+                    <span className="block text-2xl font-display font-bold leading-none tabular-nums">{dia.dia}</span>
+                    <span className="block text-[10px] uppercase tracking-wider font-bold mt-1 text-orange-200">{dia.mes}</span>
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-display font-bold text-[#682c0b]">{dia.diaSemana}</h3>
                 </div>
-                <div>
-                  <h3 className="text-xl md:text-2xl font-display font-bold text-[#682c0b]">Quinta-feira</h3>
-                  <p className="text-orange-700 text-sm hidden md:block">Início do intensivo</p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                  {dia.aulas.map((aula) =>
+                    aula.intervalo ? (
+                      <div key={aula.id} className="flex items-center gap-2 px-1 sm:col-span-2 text-[#8a6a4a]">
+                        <Clock size={13} className="shrink-0" />
+                        <span className="text-xs font-bold tabular-nums">{aula.horario}</span>
+                        <span className="text-xs">· {aula.nome}</span>
+                      </div>
+                    ) : aula.evento ? (
+                      <div key={aula.id} className="flex flex-col text-left bg-orange-600/10 rounded-xl p-4 shadow-sm border border-orange-200 relative overflow-hidden sm:col-span-2">
+                        <div className="absolute top-2 right-2 bg-orange-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm uppercase tracking-widest flex items-center gap-1 z-10">
+                          <Music size={10} className="fill-white" />
+                          Aberto ao Público
+                        </div>
+                        <div className="relative z-10 mt-4 sm:mt-0">
+                          <div className="flex items-center gap-1.5 text-orange-800 text-xs font-bold mb-1">
+                            <Clock size={14} />
+                            <span className="tabular-nums">{aula.horario}</span>
+                          </div>
+                          <h4 className="text-base font-bold text-[#682c0b] mb-1">{aula.nome}</h4>
+                          {aula.descricao && (
+                            <p className="text-xs text-orange-800 font-medium leading-snug">{aula.descricao}</p>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        key={aula.id}
+                        onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
+                        className="pressable flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover-fine:-translate-y-1 group"
+                      >
+                        <div className="flex justify-between items-start mb-2 w-full gap-2">
+                          <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
+                            <Clock size={14} />
+                            <span className="tabular-nums">{aula.horario}</span>
+                          </div>
+                          <span className={`inline-block px-2 py-0.5 text-[9px] font-bold rounded uppercase tracking-wider shrink-0 ${aula.nivel === 'Do Zero' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                            {aula.nivel}
+                          </span>
+                        </div>
+                        <h4 className="text-base md:text-lg font-bold text-[#682c0b] group-hover:text-orange-700 transition-colors">{aula.nome}</h4>
+                      </button>
+                    ),
+                  )}
                 </div>
               </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-                {/* Class 1 */}
-                <button 
-                  onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="pressable flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover-fine:-translate-y-1 group"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
-                      <Clock size={14} />
-                      <span>18:40 às 20:00</span>
-                    </div>
-                    <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[9px] font-bold rounded uppercase tracking-wider">
-                      Do Zero
-                    </span>
-                  </div>
-                  <h4 className="text-base md:text-lg font-bold text-[#682c0b] group-hover:text-orange-700 transition-colors">Zouk Brasileiro</h4>
-                </button>
-
-                {/* Class 2 */}
-                <button 
-                  onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="pressable flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover-fine:-translate-y-1 group"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
-                      <Clock size={14} />
-                      <span>20:20 às 21:40</span>
-                    </div>
-                    <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[9px] font-bold rounded uppercase tracking-wider">
-                      Do Zero
-                    </span>
-                  </div>
-                  <h4 className="text-base md:text-lg font-bold text-[#682c0b] group-hover:text-orange-700 transition-colors">Bachata Brasileira</h4>
-                </button>
-              </div>
-            </div>
-
-            {/* Day 2 */}
-            <div className="bg-orange-50/80 rounded-2xl md:rounded-[32px] p-5 md:p-8 shadow-sm border border-orange-100">
-              <div className="flex items-center gap-4 mb-5 border-b border-orange-200/50 pb-4">
-                <div className="bg-[#682c0b] text-white px-4 py-2 rounded-xl text-center shrink-0 shadow-sm">
-                  <span className="block text-2xl font-display font-bold leading-none">24</span>
-                  <span className="block text-[10px] uppercase tracking-wider font-bold mt-1 text-orange-200">JUL</span>
-                </div>
-                <div>
-                  <h3 className="text-xl md:text-2xl font-display font-bold text-[#682c0b]">Sexta-feira</h3>
-                  <p className="text-orange-700 text-sm hidden md:block">Noite do Forró</p>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-                {/* Class 1 */}
-                <button 
-                  onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="pressable flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover-fine:-translate-y-1 group"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
-                      <Clock size={14} />
-                      <span>18:40 às 20:00</span>
-                    </div>
-                    <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[9px] font-bold rounded uppercase tracking-wider">
-                      Do Zero
-                    </span>
-                  </div>
-                  <h4 className="text-base md:text-lg font-bold text-[#682c0b] group-hover:text-orange-700 transition-colors">Forró</h4>
-                </button>
-
-                {/* Class 2 */}
-                <button 
-                  onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="pressable flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover-fine:-translate-y-1 group"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
-                      <Clock size={14} />
-                      <span>20:20 às 21:40</span>
-                    </div>
-                    <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[9px] font-bold rounded uppercase tracking-wider">
-                      Do Zero
-                    </span>
-                  </div>
-                  <h4 className="text-base md:text-lg font-bold text-[#682c0b] group-hover:text-orange-700 transition-colors">Forró Eletrônico</h4>
-                </button>
-              </div>
-            </div>
-
-            {/* Day 3 */}
-            <div className="bg-orange-50/80 rounded-2xl md:rounded-[32px] p-5 md:p-8 shadow-sm border border-orange-100">
-              <div className="flex items-center gap-4 mb-5 border-b border-orange-200/50 pb-4">
-                <div className="bg-[#682c0b] text-white px-4 py-2 rounded-xl text-center shrink-0 shadow-sm">
-                  <span className="block text-2xl font-display font-bold leading-none">25</span>
-                  <span className="block text-[10px] uppercase tracking-wider font-bold mt-1 text-orange-200">JUL</span>
-                </div>
-                <div>
-                  <h3 className="text-xl md:text-2xl font-display font-bold text-[#682c0b]">Sábado</h3>
-                  <p className="text-orange-700 text-sm hidden md:block">Encerramento e Baile</p>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-                {/* Class 1 */}
-                <button 
-                  onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="pressable flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover-fine:-translate-y-1 group"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
-                      <Clock size={14} />
-                      <span>14:40 às 16:00</span>
-                    </div>
-                    <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[9px] font-bold rounded uppercase tracking-wider">
-                      Do Zero
-                    </span>
-                  </div>
-                  <h4 className="text-base md:text-lg font-bold text-[#682c0b] group-hover:text-orange-700 transition-colors">Samba de Gafieira</h4>
-                </button>
-
-                {/* Class 2 */}
-                <button 
-                  onClick={() => document.getElementById('matricula')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="pressable flex flex-col text-left bg-white rounded-xl p-4 shadow-sm border border-orange-100 cursor-pointer hover:border-orange-300 hover-fine:-translate-y-1 group"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center gap-1.5 text-orange-600 text-xs font-bold">
-                      <Clock size={14} />
-                      <span>16:20 às 17:40</span>
-                    </div>
-                    <span className="inline-block px-2 py-0.5 bg-blue-100 text-blue-700 text-[9px] font-bold rounded uppercase tracking-wider">
-                      Intermediário
-                    </span>
-                  </div>
-                  <h4 className="text-base md:text-lg font-bold text-[#682c0b] group-hover:text-orange-700 transition-colors">Forró</h4>
-                </button>
-
-                {/* Baile */}
-                <div className="flex flex-col text-left bg-orange-600/10 rounded-xl p-4 shadow-sm border border-orange-200 relative overflow-hidden sm:col-span-2 lg:col-span-1">
-                  <div className="absolute top-2 right-2 bg-orange-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm uppercase tracking-widest flex items-center gap-1 z-10">
-                    <Music size={10} className="fill-white" />
-                    Aberto ao Público
-                  </div>
-                  <div className="relative z-10 mt-4 md:mt-0">
-                    <div className="flex items-center gap-1.5 text-orange-800 text-xs font-bold mb-1">
-                      <Clock size={14} />
-                      <span>Das 19:00 às 00:00</span>
-                    </div>
-                    <h4 className="text-base font-bold text-[#682c0b] mb-1">Baile Edição Julina</h4>
-                    <p className="text-xs text-orange-800 font-medium leading-snug">
-                      Com feira de festa julina na parte de fora!
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </motion.section>
@@ -446,7 +337,7 @@ export default function CursosIntensivos() {
         <div className="max-w-6xl mx-auto relative z-10">
         <div className="w-full bg-white/5 border border-white/10 rounded-[32px] overflow-hidden shadow-2xl backdrop-blur-sm">
            {EDICAO_ATIVA ? (
-             <BookingFlow />
+             <InscricaoForm />
            ) : (
              <EdicaoEmBreve
                titulo="Novas edições em breve!"

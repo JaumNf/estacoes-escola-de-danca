@@ -84,6 +84,27 @@
   }
 }
 
+/* Superfícies que o navegador desenha sozinho — seleção de texto, cursor de
+   digitação, caixas de marcação nativas e anel de foco — não pertencem a
+   sistema de design nenhum por padrão. Puxando-as da paleta, a página toda
+   parece desenhada em vez de montada.
+   O anel de foco vale para quem navega por teclado: os campos que já definem
+   `focus:outline-none focus:ring-2` continuam com o anel deles. */
+::selection {
+  background-color: var(--color-brown-200);
+  color: var(--color-brown-950);
+}
+
+:root {
+  caret-color: var(--color-terracotta);
+  accent-color: var(--color-terracotta);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 2px;
+}
+
 body {
   background-color: var(--color-brown-50);
   color: var(--color-brown-950);

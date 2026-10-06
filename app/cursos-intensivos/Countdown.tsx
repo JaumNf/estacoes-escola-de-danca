@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar } from 'lucide-react';
 import { motion } from 'motion/react';
+import { EDICAO } from '@/lib/intensivo';
 
 export default function Countdown() {
   const [timeLeft, setTimeLeft] = useState<{
@@ -17,8 +18,8 @@ export default function Countdown() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-    // Data alvo: 23 de julho de 2026 às 18:40
-    const targetDate = new Date('2026-07-23T18:40:00-04:00').getTime();
+    // Data alvo definida em lib/intensivo.ts (EDICAO.comecaEm).
+    const targetDate = new Date(EDICAO.comecaEm).getTime();
 
     const updateCountdown = () => {
       const now = new Date().getTime();
