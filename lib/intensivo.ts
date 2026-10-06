@@ -84,7 +84,7 @@ export const BAILE = {
   /** Por pessoa, comprando pelo site. */
   antecipado: 15,
   /** O casal, comprando pelo site. */
-  antecipadoDupla: 30,
+  antecipadoDupla: 25,
   /** Por pessoa, na portaria. Não se vende aqui: é só informação. */
   naHora: 20,
   /** Início do baile, em ISO — é a partir daqui que o prazo é contado. */
