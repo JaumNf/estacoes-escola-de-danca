@@ -284,9 +284,52 @@ export const CREDITO = {
   url: '',
 
   operadora: 'InfinitePay',
+
+  /**
+   * Taxa do crédito à vista, repassada a quem paga.
+   *
+   * ⚠️ CONFIRMAR: copie o número exato do app da operadora. Taxa de link de
+   * pagamento costuma ser diferente da taxa da maquininha.
+   *
+   * O parcelamento não entra aqui: quem parcela escolhe isso na página da
+   * operadora e paga os juros dela, enquanto a escola recebe o mesmo.
+   */
+  taxaPercentual: 4.98,
+  /** Taxa fixa por transação, se a operadora cobrar uma. Em reais. */
+  taxaFixa: 0,
+
   /** Observação curta mostrada abaixo do botão. Deixe '' para esconder. */
   observacao: 'Parcelamento em até 12x, com juros da operadora.',
 } as const;
+
+/**
+ * Quanto a pessoa paga no crédito para a escola receber o valor cheio.
+ *
+ * Não é somar a taxa: a operadora cobra o percentual sobre o valor cobrado,
+ * não sobre o valor líquido. Em R$ 85 com 4,98%, somar daria R$ 89,23 — e a
+ * operadora tiraria 4,98% de 89,23, deixando R$ 84,79. Faltariam 21 centavos.
+ * O certo é dividir: 85 ÷ (1 − 0,0498) = R$ 89,46, de onde saem R$ 4,46 de
+ * taxa e sobram os R$ 85.
+ *
+ * Arredonda o centavo para cima, de propósito: para baixo, a escola receberia
+ * menos do que a tabela diz.
+ */
+export function totalNoCredito(total: number): number {
+  const { taxaPercentual, taxaFixa } = CREDITO;
+  if (taxaPercentual <= 0 && taxaFixa <= 0) return total;
+  const bruto = (total + taxaFixa) / (1 - taxaPercentual / 100);
+  return Math.ceil(bruto * 100) / 100;
+}
+
+/** O que a taxa acrescenta, em reais. Zero quando não há taxa configurada. */
+export function taxaDoCredito(total: number): number {
+  return Math.round((totalNoCredito(total) - total) * 100) / 100;
+}
+
+/** Quanto a pessoa paga, pela forma escolhida. O PIX não tem taxa. */
+export function totalAPagar(total: number, metodo: 'pix' | 'credito'): number {
+  return metodo === 'credito' ? totalNoCredito(total) : total;
+}
 
 /** Monta o link do crédito com o valor desta inscrição, quando der. */
 export function linkDoCredito(total: number): string {

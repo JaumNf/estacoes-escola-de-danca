@@ -47,7 +47,8 @@ const COLUNAS = [
   'Baile (R$)',
   'Desconto %',
   'Desconto',
-  'Total',
+  'Taxa cartão',
+  'Total pago',
   'Pagamento',
   'Comprovante',
   'Status',
@@ -102,6 +103,7 @@ function doPost(e) {
       dados.subtotalBaile || 0,
       dados.percentualDesconto || 0,
       dados.desconto || 0,
+      dados.taxaCartao || 0,
       dados.total || 0,
       dados.metodo || '',
       linkComprovante,
@@ -147,7 +149,7 @@ function obterAba() {
     aba.setFrozenRows(1);
     aba.setColumnWidth(COLUNAS.indexOf('Aulas') + 1, 420); // essa coluna é longa
     // As colunas de dinheiro saem como moeda, para somar direto na planilha.
-    ['Subtotal aulas', 'Baile (R$)', 'Desconto', 'Total'].forEach(function (nome) {
+    ['Subtotal aulas', 'Baile (R$)', 'Desconto', 'Taxa cartão', 'Total pago'].forEach(function (nome) {
       aba.getRange(1, COLUNAS.indexOf(nome) + 1, aba.getMaxRows(), 1)
         .setNumberFormat('R$ #,##0.00');
     });

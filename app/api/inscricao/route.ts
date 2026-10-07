@@ -6,6 +6,7 @@ import {
   calcularOrcamento,
   ehVendavel,
   formatarReais,
+  totalAPagar,
   type Formato,
 } from '@/lib/intensivo';
 
@@ -163,6 +164,11 @@ export async function POST(request: NextRequest) {
   }
 
   // ── repasse para a planilha ───────────────────────────────────────────────
+  // O valor cobrado é calculado aqui também: o navegador não dita nem o preço
+  // das aulas nem a taxa do cartão.
+  const totalCobrado = totalAPagar(orcamento.total, metodo);
+  const taxaCartao = Math.round((totalCobrado - orcamento.total) * 100) / 100;
+
   const protocolo = gerarProtocolo();
   const descricaoAulas = ids
     .map((id) => {
@@ -193,8 +199,11 @@ export async function POST(request: NextRequest) {
     subtotalBaile: orcamento.subtotalBaile,
     percentualDesconto: orcamento.percentualDesconto,
     desconto: orcamento.desconto,
-    total: orcamento.total,
-    totalFormatado: formatarReais(orcamento.total),
+    // No crédito a taxa da operadora é repassada, então o que a pessoa paga
+    // não é o preço de tabela. A planilha registra os dois.
+    taxaCartao,
+    total: totalCobrado,
+    totalFormatado: formatarReais(totalCobrado),
     metodo: metodo === 'pix' ? 'PIX' : 'Cartão de crédito',
     arquivo,
   };
@@ -243,8 +252,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       ok: true,
       protocolo,
-      total: orcamento.total,
-      totalFormatado: formatarReais(orcamento.total),
+      // O que a pessoa pagou de verdade — no crédito, já com a taxa repassada.
+      total: totalCobrado,
+      totalFormatado: formatarReais(totalCobrado),
+      taxaCartao,
     });
   } catch (falha) {
     console.error('[inscricao] falha ao falar com a planilha:', falha);

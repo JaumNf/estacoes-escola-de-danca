@@ -41,6 +41,8 @@ import {
   linkDoCredito,
   formatarReais,
   precoDe,
+  taxaDoCredito,
+  totalNoCredito,
   vendaAntecipadaDoBaileAberta,
   type Aula,
   type EstadoDoBaile,
@@ -209,6 +211,11 @@ export default function InscricaoForm() {
   );
 
   const preco = useCallback((aula: Aula) => precoDe(aula, formato), [formato]);
+
+  // No crédito a taxa da operadora é repassada; o PIX sai pelo valor de tabela.
+  const totalCredito = useMemo(() => totalNoCredito(orcamento.total), [orcamento.total]);
+  const taxaCredito = useMemo(() => taxaDoCredito(orcamento.total), [orcamento.total]);
+  const totalDaForma = metodo === 'credito' ? totalCredito : orcamento.total;
 
   // ── PIX ───────────────────────────────────────────────────────────────────
   const payloadPix = useMemo(() => {
@@ -938,7 +945,7 @@ export default function InscricaoForm() {
                 <p className="text-brown-700 mb-6">
                   {formato === 'dupla' ? 'Dupla' : 'Inscrição individual'} ·{' '}
                   {selecionadas.length} {selecionadas.length === 1 ? 'item' : 'itens'} ·{' '}
-                  <strong className="text-[#682c0b]">{formatarReais(orcamento.total)}</strong>
+                  <strong className="text-[#682c0b]">{formatarReais(totalDaForma)}</strong>
                 </p>
 
                 {/* Escolha do método */}
@@ -1044,28 +1051,60 @@ export default function InscricaoForm() {
                       <p className="text-sm text-brown-700 mt-0.5">
                         {creditoLevaOValor() ? (
                           <>
-                            Abre a página segura da {CREDITO.operadora} com os{' '}
-                            <strong>{formatarReais(orcamento.total)}</strong> já preenchidos. Depois
-                            é só voltar e anexar o recibo.
+                            Abre a página segura da {CREDITO.operadora} com o valor já preenchido.
+                            Depois é só voltar e anexar o recibo.
                           </>
                         ) : (
                           <>
                             Abre a página segura da {CREDITO.operadora}. Digite{' '}
-                            <strong>{formatarReais(orcamento.total)}</strong> e volte aqui para
-                            anexar o recibo.
+                            <strong>{formatarReais(totalCredito)}</strong> e volte aqui para anexar
+                            o recibo.
                           </>
                         )}
                       </p>
                     </div>
                     <div className="p-5">
+                      {/* A taxa aparece na conta antes do botão: ninguém deveria
+                          descobrir que pagou a mais só na fatura. */}
+                      {taxaCredito > 0 && (
+                        <dl className="text-sm mb-4 space-y-1.5 pb-4 border-b border-brown-100">
+                          <div className="flex justify-between">
+                            <dt className="text-brown-700">Inscrição</dt>
+                            <dd className="text-[#682c0b] tabular-nums">
+                              {formatarReais(orcamento.total)}
+                            </dd>
+                          </div>
+                          <div className="flex justify-between">
+                            <dt className="text-brown-700">
+                              Taxa do cartão ({CREDITO.taxaPercentual.toLocaleString('pt-BR')}%)
+                            </dt>
+                            <dd className="text-[#682c0b] tabular-nums">
+                              + {formatarReais(taxaCredito)}
+                            </dd>
+                          </div>
+                          <div className="flex justify-between font-bold pt-1">
+                            <dt className="text-[#682c0b]">Total no crédito</dt>
+                            <dd className="text-[#682c0b] tabular-nums">
+                              {formatarReais(totalCredito)}
+                            </dd>
+                          </div>
+                        </dl>
+                      )}
+
                       <a
-                        href={linkDoCredito(orcamento.total)}
+                        href={linkDoCredito(totalCredito)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="pressable w-full flex items-center justify-center gap-2 bg-[#682c0b] text-orange-50 px-4 py-3.5 rounded-xl font-bold hover:bg-terracotta"
                       >
-                        <CreditCard size={17} /> Pagar {formatarReais(orcamento.total)}
+                        <CreditCard size={17} /> Pagar {formatarReais(totalCredito)}
                       </a>
+
+                      {taxaCredito > 0 && (
+                        <p className="text-xs text-brown-600 mt-3 text-center">
+                          No PIX sai por {formatarReais(orcamento.total)}, sem a taxa.
+                        </p>
+                      )}
                       {CREDITO.observacao && (
                         <p className="text-xs text-brown-600 mt-3 text-center">
                           {CREDITO.observacao}
