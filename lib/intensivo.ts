@@ -340,9 +340,9 @@ export function totalAPagar(total: number, metodo: 'pix' | 'credito'): number {
  * alternativa para quem pagar por fora.
  */
 export const CHECKOUT = {
-  ativo: false,
+  ativo: true,
   /** Seu handle da InfiniteTag, sem o "$". É o que identifica a conta. */
-  handle: '',
+  handle: 'estacoesdanca',
 } as const;
 
 /** Monta o link do crédito com o valor desta inscrição, quando der. */
