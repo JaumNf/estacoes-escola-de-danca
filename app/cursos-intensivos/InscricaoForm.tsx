@@ -27,6 +27,7 @@ import {
 import {
   AULAS,
   BAILE,
+  CHECKOUT,
   CREDITO,
   DESCONTOS,
   EDICAO,
@@ -190,6 +191,8 @@ export default function InscricaoForm() {
    * montagem: assim o HTML do servidor e o da primeira renderização batem.
    */
   const [antecipadaAberta, setAntecipadaAberta] = useState(true);
+  /** A pessoa pediu para pagar por fora e mandar comprovante. */
+  const [modoManual, setModoManual] = useState(false);
   /** Se o baile entrou de brinde, e se a pessoa já o recusou uma vez. */
   const [estadoDoBaile, setEstadoDoBaile] = useState<EstadoDoBaile>({
     baileAutomatico: false,
@@ -288,7 +291,15 @@ export default function InscricaoForm() {
 
   const etapa2Completa = selecionadas.length > 0;
 
-  const precisaComprovante = metodo === 'pix';
+  /**
+   * Com o checkout automático ligado, o pagamento acontece na página da
+   * InfinitePay e a confirmação chega por webhook — não há comprovante para
+   * anexar. O caminho manual continua a um clique de distância, para quem
+   * pagar por fora ou se a cobrança automática falhar.
+   */
+  const usarCheckout = CHECKOUT.ativo && Boolean(CHECKOUT.handle) && !modoManual;
+
+  const precisaComprovante = metodo === 'pix' && !usarCheckout;
   const etapa3Completa =
     consentimento && (!precisaComprovante || Boolean(comprovante)) && !erroArquivo;
 
@@ -402,6 +413,7 @@ export default function InscricaoForm() {
     corpo.set('aulas', JSON.stringify(selecionadas));
     corpo.set('metodo', metodo);
     corpo.set('consentimento', String(consentimento));
+    corpo.set('checkout', String(usarCheckout));
     if (comprovante) corpo.set('comprovante', comprovante);
 
     try {
@@ -411,6 +423,24 @@ export default function InscricaoForm() {
         setErroEnvio(dados.erro ?? 'Não conseguimos enviar agora. Tenta pelo WhatsApp?');
         return;
       }
+
+      // Checkout automático: a inscrição já está registrada, agora é pagar.
+      if (dados.checkoutUrl) {
+        window.location.href = dados.checkoutUrl;
+        return;
+      }
+
+      // Pediu checkout mas a cobrança não nasceu: a inscrição está salva, então
+      // em vez de perder a venda, oferecemos o caminho manual com o protocolo.
+      if (usarCheckout) {
+        setProtocolo(dados.protocolo);
+        setErroEnvio(
+          'Sua inscrição foi registrada, mas a página de pagamento não abriu. ' +
+            'Chama a gente no WhatsApp com o seu protocolo que a gente manda o link.',
+        );
+        return;
+      }
+
       setProtocolo(dados.protocolo);
     } catch {
       setErroEnvio('Sua conexão caiu no meio do envio. Tenta de novo ou manda pelo WhatsApp.');
@@ -949,7 +979,11 @@ export default function InscricaoForm() {
                 </p>
 
                 {/* Escolha do método */}
-                {PIX.ativo && CREDITO.ativo && (
+                {/* No checkout a pessoa escolhe PIX ou cartão na página da
+                    InfinitePay, mas o valor cobrado tem que sair daqui: sem
+                    estas abas, quem pagasse no cartão pagaria o preço do PIX e
+                    a taxa sairia do bolso da escola. */}
+                {PIX.ativo && (CREDITO.ativo || usarCheckout) && (
                   <div
                     role="tablist"
                     aria-label="Forma de pagamento"
@@ -977,8 +1011,58 @@ export default function InscricaoForm() {
                   </div>
                 )}
 
+                {/* Checkout automático */}
+                {usarCheckout && (
+                  <div className="rounded-2xl border border-brown-200 overflow-hidden mb-6">
+                    <div className="px-5 py-4 bg-brown-50/70 border-b border-brown-200">
+                      <h3 className="font-bold text-[#682c0b]">
+                        {metodo === 'pix' ? 'Pague com PIX' : 'Pague no crédito'}
+                      </h3>
+                      <p className="text-sm text-brown-700 mt-0.5">
+                        Você vai para a página segura da InfinitePay com o valor já preenchido.
+                        Assim que o pagamento cair, sua vaga é confirmada automaticamente — sem
+                        precisar mandar comprovante.
+                      </p>
+                    </div>
+
+                    <div className="p-5">
+                      {metodo === 'credito' && taxaCredito > 0 && (
+                        <dl className="text-sm mb-4 space-y-1.5 pb-4 border-b border-brown-100">
+                          <div className="flex justify-between">
+                            <dt className="text-brown-700">Inscrição</dt>
+                            <dd className="text-[#682c0b] tabular-nums">
+                              {formatarReais(orcamento.total)}
+                            </dd>
+                          </div>
+                          <div className="flex justify-between">
+                            <dt className="text-brown-700">
+                              Taxa do cartão ({CREDITO.taxaPercentual.toLocaleString('pt-BR')}%)
+                            </dt>
+                            <dd className="text-[#682c0b] tabular-nums">
+                              + {formatarReais(taxaCredito)}
+                            </dd>
+                          </div>
+                        </dl>
+                      )}
+
+                      <p className="flex items-baseline justify-between mb-1">
+                        <span className="font-bold text-[#682c0b]">Total</span>
+                        <span className="text-2xl font-display font-bold text-[#682c0b] tabular-nums">
+                          {formatarReais(totalDaForma)}
+                        </span>
+                      </p>
+
+                      {metodo === 'credito' && taxaCredito > 0 && (
+                        <p className="text-xs text-brown-600 mt-2">
+                          No PIX sai por {formatarReais(orcamento.total)}, sem a taxa.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* PIX */}
-                {metodo === 'pix' && (
+                {metodo === 'pix' && !usarCheckout && (
                   <div className="rounded-2xl border border-brown-200 overflow-hidden mb-6">
                     <div className="px-5 py-4 bg-brown-50/70 border-b border-brown-200">
                       <h3 className="font-bold text-[#682c0b]">Pague com PIX</h3>
@@ -1043,8 +1127,8 @@ export default function InscricaoForm() {
                   </div>
                 )}
 
-                {/* Crédito */}
-                {metodo === 'credito' && CREDITO.ativo && (
+                {/* Crédito por link avulso (sem checkout automático) */}
+                {metodo === 'credito' && CREDITO.ativo && !usarCheckout && (
                   <div className="rounded-2xl border border-brown-200 overflow-hidden mb-6">
                     <div className="px-5 py-4 bg-brown-50/70 border-b border-brown-200">
                       <h3 className="font-bold text-[#682c0b]">Pague no crédito</h3>
@@ -1114,10 +1198,10 @@ export default function InscricaoForm() {
                   </div>
                 )}
 
-                {/* Comprovante */}
-                <div className="mb-6">
+                {/* Comprovante — só no caminho manual */}
+                <div className={usarCheckout ? 'hidden' : 'mb-6'}>
                   <h3 className="text-xs font-bold tracking-widest uppercase text-brown-800 mb-2">
-                    Comprovante {metodo === 'pix' ? '' : '(opcional)'}
+                    Comprovante {precisaComprovante ? '' : '(opcional)'}
                   </h3>
 
                   {comprovante ? (
@@ -1274,7 +1358,12 @@ export default function InscricaoForm() {
               >
                 {enviando ? (
                   <>
-                    <Loader2 size={18} className="animate-spin" /> Enviando…
+                    <Loader2 size={18} className="animate-spin" />{' '}
+                    {usarCheckout ? 'Abrindo o pagamento…' : 'Enviando…'}
+                  </>
+                ) : usarCheckout ? (
+                  <>
+                    Pagar {formatarReais(totalDaForma)} <ArrowRight size={18} />
                   </>
                 ) : (
                   <>
@@ -1284,6 +1373,21 @@ export default function InscricaoForm() {
               </button>
             )}
           </div>
+
+          {/* A alternativa manual, discreta: quem precisa dela procura. */}
+          {etapa === 3 && CHECKOUT.ativo && Boolean(CHECKOUT.handle) && (
+            <p className="text-center mt-4">
+              <button
+                type="button"
+                onClick={() => setModoManual((v) => !v)}
+                className="pressable text-sm text-brown-600 hover:text-[#682c0b] underline underline-offset-2 px-2 py-1 rounded"
+              >
+                {modoManual
+                  ? 'Voltar para o pagamento automático'
+                  : 'Prefiro pagar por fora e enviar o comprovante'}
+              </button>
+            </p>
+          )}
         </div>
       </div>
 

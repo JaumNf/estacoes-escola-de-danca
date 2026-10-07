@@ -331,6 +331,20 @@ export function totalAPagar(total: number, metodo: 'pix' | 'credito'): number {
   return metodo === 'credito' ? totalNoCredito(total) : total;
 }
 
+/**
+ * Checkout automático da InfinitePay: a pessoa paga na página deles e o site
+ * confirma sozinho pelo webhook, sem comprovante e sem conferência manual.
+ *
+ * Com `ativo: false`, tudo continua como antes — PIX no QR Code e comprovante
+ * anexado à mão. Mesmo ligado, o caminho manual segue disponível como
+ * alternativa para quem pagar por fora.
+ */
+export const CHECKOUT = {
+  ativo: false,
+  /** Seu handle da InfiniteTag, sem o "$". É o que identifica a conta. */
+  handle: '',
+} as const;
+
 /** Monta o link do crédito com o valor desta inscrição, quando der. */
 export function linkDoCredito(total: number): string {
   return CREDITO.url

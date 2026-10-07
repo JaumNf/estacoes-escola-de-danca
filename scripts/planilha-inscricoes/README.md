@@ -135,11 +135,39 @@ Depois apague a linha de teste e o arquivo.
 
 ---
 
+## Pagamento automático (opcional)
+
+Com o checkout da InfinitePay ligado, você não confere nada: a pessoa paga na
+página deles e a linha vira **Pago** sozinha, com a transação e o link do
+recibo preenchidos. Para ligar, em `lib/intensivo.ts`:
+
+```ts
+export const CHECKOUT = {
+  ativo: true,
+  handle: 'seu-handle-da-infinitetag',  // sem o "$"
+};
+```
+
+O site registra a inscrição **antes** de mandar a pessoa pagar, com status
+`Aguardando pagamento` — assim quem desiste no meio do caminho não some. Quando
+o pagamento é aprovado, a InfinitePay chama `/api/pagamento/webhook`, o site
+reconfere na origem e só então a linha vira `Pago`.
+
+> **Por que a reconferência:** a API da InfinitePay se identifica só pelo
+> handle, sem chave secreta e sem assinatura no webhook. Quem descobrir a URL
+> poderia mandar um "pago" falso. O site nunca confia no aviso: ele pergunta de
+> volta pelo `payment_check` e exige que o valor pago cubra o cobrado.
+
+O caminho manual continua disponível no formulário, em
+"Prefiro pagar por fora e enviar o comprovante" — para quem pagar por outro meio
+ou se a cobrança automática falhar.
+
 ## Depois, no dia a dia
 
-A coluna **Status** nasce como `A conferir`. Troque para `Pago` ou `Cancelado`
-conforme for confirmando — o script nunca sobrescreve linha existente, só
-acrescenta no fim.
+A coluna **Status** nasce como `A conferir` (ou `Aguardando pagamento`, no
+checkout automático). Troque para `Pago` ou `Cancelado` conforme for
+confirmando — o script nunca sobrescreve linha existente, só acrescenta no fim
+ou atualiza o status de uma linha já existente.
 
 Para receber um aviso a cada inscrição nova: na planilha,
 **Ferramentas → Regras de notificação → Notificar quando qualquer alteração for

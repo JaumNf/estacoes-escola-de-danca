@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
   AULAS,
+  CHECKOUT,
   EDICAO,
   aulaPorId,
   calcularOrcamento,
@@ -9,6 +10,7 @@ import {
   totalAPagar,
   type Formato,
 } from '@/lib/intensivo';
+import { criarLinkDePagamento, emCentavos, urlPublica } from '@/lib/pagamento';
 
 /**
  * Recebe uma inscrição do Curso Intensivo e repassa para a planilha do Google.
@@ -142,6 +144,12 @@ export async function POST(request: NextRequest) {
     return erro('Precisamos do seu aceite para guardar seus dados e entrar em contato.', 400);
   }
 
+  // ── caminho do pagamento ──────────────────────────────────────────────────
+  // No checkout automático a pessoa paga na página da InfinitePay e a
+  // confirmação chega por webhook, então não há comprovante para anexar.
+  const viaCheckout =
+    String(dados.get('checkout')) === 'true' && CHECKOUT.ativo && Boolean(CHECKOUT.handle);
+
   // ── comprovante ───────────────────────────────────────────────────────────
   const comprovante = dados.get('comprovante');
   let arquivo: { nome: string; tipo: string; base64: string } | null = null;
@@ -159,7 +167,7 @@ export async function POST(request: NextRequest) {
       tipo: comprovante.type,
       base64: bytes.toString('base64'),
     };
-  } else if (metodo === 'pix') {
+  } else if (metodo === 'pix' && !viaCheckout) {
     return erro('Anexe o comprovante do PIX para a gente confirmar sua vaga.', 400);
   }
 
@@ -205,6 +213,10 @@ export async function POST(request: NextRequest) {
     total: totalCobrado,
     totalFormatado: formatarReais(totalCobrado),
     metodo: metodo === 'pix' ? 'PIX' : 'Cartão de crédito',
+    // No checkout, a linha nasce "aguardando" e o webhook a promove a "Pago".
+    // Gravar antes de mandar a pessoa pagar é o que impede de perder a
+    // inscrição de quem desiste no meio do caminho.
+    status: viaCheckout ? 'Aguardando pagamento' : 'A conferir',
     arquivo,
   };
 
@@ -249,6 +261,35 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // A inscrição já está gravada. Agora, se for pelo checkout, criamos a
+    // cobrança e devolvemos para onde mandar a pessoa.
+    let checkoutUrl: string | undefined;
+    if (viaCheckout) {
+      try {
+        const link = await criarLinkDePagamento({
+          handle: CHECKOUT.handle,
+          orderNsu: protocolo,
+          itens: [
+            {
+              quantity: 1,
+              price: emCentavos(totalCobrado),
+              description: `${EDICAO.nome} — ${orcamento.quantidadeAulas} ${
+                orcamento.quantidadeAulas === 1 ? 'aula' : 'aulas'
+              }${orcamento.baileEscolhido ? ' + baile' : ''} (${protocolo})`,
+            },
+          ],
+          redirectUrl: urlPublica(`/cursos-intensivos/inscricao/obrigado?protocolo=${protocolo}`),
+          webhookUrl: urlPublica('/api/pagamento/webhook'),
+          cliente: { name: nome1, phone_number: whatsapp1 },
+        });
+        checkoutUrl = link.url;
+      } catch (falha) {
+        // A inscrição já foi registrada; só o pagamento automático falhou.
+        // Em vez de perder a venda, o formulário cai no caminho manual.
+        console.error('[inscricao] não consegui criar o link de pagamento:', falha);
+      }
+    }
+
     return NextResponse.json({
       ok: true,
       protocolo,
@@ -256,6 +297,7 @@ export async function POST(request: NextRequest) {
       total: totalCobrado,
       totalFormatado: formatarReais(totalCobrado),
       taxaCartao,
+      checkoutUrl,
     });
   } catch (falha) {
     console.error('[inscricao] falha ao falar com a planilha:', falha);

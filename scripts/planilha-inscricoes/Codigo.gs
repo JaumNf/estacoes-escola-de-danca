@@ -51,6 +51,8 @@ const COLUNAS = [
   'Total pago',
   'Pagamento',
   'Comprovante',
+  'Transação',
+  'Recibo',
   'Status',
 ];
 
@@ -76,6 +78,12 @@ function doPost(e) {
     }
     if (dados.token !== CONFIG.TOKEN) {
       return responder({ ok: false, erro: 'token inválido' });
+    }
+
+    // Confirmação de pagamento: não cria linha, acha a que já existe pelo
+    // protocolo e muda o status.
+    if (dados.acao === 'confirmarPagamento') {
+      return confirmarPagamento(dados);
     }
 
     const aba = obterAba();
@@ -107,7 +115,9 @@ function doPost(e) {
       dados.total || 0,
       dados.metodo || '',
       linkComprovante,
-      'A conferir',
+      '',
+      '',
+      dados.status || 'A conferir',
     ]);
 
     return responder({ ok: true, comprovanteUrl: linkComprovante });
@@ -119,6 +129,49 @@ function doPost(e) {
   } finally {
     trava.releaseLock();
   }
+}
+
+/**
+ * Marca uma inscrição como paga. Procura a linha pelo protocolo — que é o
+ * mesmo `order_nsu` mandado à InfinitePay — e atualiza o status.
+ *
+ * Não cria linha nova: se o protocolo não existir, é sinal de problema e vale
+ * mais devolver erro do que inventar um registro.
+ */
+function confirmarPagamento(dados) {
+  const aba = obterAba();
+  const protocolo = String(dados.protocolo || '').trim();
+  if (!protocolo) return responder({ ok: false, erro: 'sem protocolo' });
+
+  const colProtocolo = COLUNAS.indexOf('Protocolo') + 1;
+  const ultima = aba.getLastRow();
+  if (ultima < 2) return responder({ ok: false, erro: 'planilha vazia' });
+
+  const protocolos = aba.getRange(2, colProtocolo, ultima - 1, 1).getValues();
+  let linha = -1;
+  for (let i = 0; i < protocolos.length; i++) {
+    if (String(protocolos[i][0]).trim() === protocolo) {
+      linha = i + 2;
+      break;
+    }
+  }
+  if (linha < 0) return responder({ ok: false, erro: 'protocolo não encontrado: ' + protocolo });
+
+  const definir = function (nomeDaColuna, valor) {
+    const col = COLUNAS.indexOf(nomeDaColuna) + 1;
+    if (col > 0) aba.getRange(linha, col).setValue(valor);
+  };
+
+  definir('Status', 'Pago');
+  definir('Pagamento', dados.formaConfirmada || '');
+  definir('Transação', dados.transacao || '');
+  definir('Recibo', dados.reciboUrl || '');
+  if (dados.valorPago) definir('Total pago', dados.valorPago);
+
+  // Verde na linha inteira: dá para ver o que já entrou sem ler coluna.
+  aba.getRange(linha, 1, 1, COLUNAS.length).setBackground('#e8f5e9');
+
+  return responder({ ok: true, linha: linha });
 }
 
 /** Abrir a URL /exec no navegador cai aqui. Serve para testar a publicação. */
