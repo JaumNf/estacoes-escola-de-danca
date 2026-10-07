@@ -124,29 +124,36 @@ valores, marcando **Production**.
 
 ## 7. Faça uma inscrição de teste
 
-Entre em `/cursos-intensivos`, preencha o formulário e envie com qualquer
-imagem como comprovante. Confira:
+Entre em `/cursos-intensivos/inscricao` e preencha o formulário.
 
-- a linha apareceu na planilha, com o protocolo;
+**Na sua máquina**, clique em *"Prefiro pagar por fora e enviar o comprovante"*
+e envie com qualquer imagem — o pagamento automático depende do webhook, que
+não chega em `localhost`.
+
+Confira na planilha:
+
+- a linha apareceu, com o protocolo;
 - a coluna **Comprovante** tem um link que abre o arquivo no Drive;
-- o telefone saiu formatado, tipo `(67) 99263-0948`.
+- o telefone saiu formatado, tipo `(67) 99263-0948`;
+- os valores de **Subtotal aulas**, **Desconto** e **Total pago** fecham.
 
-Depois apague a linha de teste e o arquivo.
+**Depois de publicar**, repita pelo caminho automático: pague R$ 1 numa
+inscrição de teste e confira se a linha vira **Pago** sozinha, com **Transação**
+e **Recibo** preenchidos.
+
+Apague as linhas de teste e os arquivos quando terminar.
 
 ---
 
-## Pagamento automático (opcional)
+## Pagamento automático — já está ligado
 
-Com o checkout da InfinitePay ligado, você não confere nada: a pessoa paga na
-página deles e a linha vira **Pago** sozinha, com a transação e o link do
-recibo preenchidos. Para ligar, em `lib/intensivo.ts`:
+O checkout da InfinitePay está configurado em `lib/intensivo.ts` com o handle
+`estacoesdanca`. Você não confere nada: a pessoa paga na página deles e a linha
+vira **Pago** sozinha, com a transação e o link do recibo preenchidos.
 
-```ts
-export const CHECKOUT = {
-  ativo: true,
-  handle: 'seu-handle-da-infinitetag',  // sem o "$"
-};
-```
+> ⚠️ **Isso só funciona com o site publicado.** O webhook precisa de um
+> endereço que a InfinitePay alcance, e `localhost` ela não alcança. Rodando na
+> sua máquina, use o caminho manual para testar.
 
 O site registra a inscrição **antes** de mandar a pessoa pagar, com status
 `Aguardando pagamento` — assim quem desiste no meio do caminho não some. Quando
