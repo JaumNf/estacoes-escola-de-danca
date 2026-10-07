@@ -1,10 +1,25 @@
 import { MetadataRoute } from 'next';
+import { EDICAO } from '@/lib/intensivo';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // Defina NEXT_PUBLIC_BASE_URL na Vercel quando o domínio próprio entrar no ar.
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://escoladedancaestacoes.vercel.app';
 
+  // A página de inscrição só entra no mapa enquanto houver edição aberta: não
+  // adianta mandar o Google indexar um formulário que não existe.
+  const inscricao: MetadataRoute.Sitemap = EDICAO.ativa
+    ? [
+        {
+          url: `${baseUrl}/cursos-intensivos/inscricao`,
+          lastModified: new Date(),
+          changeFrequency: 'daily',
+          priority: 0.9,
+        },
+      ]
+    : [];
+
   return [
+    ...inscricao,
     {
       url: `${baseUrl}/`,
       lastModified: new Date(),
