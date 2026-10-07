@@ -36,7 +36,9 @@ import {
   aulaPorId,
   aulasPorDia,
   calcularOrcamento,
+  creditoLevaOValor,
   ehVendavel,
+  linkDoCredito,
   formatarReais,
   precoDe,
   vendaAntecipadaDoBaileAberta,
@@ -1040,14 +1042,24 @@ export default function InscricaoForm() {
                     <div className="px-5 py-4 bg-brown-50/70 border-b border-brown-200">
                       <h3 className="font-bold text-[#682c0b]">Pague no crédito</h3>
                       <p className="text-sm text-brown-700 mt-0.5">
-                        Abre a página segura da {CREDITO.operadora}. Digite{' '}
-                        <strong>{formatarReais(orcamento.total)}</strong> e volte aqui para anexar o
-                        recibo.
+                        {creditoLevaOValor() ? (
+                          <>
+                            Abre a página segura da {CREDITO.operadora} com os{' '}
+                            <strong>{formatarReais(orcamento.total)}</strong> já preenchidos. Depois
+                            é só voltar e anexar o recibo.
+                          </>
+                        ) : (
+                          <>
+                            Abre a página segura da {CREDITO.operadora}. Digite{' '}
+                            <strong>{formatarReais(orcamento.total)}</strong> e volte aqui para
+                            anexar o recibo.
+                          </>
+                        )}
                       </p>
                     </div>
                     <div className="p-5">
                       <a
-                        href={CREDITO.url}
+                        href={linkDoCredito(orcamento.total)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="pressable w-full flex items-center justify-center gap-2 bg-[#682c0b] text-orange-50 px-4 py-3.5 rounded-xl font-bold hover:bg-terracotta"

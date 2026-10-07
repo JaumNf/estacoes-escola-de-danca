@@ -268,11 +268,37 @@ export const PIX = {
  */
 export const CREDITO = {
   ativo: false,
-  url: '', // ex.: 'https://pag.ae/...' ou 'https://invoice.infinitepay.io/...'
+
+  /**
+   * Link de pagamento da operadora.
+   *
+   * Se o link aceitar o valor pela URL, escreva `{valor}` (em reais, com
+   * ponto: 85.00) ou `{centavos}` (8500) no lugar do número — o site preenche
+   * sozinho com o total da inscrição, e ninguém digita errado. Exemplos:
+   *     'https://invoice.infinitepay.io/plans/estacoes/{centavos}'
+   *     'https://pag.ae/abc?valor={valor}'
+   *
+   * Sem placeholder, o link abre do jeito que estiver e o formulário mostra à
+   * pessoa quanto ela precisa digitar lá. Funciona, mas confere o comprovante.
+   */
+  url: '',
+
   operadora: 'InfinitePay',
   /** Observação curta mostrada abaixo do botão. Deixe '' para esconder. */
   observacao: 'Parcelamento em até 12x, com juros da operadora.',
 } as const;
+
+/** Monta o link do crédito com o valor desta inscrição, quando der. */
+export function linkDoCredito(total: number): string {
+  return CREDITO.url
+    .replace('{valor}', total.toFixed(2))
+    .replace('{centavos}', String(Math.round(total * 100)));
+}
+
+/** O link leva o valor embutido? Muda o que o formulário promete à pessoa. */
+export function creditoLevaOValor(): boolean {
+  return /\{valor\}|\{centavos\}/.test(CREDITO.url);
+}
 
 /** Grupo onde a próxima edição é anunciada. */
 export const COMUNIDADE_WHATSAPP = 'https://chat.whatsapp.com/GleDoqpuQAh0K1Bo8fho7T';
