@@ -7,7 +7,6 @@ import {
   calcularOrcamento,
   ehVendavel,
   formatarReais,
-  totalAPagar,
   type Formato,
 } from '@/lib/intensivo';
 import { criarLinkDePagamento, emCentavos, urlPublica } from '@/lib/pagamento';
@@ -172,10 +171,12 @@ export async function POST(request: NextRequest) {
   }
 
   // ── repasse para a planilha ───────────────────────────────────────────────
-  // O valor cobrado é calculado aqui também: o navegador não dita nem o preço
-  // das aulas nem a taxa do cartão.
-  const totalCobrado = totalAPagar(orcamento.total, metodo);
-  const taxaCartao = Math.round((totalCobrado - orcamento.total) * 100) / 100;
+  // O que se cobra é SEMPRE o preço de tabela. No crédito, quem acrescenta a
+  // taxa é a InfinitePay, na página dela — mandar o valor já acrescido faria a
+  // taxa ser cobrada duas vezes. Quanto a pessoa pagou de fato chega depois,
+  // pelo webhook, e é ele que preenche a coluna da taxa.
+  const totalCobrado = orcamento.total;
+  const taxaCartao = 0;
 
   const protocolo = gerarProtocolo();
   const descricaoAulas = ids

@@ -215,10 +215,23 @@ export default function InscricaoForm() {
 
   const preco = useCallback((aula: Aula) => precoDe(aula, formato), [formato]);
 
-  // No crédito a taxa da operadora é repassada; o PIX sai pelo valor de tabela.
+  // Estimativa do que o cartão vai custar. Quem acrescenta a taxa de verdade é
+  // a InfinitePay, na página dela — isto serve para avisar antes.
   const totalCredito = useMemo(() => totalNoCredito(orcamento.total), [orcamento.total]);
   const taxaCredito = useMemo(() => taxaDoCredito(orcamento.total), [orcamento.total]);
-  const totalDaForma = metodo === 'credito' ? totalCredito : orcamento.total;
+
+  /**
+   * Com o checkout automático ligado, o pagamento acontece na página da
+   * InfinitePay e a confirmação chega por webhook — não há comprovante para
+   * anexar. O caminho manual continua a um clique de distância, para quem
+   * pagar por fora ou se a cobrança automática falhar.
+   */
+  const usarCheckout = CHECKOUT.ativo && Boolean(CHECKOUT.handle) && !modoManual;
+
+  // O site sempre trabalha com o preço de tabela. Só no caminho manual, onde o
+  // link do crédito é montado por nós, o valor mostrado já inclui a taxa.
+  const totalDaForma =
+    !usarCheckout && metodo === 'credito' ? totalCredito : orcamento.total;
 
   // ── PIX ───────────────────────────────────────────────────────────────────
   const payloadPix = useMemo(() => {
@@ -290,14 +303,6 @@ export default function InscricaoForm() {
     (formato === 'individual' || (nome2.trim().length >= 3 && telefoneValido(whatsapp2)));
 
   const etapa2Completa = selecionadas.length > 0;
-
-  /**
-   * Com o checkout automático ligado, o pagamento acontece na página da
-   * InfinitePay e a confirmação chega por webhook — não há comprovante para
-   * anexar. O caminho manual continua a um clique de distância, para quem
-   * pagar por fora ou se a cobrança automática falhar.
-   */
-  const usarCheckout = CHECKOUT.ativo && Boolean(CHECKOUT.handle) && !modoManual;
 
   const precisaComprovante = metodo === 'pix' && !usarCheckout;
   const etapa3Completa =
@@ -979,11 +984,10 @@ export default function InscricaoForm() {
                 </p>
 
                 {/* Escolha do método */}
-                {/* No checkout a pessoa escolhe PIX ou cartão na página da
-                    InfinitePay, mas o valor cobrado tem que sair daqui: sem
-                    estas abas, quem pagasse no cartão pagaria o preço do PIX e
-                    a taxa sairia do bolso da escola. */}
-                {PIX.ativo && (CREDITO.ativo || usarCheckout) && (
+                {/* No checkout a escolha da forma acontece na página da
+                    InfinitePay, que também acrescenta a taxa do cartão sozinha.
+                    Duplicar a escolha aqui só criaria chance de divergir. */}
+                {PIX.ativo && CREDITO.ativo && !usarCheckout && (
                   <div
                     role="tablist"
                     aria-label="Forma de pagamento"
@@ -1015,46 +1019,28 @@ export default function InscricaoForm() {
                 {usarCheckout && (
                   <div className="rounded-2xl border border-brown-200 overflow-hidden mb-6">
                     <div className="px-5 py-4 bg-brown-50/70 border-b border-brown-200">
-                      <h3 className="font-bold text-[#682c0b]">
-                        {metodo === 'pix' ? 'Pague com PIX' : 'Pague no crédito'}
-                      </h3>
+                      <h3 className="font-bold text-[#682c0b]">Pagamento seguro</h3>
                       <p className="text-sm text-brown-700 mt-0.5">
-                        Você vai para a página segura da InfinitePay com o valor já preenchido.
+                        Você vai para a página da InfinitePay e escolhe lá entre PIX e cartão.
                         Assim que o pagamento cair, sua vaga é confirmada automaticamente — sem
                         precisar mandar comprovante.
                       </p>
                     </div>
 
                     <div className="p-5">
-                      {metodo === 'credito' && taxaCredito > 0 && (
-                        <dl className="text-sm mb-4 space-y-1.5 pb-4 border-b border-brown-100">
-                          <div className="flex justify-between">
-                            <dt className="text-brown-700">Inscrição</dt>
-                            <dd className="text-[#682c0b] tabular-nums">
-                              {formatarReais(orcamento.total)}
-                            </dd>
-                          </div>
-                          <div className="flex justify-between">
-                            <dt className="text-brown-700">
-                              Taxa do cartão ({CREDITO.taxaPercentual.toLocaleString('pt-BR')}%)
-                            </dt>
-                            <dd className="text-[#682c0b] tabular-nums">
-                              + {formatarReais(taxaCredito)}
-                            </dd>
-                          </div>
-                        </dl>
-                      )}
-
-                      <p className="flex items-baseline justify-between mb-1">
-                        <span className="font-bold text-[#682c0b]">Total</span>
+                      <p className="flex items-baseline justify-between">
+                        <span className="font-bold text-[#682c0b]">Total no PIX</span>
                         <span className="text-2xl font-display font-bold text-[#682c0b] tabular-nums">
-                          {formatarReais(totalDaForma)}
+                          {formatarReais(orcamento.total)}
                         </span>
                       </p>
 
-                      {metodo === 'credito' && taxaCredito > 0 && (
-                        <p className="text-xs text-brown-600 mt-2">
-                          No PIX sai por {formatarReais(orcamento.total)}, sem a taxa.
+                      {taxaCredito > 0 && (
+                        <p className="flex items-baseline justify-between mt-2 pt-2 border-t border-brown-100 text-sm text-brown-700">
+                          <span>No cartão, com a taxa da operadora</span>
+                          <span className="tabular-nums">
+                            {formatarReais(totalCredito)}
+                          </span>
                         </p>
                       )}
                     </div>
@@ -1176,7 +1162,7 @@ export default function InscricaoForm() {
                       )}
 
                       <a
-                        href={linkDoCredito(totalCredito)}
+                        href={linkDoCredito(orcamento.total)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="pressable w-full flex items-center justify-center gap-2 bg-[#682c0b] text-orange-50 px-4 py-3.5 rounded-xl font-bold hover:bg-terracotta"

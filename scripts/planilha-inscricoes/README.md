@@ -158,6 +158,12 @@ reconfere na origem e só então a linha vira `Pago`.
 > poderia mandar um "pago" falso. O site nunca confia no aviso: ele pergunta de
 > volta pelo `payment_check` e exige que o valor pago cubra o cobrado.
 
+> **Sobre a taxa do cartão:** a cobrança é sempre criada com o **preço de
+> tabela**. Quem acrescenta a taxa é a InfinitePay, na página dela — uma
+> cobrança de R$ 100 aparece como "R$ 100 + R$ 4,39 = R$ 104,39" no crédito, e
+> como R$ 100 no PIX. Nos dois casos a escola recebe os R$ 100. Mandar o valor
+> já acrescido faria a taxa ser cobrada duas vezes.
+
 O caminho manual continua disponível no formulário, em
 "Prefiro pagar por fora e enviar o comprovante" — para quem pagar por outro meio
 ou se a cobrança automática falhar.

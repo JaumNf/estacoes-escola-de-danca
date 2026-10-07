@@ -286,15 +286,16 @@ export const CREDITO = {
   operadora: 'InfinitePay',
 
   /**
-   * Taxa do crédito à vista, repassada a quem paga.
+   * Taxa do crédito à vista (confirmada em 07/10/2026 numa cobrança real: a
+   * InfinitePay somou R$ 4,39 a uma cobrança de R$ 100).
    *
-   * ⚠️ CONFIRMAR: copie o número exato do app da operadora. Taxa de link de
-   * pagamento costuma ser diferente da taxa da maquininha.
+   * ⚠️  Este número serve só para ESTIMAR e avisar a pessoa. Quem acrescenta a
+   *     taxa é a InfinitePay, na página dela — veja `totalNoCredito`.
    *
-   * O parcelamento não entra aqui: quem parcela escolhe isso na página da
-   * operadora e paga os juros dela, enquanto a escola recebe o mesmo.
+   * O parcelamento não entra aqui: quem parcela escolhe na página da operadora
+   * e paga os juros dela, enquanto a escola recebe o mesmo.
    */
-  taxaPercentual: 4.98,
+  taxaPercentual: 4.2,
   /** Taxa fixa por transação, se a operadora cobrar uma. Em reais. */
   taxaFixa: 0,
 
@@ -303,16 +304,20 @@ export const CREDITO = {
 } as const;
 
 /**
- * Quanto a pessoa paga no crédito para a escola receber o valor cheio.
+ * ESTIMATIVA de quanto a pessoa verá no crédito.
  *
- * Não é somar a taxa: a operadora cobra o percentual sobre o valor cobrado,
- * não sobre o valor líquido. Em R$ 85 com 4,98%, somar daria R$ 89,23 — e a
- * operadora tiraria 4,98% de 89,23, deixando R$ 84,79. Faltariam 21 centavos.
- * O certo é dividir: 85 ÷ (1 − 0,0498) = R$ 89,46, de onde saem R$ 4,46 de
- * taxa e sobram os R$ 85.
+ * ⚠️  Isto NÃO é o que o site cobra. A InfinitePay acrescenta a taxa sozinha
+ *     na página de pagamento: uma cobrança criada com R$ 100 aparece lá como
+ *     "Valor R$ 100 + Taxas R$ 4,39 = R$ 104,39" no crédito, e como R$ 100 no
+ *     PIX. Quem recebe fica com os R$ 100 nos dois casos.
  *
- * Arredonda o centavo para cima, de propósito: para baixo, a escola receberia
- * menos do que a tabela diz.
+ *     Por isso o site sempre manda o preço de tabela para o checkout. Mandar o
+ *     valor já acrescido faria a taxa ser cobrada duas vezes.
+ *
+ * A fórmula é a mesma que a InfinitePay usa — dividir, não somar, porque o
+ * percentual incide sobre o valor cobrado e não sobre o líquido: R$ 100 a 4,2%
+ * dá 100 ÷ 0,958 = R$ 104,39, e não R$ 104,20. Serve para avisar a pessoa
+ * antes de ela sair do site.
  */
 export function totalNoCredito(total: number): number {
   const { taxaPercentual, taxaFixa } = CREDITO;
@@ -321,14 +326,9 @@ export function totalNoCredito(total: number): number {
   return Math.ceil(bruto * 100) / 100;
 }
 
-/** O que a taxa acrescenta, em reais. Zero quando não há taxa configurada. */
+/** Quanto a taxa acrescenta, em reais. Estimativa, pelo mesmo motivo acima. */
 export function taxaDoCredito(total: number): number {
   return Math.round((totalNoCredito(total) - total) * 100) / 100;
-}
-
-/** Quanto a pessoa paga, pela forma escolhida. O PIX não tem taxa. */
-export function totalAPagar(total: number, metodo: 'pix' | 'credito'): number {
-  return metodo === 'credito' ? totalNoCredito(total) : total;
 }
 
 /**
