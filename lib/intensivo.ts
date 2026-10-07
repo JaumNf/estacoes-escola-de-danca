@@ -376,6 +376,77 @@ export function calcularOrcamento(ids: readonly string[], formato: Formato): Orc
   };
 }
 
+/**
+ * A regra do baile, aplicada em cima de uma seleção nova.
+ *
+ * Completou as aulas todas, o baile entra sozinho — é brinde, e ninguém devia
+ * precisar descobrir isso marcando mais uma caixa. Se depois tirar uma aula, o
+ * baile que entrou sozinho sai junto: deixá-lo marcado viraria uma cobrança
+ * que a pessoa não pediu.
+ *
+ * O momento em que ela mexe no baile com a própria mão encerra o automático: a
+ * partir dali a escolha é dela, e a gente não desfaz nem refaz.
+ *
+ * Fica aqui, e não no componente, porque é regra de negócio: assim dá para
+ * testá-la sem navegador.
+ */
+export interface EstadoDoBaile {
+  /** O baile presente na seleção entrou por brinde, e não por escolha. */
+  baileAutomatico: boolean;
+  /** A pessoa já tirou o baile com a própria mão. Não se oferece de novo. */
+  baileRecusado: boolean;
+}
+
+export function aplicarRegraDoBaile(
+  proximas: readonly string[],
+  opcoes: Partial<EstadoDoBaile> & {
+    /** Esta mudança foi a pessoa marcando ou desmarcando o próprio baile? */
+    mexeuNoBaile?: boolean;
+    /** A venda antecipada ainda está aberta? Fora do prazo, não se oferece. */
+    vendaAberta?: boolean;
+  },
+): EstadoDoBaile & { selecao: string[] } {
+  const {
+    baileAutomatico = false,
+    baileRecusado = false,
+    mexeuNoBaile = false,
+    vendaAberta = true,
+  } = opcoes;
+
+  const selecao = [...proximas];
+  const baile = AULAS.find((aula) => aula.evento);
+  if (!baile) return { selecao, baileAutomatico: false, baileRecusado };
+
+  const temBaile = selecao.includes(baile.id);
+
+  // A pessoa mexeu no baile: a escolha passa a ser dela, e tirar é uma recusa
+  // que vale para o resto da inscrição — senão o baile voltaria sozinho na
+  // próxima vez que ela completasse as aulas.
+  if (mexeuNoBaile) {
+    return { selecao, baileAutomatico: false, baileRecusado: !temBaile };
+  }
+
+  const quantasAulas = selecao.filter((id) => {
+    const aula = aulaPorId(id);
+    return aula && ehVendavel(aula) && !aula.evento;
+  }).length;
+  const completou = quantasAulas >= TOTAL_DE_AULAS;
+
+  if (completou && !temBaile && vendaAberta && !baileRecusado) {
+    return { selecao: [...selecao, baile.id], baileAutomatico: true, baileRecusado };
+  }
+
+  if (!completou && temBaile && baileAutomatico) {
+    return {
+      selecao: selecao.filter((id) => id !== baile.id),
+      baileAutomatico: false,
+      baileRecusado,
+    };
+  }
+
+  return { selecao, baileAutomatico, baileRecusado };
+}
+
 /** Agrupa as aulas por dia, preservando a ordem do array. */
 export function aulasPorDia(): { dia: string; mes: string; diaSemana: string; aulas: Aula[] }[] {
   const dias: { dia: string; mes: string; diaSemana: string; aulas: Aula[] }[] = [];

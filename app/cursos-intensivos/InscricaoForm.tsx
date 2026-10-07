@@ -32,6 +32,8 @@ import {
   EDICAO,
   PIX,
   WHATSAPP_ESCOLA,
+  aplicarRegraDoBaile,
+  aulaPorId,
   aulasPorDia,
   calcularOrcamento,
   ehVendavel,
@@ -39,6 +41,7 @@ import {
   precoDe,
   vendaAntecipadaDoBaileAberta,
   type Aula,
+  type EstadoDoBaile,
   type Formato,
 } from '@/lib/intensivo';
 import { gerarPixCopiaECola } from '@/lib/pix';
@@ -183,6 +186,11 @@ export default function InscricaoForm() {
    * montagem: assim o HTML do servidor e o da primeira renderização batem.
    */
   const [antecipadaAberta, setAntecipadaAberta] = useState(true);
+  /** Se o baile entrou de brinde, e se a pessoa já o recusou uma vez. */
+  const [estadoDoBaile, setEstadoDoBaile] = useState<EstadoDoBaile>({
+    baileAutomatico: false,
+    baileRecusado: false,
+  });
   useEffect(() => {
     setAntecipadaAberta(vendaAntecipadaDoBaileAberta());
   }, []);
@@ -285,20 +293,36 @@ export default function InscricaoForm() {
     setEtapa((n) => Math.min(3, n + 1));
   }
 
+  /** A regra mora em lib/intensivo.ts; aqui só se liga ao estado. */
+  function aplicarSelecao(proximas: string[], mexeuNoBaile = false) {
+    const resultado = aplicarRegraDoBaile(proximas, {
+      ...estadoDoBaile,
+      mexeuNoBaile,
+      vendaAberta: antecipadaAberta,
+    });
+    setSelecionadas(resultado.selecao);
+    setEstadoDoBaile({
+      baileAutomatico: resultado.baileAutomatico,
+      baileRecusado: resultado.baileRecusado,
+    });
+  }
+
   function alternarAula(id: string) {
-    setSelecionadas((atual) =>
-      atual.includes(id) ? atual.filter((x) => x !== id) : [...atual, id],
-    );
+    const aula = aulaPorId(id);
+    const proximas = selecionadas.includes(id)
+      ? selecionadas.filter((x) => x !== id)
+      : [...selecionadas, id];
+    aplicarSelecao(proximas, Boolean(aula?.evento));
   }
 
   function alternarDia(aulasDoDia: Aula[]) {
     const ids = aulasDoDia.filter(ehVendavel).map((a) => a.id);
     const todasMarcadas = ids.every((id) => selecionadas.includes(id));
-    setSelecionadas((atual) =>
-      todasMarcadas
-        ? atual.filter((id) => !ids.includes(id))
-        : [...new Set([...atual, ...ids])],
-    );
+    const proximas = todasMarcadas
+      ? selecionadas.filter((id) => !ids.includes(id))
+      : [...new Set([...selecionadas, ...ids])];
+    // "Marcar tudo" num dia não é a pessoa mexendo no baile de propósito.
+    aplicarSelecao(proximas);
   }
 
   async function escolherArquivo(arquivo: File | null) {
