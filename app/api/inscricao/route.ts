@@ -70,7 +70,11 @@ function erro(mensagem: string, status: number) {
  *
  * REMOVER depois que o envio estiver confirmado.
  */
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
+  // Sem 'force-dynamic' acima, o Next.js renderiza este GET no build e serve
+  // uma resposta congelada — que foi exatamente o que confundiu o diagnóstico.
   const url = process.env.INSCRICOES_WEBHOOK_URL ?? '';
   const token = process.env.INSCRICOES_TOKEN ?? '';
 
