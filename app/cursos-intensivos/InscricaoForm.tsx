@@ -41,8 +41,10 @@ import {
   ehVendavel,
   linkDoCredito,
   formatarReais,
+  formatarTelefone,
   precoDe,
   taxaDoCredito,
+  telefoneValido,
   totalNoCredito,
   vendaAntecipadaDoBaileAberta,
   type Aula,
@@ -62,20 +64,6 @@ const TAMANHO_MAXIMO = 3 * 1024 * 1024;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Utilidades
-
-/** (67) 99263-0948 enquanto a pessoa digita. */
-function mascararTelefone(valor: string): string {
-  const d = valor.replace(/\D/g, '').slice(0, 11);
-  if (d.length <= 2) return d;
-  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
-  if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
-  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
-}
-
-function telefoneValido(valor: string): boolean {
-  const d = valor.replace(/\D/g, '');
-  return d.length === 10 || d.length === 11;
-}
 
 /**
  * Foto de comprovante de celular chega com 4 MB e 4000px de largura. Reduzir
@@ -660,7 +648,7 @@ export default function InscricaoForm() {
                     id="whatsapp1"
                     rotulo="WhatsApp"
                     valor={whatsapp1}
-                    onChange={(v) => setWhatsapp1(mascararTelefone(v))}
+                    onChange={(v) => setWhatsapp1(formatarTelefone(v))}
                     onBlur={() => setTocado((t) => ({ ...t, whatsapp1: true }))}
                     erro={erros.whatsapp1}
                     placeholder="(67) 99263-0948"
@@ -693,7 +681,7 @@ export default function InscricaoForm() {
                             id="whatsapp2"
                             rotulo="WhatsApp da 2ª pessoa"
                             valor={whatsapp2}
-                            onChange={(v) => setWhatsapp2(mascararTelefone(v))}
+                            onChange={(v) => setWhatsapp2(formatarTelefone(v))}
                             onBlur={() => setTocado((t) => ({ ...t, whatsapp2: true }))}
                             erro={erros.whatsapp2}
                             placeholder="(67) 90000-0000"

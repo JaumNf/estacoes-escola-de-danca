@@ -544,6 +544,49 @@ export function aulasPorDia(): { dia: string; mes: string; diaSemana: string; au
   return dias;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Telefone
+//
+// Mora aqui, e não no formulário, porque o servidor precisa da mesma regra.
+// Quando as duas pontas tinham cópias diferentes, um número digitado com o
+// código do país chegou torto na planilha: "(55) 67992-6309".
+
+/**
+ * Só os dígitos do número nacional: sem código de país, sem zero de discagem.
+ *
+ * O cuidado aqui é que **DDD 55 existe** (Santa Maria, RS). Então o "55" da
+ * frente só é tratado como código do país quando o número não caberia num
+ * nacional — que tem 10 ou 11 dígitos. Com 12 ou 13, o 55 sobra, e aí é DDI.
+ */
+export function digitosDoTelefone(bruto: string): string {
+  let d = bruto.replace(/\D/g, '');
+  // "0" ou "021" na frente é prefixo de discagem, não faz parte do número.
+  d = d.replace(/^0+/, '');
+  if (d.startsWith('55') && (d.length === 12 || d.length === 13)) d = d.slice(2);
+  return d.slice(0, 11);
+}
+
+/** Celular (11 dígitos) ou fixo (10), já descontados DDI e zeros. */
+export function telefoneValido(bruto: string): boolean {
+  const d = digitosDoTelefone(bruto);
+  return d.length === 10 || d.length === 11;
+}
+
+/** (67) 99263-0948 — a máscara que o campo mostra enquanto se digita. */
+export function formatarTelefone(bruto: string): string {
+  const d = digitosDoTelefone(bruto);
+  if (d.length <= 2) return d;
+  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+  if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+}
+
+/** Com o DDI, como a planilha e o WhatsApp esperam. Null se não for válido. */
+export function whatsappComDdi(bruto: string): string | null {
+  const d = digitosDoTelefone(bruto);
+  return telefoneValido(d) ? `55${d}` : null;
+}
+
 export function formatarReais(valor: number): string {
   return valor.toLocaleString('pt-BR', {
     style: 'currency',

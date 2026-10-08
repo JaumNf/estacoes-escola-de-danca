@@ -7,6 +7,7 @@ import {
   calcularOrcamento,
   ehVendavel,
   formatarReais,
+  whatsappComDdi,
   type Formato,
 } from '@/lib/intensivo';
 import { criarLinkDePagamento, emCentavos, urlPublica } from '@/lib/pagamento';
@@ -42,15 +43,6 @@ function gerarProtocolo(): string {
   crypto.getRandomValues(aleatorio);
   for (const byte of aleatorio) sufixo += alfabeto[byte % alfabeto.length];
   return `EST-${sufixo}`;
-}
-
-/** Deixa só os dígitos e confere se parece um celular brasileiro. */
-function normalizarWhatsapp(bruto: string): string | null {
-  const digitos = bruto.replace(/\D/g, '');
-  const semDdi = digitos.startsWith('55') && digitos.length > 11 ? digitos.slice(2) : digitos;
-  // DDD de dois dígitos + 8 ou 9 dígitos de número.
-  if (semDdi.length < 10 || semDdi.length > 11) return null;
-  return `55${semDdi}`;
 }
 
 function limparNome(bruto: string): string {
@@ -94,7 +86,7 @@ export async function POST(request: NextRequest) {
   const nome1 = limparNome(String(dados.get('nome1') ?? ''));
   if (nome1.length < 3) return erro('Escreva o nome completo da primeira pessoa.', 400);
 
-  const whatsapp1 = normalizarWhatsapp(String(dados.get('whatsapp1') ?? ''));
+  const whatsapp1 = whatsappComDdi(String(dados.get('whatsapp1') ?? ''));
   if (!whatsapp1) return erro('Confira o WhatsApp: use DDD + número, como (67) 99263-0948.', 400);
 
   let nome2 = '';
@@ -103,7 +95,7 @@ export async function POST(request: NextRequest) {
     nome2 = limparNome(String(dados.get('nome2') ?? ''));
     if (nome2.length < 3) return erro('Na inscrição em dupla, escreva o nome das duas pessoas.', 400);
 
-    const normalizado = normalizarWhatsapp(String(dados.get('whatsapp2') ?? ''));
+    const normalizado = whatsappComDdi(String(dados.get('whatsapp2') ?? ''));
     if (!normalizado) return erro('Confira o WhatsApp da segunda pessoa.', 400);
     whatsapp2 = normalizado;
   }
