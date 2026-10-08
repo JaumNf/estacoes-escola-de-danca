@@ -19,6 +19,13 @@ import { AULAS, EDICAO, calcularOrcamento, formatarReais, loteAtivo } from '@/li
  * compartilha. O formulário continua sendo client, importado aqui dentro.
  */
 
+/**
+ * O lote muda com o calendário, e esta página é renderizada no servidor. Sem
+ * revalidar, o preço no texto e na prévia do link ficaria congelado no build.
+ * O formulário em si é client component: ele se corrige sozinho ao carregar.
+ */
+export const revalidate = 600;
+
 const TUDO = AULAS.filter((aula) => !aula.intervalo).map((aula) => aula.id);
 const PRECO_CHEIO = calcularOrcamento(TUDO, 'individual').total;
 

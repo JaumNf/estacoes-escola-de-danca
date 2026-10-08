@@ -74,6 +74,14 @@ export interface Lote {
   porAula: number;
   /** Preço de uma aula para o casal — os dois juntos — na inscrição em dupla. */
   porAulaDupla: number;
+  /**
+   * Instante em que este lote deixa de valer, em ISO. O lote seguinte assume
+   * exatamente aí. O último da lista não tem `ate`: vale até o fim.
+   *
+   * Vire à meia-noite: assim ninguém está com a página aberta na troca,
+   * vendo um preço e sendo cobrado outro.
+   */
+  ate?: string;
 }
 
 /**
@@ -111,12 +119,16 @@ export const LOTES: Lote[] = [
     nome: 'Lote promocional',
     porAula: 25,
     porAulaDupla: 40,
+    // Vira primeiro lote no dia 14.
+    ate: '2026-10-14T00:00:00-04:00',
   },
   {
     id: 'primeiro',
     nome: 'Primeiro lote',
     porAula: 30,
     porAulaDupla: 50,
+    // Vira segundo lote no dia 21.
+    ate: '2026-10-21T00:00:00-04:00',
   },
   {
     id: 'segundo',
@@ -127,13 +139,31 @@ export const LOTES: Lote[] = [
 ];
 
 /**
- * O lote que está valendo. Vire para o próximo quando o anterior esgotar — é
- * uma linha, e preço, QR Code do PIX e etiqueta do formulário acompanham.
+ * Força um lote, ignorando as datas. Serve para antecipar ou segurar uma
+ * virada à mão. Deixe `null` para o calendário mandar.
  */
-export const LOTE_ATIVO: LoteId = 'promocional';
+export const LOTE_FORCADO: LoteId | null = null;
 
-export function loteAtivo(): Lote {
-  return LOTES.find((lote) => lote.id === LOTE_ATIVO) ?? LOTES[0];
+/**
+ * O lote que está valendo agora: o primeiro cuja data-limite ainda não passou.
+ *
+ * Recebe o instante de propósito. Quem decide o preço cobrado é o servidor, no
+ * momento da inscrição — é a mesma precaução do prazo do baile, e a razão de
+ * esta função não ler o relógio por conta própria lá dentro.
+ */
+export function loteAtivo(agora: Date = new Date()): Lote {
+  if (LOTE_FORCADO) {
+    const forcado = LOTES.find((lote) => lote.id === LOTE_FORCADO);
+    if (forcado) return forcado;
+  }
+  const emVigor = LOTES.find((lote) => !lote.ate || agora.getTime() < new Date(lote.ate).getTime());
+  return emVigor ?? LOTES[LOTES.length - 1];
+}
+
+/** Quando o lote atual vira, para avisar no formulário. Null no último. */
+export function viradaDoLote(agora: Date = new Date()): Date | null {
+  const lote = loteAtivo(agora);
+  return lote.ate ? new Date(lote.ate) : null;
 }
 
 /**

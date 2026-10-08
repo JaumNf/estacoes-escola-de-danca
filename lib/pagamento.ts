@@ -25,13 +25,24 @@ export function emCentavos(reais: number): number {
 }
 
 /**
- * De onde a InfinitePay vai nos chamar de volta. Precisa ser um endereço
- * público: em localhost o webhook não chega (use um túnel para testar).
+ * De onde a InfinitePay vai nos chamar de volta.
+ *
+ * ⚠️  Tem que ser o DOMÍNIO DE PRODUÇÃO, não o endereço do deploy.
+ *     `VERCEL_URL` aponta para o deploy específico
+ *     (`...-1iox2k86v-....vercel.app`), e esse endereço fica atrás do login da
+ *     Vercel: a InfinitePay bate nele e recebe uma tela de autenticação, então
+ *     o pagamento nunca é confirmado. Já aconteceu em 08/10/2026.
+ *
+ *     `VERCEL_PROJECT_PRODUCTION_URL` é o domínio de verdade e vem de graça
+ *     nas variáveis de sistema da Vercel. O `VERCEL_URL` fica por último, só
+ *     para não quebrar em ambientes onde ele é o único disponível.
  */
 export function urlPublica(caminho: string): string {
+  const daVercel = (host?: string) => (host ? `https://${host}` : '');
   const base =
     process.env.NEXT_PUBLIC_BASE_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '') ||
+    daVercel(process.env.VERCEL_PROJECT_PRODUCTION_URL) ||
+    daVercel(process.env.VERCEL_URL) ||
     'http://localhost:3000';
   return new URL(caminho, base).toString();
 }

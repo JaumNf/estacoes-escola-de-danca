@@ -47,6 +47,7 @@ import {
   telefoneValido,
   totalNoCredito,
   vendaAntecipadaDoBaileAberta,
+  viradaDoLote,
   type Aula,
   type EstadoDoBaile,
   type Formato,
@@ -195,6 +196,27 @@ export default function InscricaoForm() {
 
   const orcamento = useMemo(() => calcularOrcamento(selecionadas, formato), [selecionadas, formato]);
   const dias = useMemo(() => aulasPorDia(), []);
+  /**
+   * Até quando o lote de hoje vale, em palavras. Calculado depois da montagem:
+   * o HTML vem do servidor e o relógio de lá pode estar num lote diferente do
+   * de quem está olhando.
+   */
+  const [prazoDoLote, setPrazoDoLote] = useState<string | null>(null);
+  useEffect(() => {
+    const vira = viradaDoLote();
+    if (!vira) return;
+    // A virada é à meia-noite, então o último dia do lote é o dia anterior.
+    const ultimoDia = new Date(vira.getTime() - 1);
+    setPrazoDoLote(
+      ultimoDia.toLocaleDateString('pt-BR', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        timeZone: 'America/Campo_Grande',
+      }),
+    );
+  }, []);
+
   /** A faixa de desconto mais baixa, para anunciar sem repetir o número à mão. */
   const primeiraFaixa = useMemo(
     () => [...DESCONTOS].sort((a, b) => a.minimoAulas - b.minimoAulas)[0],
@@ -719,13 +741,20 @@ export default function InscricaoForm() {
                     : ''}
                 </p>
 
-                <p className="inline-flex items-center gap-2 mb-6 px-3 py-1.5 rounded-full bg-[#fffbeb] border border-[#fcd34d] text-[#92400e] text-xs font-bold">
-                  <Tag size={13} />
-                  {orcamento.lote.nome} · {formatarReais(orcamento.lote.porAula)} por aula
-                  <span className="font-medium text-[#a16207]">
-                    ({formatarReais(orcamento.lote.porAulaDupla)} a dupla)
-                  </span>
-                </p>
+                <div className="mb-6">
+                  <p className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#fffbeb] border border-[#fcd34d] text-[#92400e] text-xs font-bold">
+                    <Tag size={13} aria-hidden />
+                    {orcamento.lote.nome} · {formatarReais(orcamento.lote.porAula)} por aula
+                    <span className="font-medium text-[#a16207]">
+                      ({formatarReais(orcamento.lote.porAulaDupla)} a dupla)
+                    </span>
+                  </p>
+                  {prazoDoLote && (
+                    <p className="text-xs text-brown-600 mt-2">
+                      Este preço vale até {prazoDoLote}. Depois, o lote vira e sobe.
+                    </p>
+                  )}
+                </div>
 
                 <div className="space-y-5">
                   {dias.map((dia) => {
