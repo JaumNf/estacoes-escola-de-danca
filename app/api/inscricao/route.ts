@@ -61,50 +61,6 @@ function erro(mensagem: string, status: number) {
   return NextResponse.json({ erro: mensagem }, { status });
 }
 
-/**
- * Diagnóstico temporário: diz se as variáveis chegaram ao servidor e se o
- * conteúdo delas é o esperado, sem revelar nenhum valor.
- *
- * A impressão digital é um SHA-256 truncado — serve para comparar com o que a
- * gente tem na mão, mas não permite recuperar a URL nem o token.
- *
- * REMOVER depois que o envio estiver confirmado.
- */
-export const dynamic = 'force-dynamic';
-
-export async function GET() {
-  // Sem 'force-dynamic' acima, o Next.js renderiza este GET no build e serve
-  // uma resposta congelada — que foi exatamente o que confundiu o diagnóstico.
-  const url = process.env.INSCRICOES_WEBHOOK_URL ?? '';
-  const token = process.env.INSCRICOES_TOKEN ?? '';
-
-  const digital = async (valor: string) => {
-    if (!valor) return null;
-    const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(valor));
-    return Array.from(new Uint8Array(bytes))
-      .slice(0, 6)
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join('');
-  };
-
-  return NextResponse.json({
-    url: {
-      definida: Boolean(url),
-      tamanho: url.length,
-      // Espaço ou quebra de linha no fim é a causa clássica.
-      temEspacoSobrando: url !== url.trim(),
-      terminaEm: url.slice(-12),
-      impressaoDigital: await digital(url.trim()),
-    },
-    token: {
-      definido: Boolean(token),
-      tamanho: token.length,
-      temEspacoSobrando: token !== token.trim(),
-      impressaoDigital: await digital(token.trim()),
-    },
-  });
-}
-
 export async function POST(request: NextRequest) {
   if (!EDICAO.ativa) {
     return erro('As inscrições desta edição não estão abertas.', 409);
