@@ -104,14 +104,15 @@ export async function POST(request: NextRequest) {
   const email1 = emailValido(emailBruto) ? emailBruto : '';
 
   let nome2 = '';
+  // A dupla se inscreve junto, então um contato basta — quem preenche
+  // responde pelos dois. O segundo WhatsApp deixou de ser pedido no
+  // formulário; se vier (de uma página antiga, por exemplo), é aproveitado.
   let whatsapp2 = '';
   if (formato === 'dupla') {
     nome2 = limparNome(String(dados.get('nome2') ?? ''));
     if (nome2.length < 3) return erro('Na inscrição em dupla, escreva o nome das duas pessoas.', 400);
 
-    const normalizado = whatsappComDdi(String(dados.get('whatsapp2') ?? ''));
-    if (!normalizado) return erro('Confira o WhatsApp da segunda pessoa.', 400);
-    whatsapp2 = normalizado;
+    whatsapp2 = whatsappComDdi(String(dados.get('whatsapp2') ?? '')) ?? '';
   }
 
   // ── aulas ─────────────────────────────────────────────────────────────────

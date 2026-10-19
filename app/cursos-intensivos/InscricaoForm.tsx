@@ -166,7 +166,6 @@ export default function InscricaoForm() {
   // pessoa redigita nome e telefone lá. Testado em 19/10/2026.
   const [email1, setEmail1] = useState('');
   const [nome2, setNome2] = useState('');
-  const [whatsapp2, setWhatsapp2] = useState('');
   const [tocado, setTocado] = useState<Record<string, boolean>>({});
   const [selecionadas, setSelecionadas] = useState<string[]>([]);
   const [metodo, setMetodo] = useState<'pix' | 'credito'>(PIX.ativo ? 'pix' : 'credito');
@@ -309,16 +308,15 @@ export default function InscricaoForm() {
     if (tocado.email1 && !emailValido(email1)) e.email1 = 'Confira o e-mail.';
     if (formato === 'dupla') {
       if (tocado.nome2 && nome2.trim().length < 3) e.nome2 = 'Escreva o nome completo.';
-      if (tocado.whatsapp2 && !telefoneValido(whatsapp2)) e.whatsapp2 = 'Use DDD + número.';
     }
     return e;
-  }, [tocado, nome1, whatsapp1, email1, nome2, whatsapp2, formato]);
+  }, [tocado, nome1, whatsapp1, email1, nome2, formato]);
 
   const etapa1Completa =
     nome1.trim().length >= 3 &&
     telefoneValido(whatsapp1) &&
     emailValido(email1) &&
-    (formato === 'individual' || (nome2.trim().length >= 3 && telefoneValido(whatsapp2)));
+    (formato === 'individual' || nome2.trim().length >= 3);
 
   const etapa2Completa = selecionadas.length > 0;
 
@@ -329,7 +327,7 @@ export default function InscricaoForm() {
   // ── ações ─────────────────────────────────────────────────────────────────
   function avancar() {
     if (etapa === 1) {
-      setTocado({ nome1: true, whatsapp1: true, email1: true, nome2: true, whatsapp2: true });
+      setTocado({ nome1: true, whatsapp1: true, email1: true, nome2: true });
       if (!etapa1Completa) return;
     }
     if (etapa === 2 && !etapa2Completa) return;
@@ -410,7 +408,7 @@ export default function InscricaoForm() {
       `WhatsApp: ${whatsapp1 || '(preencher)'}`,
     ];
     if (formato === 'dupla') {
-      linhas.push(`Nome 2: ${nome2 || '(preencher)'}`, `WhatsApp 2: ${whatsapp2 || '(preencher)'}`);
+      linhas.push(`Nome 2: ${nome2 || '(preencher)'}`);
     }
     const nomes = selecionadas
       .map((id) => AULAS.find((a) => a.id === id))
@@ -420,7 +418,7 @@ export default function InscricaoForm() {
     linhas.push('', `Total: ${formatarReais(orcamento.total)}`);
     if (protocolo) linhas.push(`Protocolo: ${protocolo}`);
     return `https://wa.me/${WHATSAPP_ESCOLA}?text=${encodeURIComponent(linhas.join('\n'))}`;
-  }, [formato, nome1, whatsapp1, nome2, whatsapp2, selecionadas, orcamento.total, protocolo]);
+  }, [formato, nome1, whatsapp1, nome2, selecionadas, orcamento.total, protocolo]);
 
   async function enviar() {
     setErroEnvio('');
@@ -433,7 +431,6 @@ export default function InscricaoForm() {
     corpo.set('whatsapp1', whatsapp1);
     corpo.set('email1', email1);
     corpo.set('nome2', nome2);
-    corpo.set('whatsapp2', whatsapp2);
     corpo.set('aulas', JSON.stringify(selecionadas));
     corpo.set('metodo', metodo);
     corpo.set('consentimento', String(consentimento));
@@ -520,7 +517,6 @@ export default function InscricaoForm() {
                 setComprovante(null);
                 setConsentimento(false);
                 setNome2('');
-                setWhatsapp2('');
                 setEtapa(1);
               }}
               className="pressable inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-bold text-brown-800 border-2 border-brown-200 hover:bg-brown-50"
@@ -719,17 +715,9 @@ export default function InscricaoForm() {
                             erro={erros.nome2}
                             placeholder="Quem vem com você"
                           />
-                          <Campo
-                            id="whatsapp2"
-                            rotulo="WhatsApp da 2ª pessoa"
-                            valor={whatsapp2}
-                            onChange={(v) => setWhatsapp2(formatarTelefone(v))}
-                            onBlur={() => setTocado((t) => ({ ...t, whatsapp2: true }))}
-                            erro={erros.whatsapp2}
-                            placeholder="(67) 90000-0000"
-                            tipo="tel"
-                            inputMode="tel"
-                          />
+                          {/* Um contato basta: a dupla se inscreve junto e
+                              quem preenche fala pelos dois. Pedir o segundo
+                              WhatsApp só acrescentava um campo para travar. */}
                         </div>
                       </motion.div>
                     )}
