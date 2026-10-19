@@ -124,8 +124,21 @@ export interface SituacaoDoPagamento {
  */
 export async function consultarPagamento(opcoes: {
   handle: string;
+  /** O UUID da transação, como a InfinitePay devolve. */
   transactionNsu: string;
-  externalOrderNsu: string;
+  /** Nosso protocolo — o mesmo `order_nsu` que mandamos ao criar a cobrança. */
+  orderNsu: string;
+  /**
+   * O código da fatura na InfinitePay.
+   *
+   * ⚠️  É um valor DIFERENTE do `transaction_nsu`. Até 18/10/2026 este campo
+   *     ia preenchido com o transaction_nsu, e o nome do pedido ia como
+   *     `external_order_nsu` — que não existe nesta API. Com os dois campos
+   *     errados, `payment_check` respondia `success: false` para TODO
+   *     pagamento, inclusive os que entraram na conta. Era por isso que
+   *     nenhuma inscrição virava "Pago".
+   */
+  slug: string;
   /**
    * Em centavos, o valor que esperamos ter sido pago. Omitir equivale a
    * perguntar só "foi pago?", sem conferir quanto — é o que a página de
@@ -140,9 +153,9 @@ export async function consultarPagamento(opcoes: {
     signal: AbortSignal.timeout(15_000),
     body: JSON.stringify({
       handle: opcoes.handle,
+      order_nsu: opcoes.orderNsu,
       transaction_nsu: opcoes.transactionNsu,
-      external_order_nsu: opcoes.externalOrderNsu,
-      slug: opcoes.transactionNsu,
+      slug: opcoes.slug,
     }),
   });
 

@@ -48,8 +48,12 @@ export async function POST(request: NextRequest) {
   }
 
   const protocolo = String(aviso.order_nsu ?? '').trim();
-  const transacao = String(aviso.transaction_nsu ?? aviso.invoice_slug ?? '').trim();
-  if (!protocolo || !transacao) {
+  // Transação e fatura são identificadores distintos, e `payment_check` quer
+  // cada um no seu campo. Confundi-los fazia a conferência negar pagamentos
+  // que estavam na conta.
+  const transacao = String(aviso.transaction_nsu ?? '').trim();
+  const slug = String(aviso.invoice_slug ?? '').trim();
+  if (!protocolo || (!transacao && !slug)) {
     return NextResponse.json({ erro: 'aviso sem protocolo ou transação' }, { status: 400 });
   }
 
@@ -62,7 +66,8 @@ export async function POST(request: NextRequest) {
     situacao = await consultarPagamento({
       handle: CHECKOUT.handle,
       transactionNsu: transacao,
-      externalOrderNsu: protocolo,
+      orderNsu: protocolo,
+      slug,
       valorEsperado,
     });
   } catch (falha) {
@@ -89,7 +94,9 @@ export async function POST(request: NextRequest) {
         token,
         acao: 'confirmarPagamento',
         protocolo,
-        transacao,
+        // Na planilha vale o que identifica o pagamento no extrato; se a
+        // InfinitePay mandar só a fatura, é ela que vai registrada.
+        transacao: transacao || slug,
         valorPago: situacao.valorPago / 100,
         parcelas: situacao.parcelas,
         formaConfirmada: nomeDaForma(situacao.formaDeCaptura),

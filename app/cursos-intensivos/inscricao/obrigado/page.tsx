@@ -42,17 +42,25 @@ export default async function ObrigadoPage({
 }) {
   const params = await searchParams;
   const protocolo = params.protocolo ?? params.order_nsu;
-  const transacao = params.transaction_nsu ?? params.slug;
 
-  // Sem transação não há o que conferir: a pessoa chegou aqui por outro
+  // A InfinitePay acrescenta `transaction_nsu` E `slug` ao redirect, e são
+  // valores diferentes: o primeiro identifica a transação, o segundo a fatura.
+  // `payment_check` quer os dois, cada um no seu campo — tratá-los como
+  // sinônimos é o que fazia toda consulta voltar "não pago".
+  const transacao = params.transaction_nsu ?? '';
+  const slug = params.slug ?? '';
+  const temIdentificador = Boolean(transacao || slug);
+
+  // Sem identificador não há o que conferir: a pessoa chegou aqui por outro
   // caminho, ou abandonou o checkout antes de gerar a cobrança.
   let pago = false;
-  if (transacao && CHECKOUT.ativo && CHECKOUT.handle) {
+  if (temIdentificador && CHECKOUT.ativo && CHECKOUT.handle) {
     try {
       const situacao = await consultarPagamento({
         handle: CHECKOUT.handle,
         transactionNsu: transacao,
-        externalOrderNsu: protocolo ?? '',
+        orderNsu: protocolo ?? '',
+        slug,
       });
       pago = situacao.pago;
     } catch (falha) {
@@ -104,7 +112,7 @@ export default async function ObrigadoPage({
           )}
 
           {/* Enquanto não há confirmação, a página se atualiza sozinha. */}
-          {!pago && transacao && (
+          {!pago && temIdentificador && (
             <div className="mb-8">
               <AguardandoPagamento protocolo={protocolo} />
             </div>
