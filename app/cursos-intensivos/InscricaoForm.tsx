@@ -671,6 +671,33 @@ export default function InscricaoForm() {
                     placeholder="Como você quer ser chamado(a)"
                     autoComplete="name"
                   />
+
+                  {/* Os dois nomes ficam juntos: é a mesma pergunta — quem vai
+                      dançar — e o contato vem depois, uma vez só. */}
+                  <AnimatePresence initial={false}>
+                    {formato === 'dupla' && (
+                      <motion.div
+                        key="segunda-pessoa"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.24 }}
+                        className="overflow-hidden"
+                      >
+                        <Campo
+                          id="nome2"
+                          rotulo="Nome da 2ª pessoa"
+                          valor={nome2}
+                          onChange={setNome2}
+                          onBlur={() => setTocado((t) => ({ ...t, nome2: true }))}
+                          erro={erros.nome2}
+                          placeholder="Quem vem com você"
+                          autoComplete="name"
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
                   <Campo
                     id="whatsapp1"
                     rotulo="WhatsApp"
@@ -694,34 +721,8 @@ export default function InscricaoForm() {
                     tipo="email"
                     autoComplete="email"
                   />
-
-                  <AnimatePresence initial={false}>
-                    {formato === 'dupla' && (
-                      <motion.div
-                        key="segunda-pessoa"
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.24 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="space-y-5 pt-5 border-t border-dashed border-brown-200">
-                          <Campo
-                            id="nome2"
-                            rotulo="Nome da 2ª pessoa"
-                            valor={nome2}
-                            onChange={setNome2}
-                            onBlur={() => setTocado((t) => ({ ...t, nome2: true }))}
-                            erro={erros.nome2}
-                            placeholder="Quem vem com você"
-                          />
-                          {/* Um contato basta: a dupla se inscreve junto e
-                              quem preenche fala pelos dois. Pedir o segundo
-                              WhatsApp só acrescentava um campo para travar. */}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  {/* Um contato basta: a dupla se inscreve junto e quem
+                      preenche fala pelos dois. */}
                 </div>
               </motion.div>
             )}
