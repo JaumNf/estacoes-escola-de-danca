@@ -375,6 +375,31 @@ export const CHECKOUT = {
   handle: 'estacoesdanca',
 } as const;
 
+/**
+ * Endereço mandado à InfinitePay junto da cobrança.
+ *
+ * Não há nada para entregar — isto existe só para apagar a etapa "Entrega" do
+ * checkout dela, que de outro modo pede o CEP de quem está comprando uma aula
+ * de dança. Com o campo preenchido, o passo já nasce pronto.
+ *
+ * Testado em 19/10/2026, isolando um campo de cada vez:
+ *   sem nada            → preenche Contato, preenche Entrega, paga
+ *   só com `customer`   → preenche Entrega, paga
+ *   com os dois         → cai direto no Pagamento
+ *
+ * O passo "Contato" (e-mail e confirmação do número) só desaparece se o
+ * `customer` levar e-mail, que hoje não pedimos no formulário.
+ *
+ * É o endereço do local do curso, e é o que aparece no recibo da InfinitePay.
+ */
+export const ENDERECO_COBRANCA = {
+  cep: '79002-160',
+  street: 'R. Barão de Melgaço',
+  neighborhood: 'Centro',
+  number: '177',
+  complement: 'Teatro do Mundo',
+} as const;
+
 /** Monta o link do crédito com o valor desta inscrição, quando der. */
 export function linkDoCredito(total: number): string {
   return CREDITO.url
@@ -609,6 +634,18 @@ export function formatarTelefone(bruto: string): string {
   if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
   if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+}
+
+/**
+ * Validação de e-mail deliberadamente frouxa: algo@algo.algo.
+ *
+ * Quem erra o próprio e-mail não é pego por regra nenhuma, e regra apertada
+ * rejeita endereço legítimo — o que aqui custaria uma inscrição. O e-mail
+ * serve para a InfinitePay aceitar o contato pronto, não para nos comunicarmos.
+ */
+export function emailValido(bruto: string): boolean {
+  const e = bruto.trim();
+  return e.length <= 120 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);
 }
 
 /** Com o DDI, como a planilha e o WhatsApp esperam. Null se não for válido. */

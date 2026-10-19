@@ -3,6 +3,8 @@ import {
   AULAS,
   CHECKOUT,
   EDICAO,
+  ENDERECO_COBRANCA,
+  emailValido,
   aulaPorId,
   calcularOrcamento,
   ehVendavel,
@@ -88,6 +90,12 @@ export async function POST(request: NextRequest) {
 
   const whatsapp1 = whatsappComDdi(String(dados.get('whatsapp1') ?? ''));
   if (!whatsapp1) return erro('Confira o WhatsApp: use DDD + número, como (67) 99263-0948.', 400);
+
+  // O e-mail existe para a InfinitePay aceitar os dados de contato prontos e
+  // pular a etapa dela. Sem ele a inscrição ainda vale, mas a pessoa redigita
+  // tudo no checkout — por isso o formulário o exige.
+  const email1 = String(dados.get('email1') ?? '').trim().slice(0, 120);
+  if (!emailValido(email1)) return erro('Confira o e-mail.', 400);
 
   let nome2 = '';
   let whatsapp2 = '';
@@ -187,6 +195,9 @@ export async function POST(request: NextRequest) {
     formato: formato === 'dupla' ? 'Dupla' : 'Individual',
     nome1,
     whatsapp1,
+    // A planilha ainda não tem coluna de e-mail; o campo vai junto para que
+    // criar a coluna no Apps Script seja a única coisa a fazer depois.
+    email1,
     nome2,
     whatsapp2,
     aulas: descricaoAulas,
@@ -273,7 +284,10 @@ export async function POST(request: NextRequest) {
           ],
           redirectUrl: urlPublica(`/cursos-intensivos/inscricao/obrigado?protocolo=${protocolo}`),
           webhookUrl: urlPublica('/api/pagamento/webhook'),
-          cliente: { name: nome1, phone_number: whatsapp1 },
+          // Os três juntos são o que faz a InfinitePay dar a etapa "Contato"
+          // por preenchida. Faltando um, ela reabre o passo inteiro.
+          cliente: { name: nome1, email: email1, phone_number: whatsapp1 },
+          endereco: ENDERECO_COBRANCA,
         });
         checkoutUrl = link.url;
       } catch (falha) {

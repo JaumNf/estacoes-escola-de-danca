@@ -70,6 +70,17 @@ export async function criarLinkDePagamento(opcoes: {
   redirectUrl: string;
   webhookUrl: string;
   cliente?: { name?: string; email?: string; phone_number?: string };
+  /**
+   * Endereço do comprador. Nada é entregue; mandá-lo preenchido é o que faz o
+   * checkout da InfinitePay pular a etapa "Entrega", que senão pede o CEP.
+   */
+  endereco?: {
+    cep: string;
+    street: string;
+    neighborhood: string;
+    number: string;
+    complement?: string;
+  };
 }): Promise<LinkCriado> {
   const resposta = await fetch(`${BASE}/links`, {
     method: 'POST',
@@ -82,6 +93,7 @@ export async function criarLinkDePagamento(opcoes: {
       redirect_url: opcoes.redirectUrl,
       webhook_url: opcoes.webhookUrl,
       ...(opcoes.cliente ? { customer: opcoes.cliente } : {}),
+      ...(opcoes.endereco ? { address: opcoes.endereco } : {}),
     }),
   });
 

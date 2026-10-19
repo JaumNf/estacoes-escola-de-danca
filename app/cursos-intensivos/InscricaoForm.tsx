@@ -39,6 +39,7 @@ import {
   calcularOrcamento,
   creditoLevaOValor,
   ehVendavel,
+  emailValido,
   linkDoCredito,
   formatarReais,
   formatarTelefone,
@@ -160,6 +161,10 @@ export default function InscricaoForm() {
   const [formato, setFormato] = useState<Formato>('individual');
   const [nome1, setNome1] = useState('');
   const [whatsapp1, setWhatsapp1] = useState('');
+  // O e-mail não é para nós: é o que a InfinitePay exige para aceitar os
+  // dados de contato prontos. Sem ele, o checkout reabre a etapa Contato e a
+  // pessoa redigita nome e telefone lá. Testado em 19/10/2026.
+  const [email1, setEmail1] = useState('');
   const [nome2, setNome2] = useState('');
   const [whatsapp2, setWhatsapp2] = useState('');
   const [tocado, setTocado] = useState<Record<string, boolean>>({});
@@ -301,16 +306,18 @@ export default function InscricaoForm() {
     const e: Record<string, string> = {};
     if (tocado.nome1 && nome1.trim().length < 3) e.nome1 = 'Escreva o nome completo.';
     if (tocado.whatsapp1 && !telefoneValido(whatsapp1)) e.whatsapp1 = 'Use DDD + número.';
+    if (tocado.email1 && !emailValido(email1)) e.email1 = 'Confira o e-mail.';
     if (formato === 'dupla') {
       if (tocado.nome2 && nome2.trim().length < 3) e.nome2 = 'Escreva o nome completo.';
       if (tocado.whatsapp2 && !telefoneValido(whatsapp2)) e.whatsapp2 = 'Use DDD + número.';
     }
     return e;
-  }, [tocado, nome1, whatsapp1, nome2, whatsapp2, formato]);
+  }, [tocado, nome1, whatsapp1, email1, nome2, whatsapp2, formato]);
 
   const etapa1Completa =
     nome1.trim().length >= 3 &&
     telefoneValido(whatsapp1) &&
+    emailValido(email1) &&
     (formato === 'individual' || (nome2.trim().length >= 3 && telefoneValido(whatsapp2)));
 
   const etapa2Completa = selecionadas.length > 0;
@@ -322,7 +329,7 @@ export default function InscricaoForm() {
   // ── ações ─────────────────────────────────────────────────────────────────
   function avancar() {
     if (etapa === 1) {
-      setTocado({ nome1: true, whatsapp1: true, nome2: true, whatsapp2: true });
+      setTocado({ nome1: true, whatsapp1: true, email1: true, nome2: true, whatsapp2: true });
       if (!etapa1Completa) return;
     }
     if (etapa === 2 && !etapa2Completa) return;
@@ -424,6 +431,7 @@ export default function InscricaoForm() {
     corpo.set('formato', formato);
     corpo.set('nome1', nome1);
     corpo.set('whatsapp1', whatsapp1);
+    corpo.set('email1', email1);
     corpo.set('nome2', nome2);
     corpo.set('whatsapp2', whatsapp2);
     corpo.set('aulas', JSON.stringify(selecionadas));
@@ -678,6 +686,17 @@ export default function InscricaoForm() {
                     tipo="tel"
                     inputMode="tel"
                     autoComplete="tel"
+                  />
+                  <Campo
+                    id="email1"
+                    rotulo="E-mail"
+                    valor={email1}
+                    onChange={setEmail1}
+                    onBlur={() => setTocado((t) => ({ ...t, email1: true }))}
+                    erro={erros.email1}
+                    placeholder="seunome@provedor.com"
+                    tipo="email"
+                    autoComplete="email"
                   />
 
                   <AnimatePresence initial={false}>
