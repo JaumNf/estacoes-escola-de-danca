@@ -91,11 +91,17 @@ export async function POST(request: NextRequest) {
   const whatsapp1 = whatsappComDdi(String(dados.get('whatsapp1') ?? ''));
   if (!whatsapp1) return erro('Confira o WhatsApp: use DDD + número, como (67) 99263-0948.', 400);
 
-  // O e-mail existe para a InfinitePay aceitar os dados de contato prontos e
-  // pular a etapa dela. Sem ele a inscrição ainda vale, mas a pessoa redigita
-  // tudo no checkout — por isso o formulário o exige.
-  const email1 = String(dados.get('email1') ?? '').trim().slice(0, 120);
-  if (!emailValido(email1)) return erro('Confira o e-mail.', 400);
+  // O e-mail existe só para a InfinitePay aceitar os dados de contato prontos
+  // e pular a etapa dela. Sem ele a inscrição vale do mesmo jeito — a pessoa
+  // apenas redigita o contato no checkout.
+  //
+  // Por isso ele NÃO é obrigatório aqui, embora o formulário o peça: recusar
+  // uma inscrição por causa de um ganho de conforto é troca ruim. Em
+  // 19/10/2026 isto chegou a derrubar um envio real — quem estava com a página
+  // aberta desde antes do deploy mandou o formulário antigo, sem o campo, e
+  // levou um 400 na cara do botão "Pagar".
+  const emailBruto = String(dados.get('email1') ?? '').trim().slice(0, 120);
+  const email1 = emailValido(emailBruto) ? emailBruto : '';
 
   let nome2 = '';
   let whatsapp2 = '';
@@ -285,8 +291,13 @@ export async function POST(request: NextRequest) {
           redirectUrl: urlPublica(`/cursos-intensivos/inscricao/obrigado?protocolo=${protocolo}`),
           webhookUrl: urlPublica('/api/pagamento/webhook'),
           // Os três juntos são o que faz a InfinitePay dar a etapa "Contato"
-          // por preenchida. Faltando um, ela reabre o passo inteiro.
-          cliente: { name: nome1, email: email1, phone_number: whatsapp1 },
+          // por preenchida. Faltando um, ela reabre o passo inteiro — que é o
+          // comportamento antigo, aceitável, e não um erro.
+          cliente: {
+            name: nome1,
+            phone_number: whatsapp1,
+            ...(email1 ? { email: email1 } : {}),
+          },
           endereco: ENDERECO_COBRANCA,
         });
         checkoutUrl = link.url;
