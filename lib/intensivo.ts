@@ -142,7 +142,7 @@ export const LOTES: Lote[] = [
  * Força um lote, ignorando as datas. Serve para antecipar ou segurar uma
  * virada à mão. Deixe `null` para o calendário mandar.
  */
-export const LOTE_FORCADO: LoteId | null = null;
+export const LOTE_FORCADO: LoteId | null = 'promocional';
 
 /**
  * O lote que está valendo agora: o primeiro cuja data-limite ainda não passou.
@@ -162,6 +162,10 @@ export function loteAtivo(agora: Date = new Date()): Lote {
 
 /** Quando o lote atual vira, para avisar no formulário. Null no último. */
 export function viradaDoLote(agora: Date = new Date()): Date | null {
+  // Com um lote forçado, o calendário não manda mais — e a data-limite dele
+  // pode até já ter passado. Prometer "vale até terça" nesse caso seria
+  // mentira; melhor não prometer prazo nenhum.
+  if (LOTE_FORCADO) return null;
   const lote = loteAtivo(agora);
   return lote.ate ? new Date(lote.ate) : null;
 }
