@@ -180,8 +180,6 @@ export default function InscricaoForm() {
    * montagem: assim o HTML do servidor e o da primeira renderização batem.
    */
   const [antecipadaAberta, setAntecipadaAberta] = useState(true);
-  /** A pessoa pediu para pagar por fora e mandar comprovante. */
-  const [modoManual, setModoManual] = useState(false);
   /** Se o baile entrou de brinde, e se a pessoa já o recusou uma vez. */
   const [estadoDoBaile, setEstadoDoBaile] = useState<EstadoDoBaile>({
     baileAutomatico: false,
@@ -231,12 +229,15 @@ export default function InscricaoForm() {
   const taxaCredito = useMemo(() => taxaDoCredito(orcamento.total), [orcamento.total]);
 
   /**
-   * Com o checkout automático ligado, o pagamento acontece na página da
-   * InfinitePay e a confirmação chega por webhook — não há comprovante para
-   * anexar. O caminho manual continua a um clique de distância, para quem
-   * pagar por fora ou se a cobrança automática falhar.
+   * Com o checkout ligado, o pagamento acontece na página da InfinitePay e a
+   * confirmação chega por webhook — não há comprovante para anexar.
+   *
+   * O caminho manual (QR Code do PIX + anexo) não é mais oferecido como opção:
+   * ele existe só como rede de segurança, e aparece sozinho se o checkout
+   * estiver desligado ou sem handle. Sem isso, desligar o checkout um dia
+   * deixaria o formulário sem nenhuma forma de pagamento.
    */
-  const usarCheckout = CHECKOUT.ativo && Boolean(CHECKOUT.handle) && !modoManual;
+  const usarCheckout = CHECKOUT.ativo && Boolean(CHECKOUT.handle);
 
   // O site sempre trabalha com o preço de tabela. Só no caminho manual, onde o
   // link do crédito é montado por nós, o valor mostrado já inclui a taxa.
@@ -1377,20 +1378,6 @@ export default function InscricaoForm() {
             )}
           </div>
 
-          {/* A alternativa manual, discreta: quem precisa dela procura. */}
-          {etapa === 3 && CHECKOUT.ativo && Boolean(CHECKOUT.handle) && (
-            <p className="text-center mt-4">
-              <button
-                type="button"
-                onClick={() => setModoManual((v) => !v)}
-                className="pressable text-sm text-brown-600 hover:text-[#682c0b] underline underline-offset-2 px-2 py-1 rounded"
-              >
-                {modoManual
-                  ? 'Voltar para o pagamento automático'
-                  : 'Prefiro pagar por fora e enviar o comprovante'}
-              </button>
-            </p>
-          )}
         </div>
       </div>
 

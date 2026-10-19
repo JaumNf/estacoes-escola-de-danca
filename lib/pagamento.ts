@@ -126,9 +126,14 @@ export async function consultarPagamento(opcoes: {
   handle: string;
   transactionNsu: string;
   externalOrderNsu: string;
-  /** Em centavos, o valor que esperamos ter sido pago. */
-  valorEsperado: number;
+  /**
+   * Em centavos, o valor que esperamos ter sido pago. Omitir equivale a
+   * perguntar só "foi pago?", sem conferir quanto — é o que a página de
+   * retorno precisa, já que quem valida o valor é o webhook.
+   */
+  valorEsperado?: number;
 }): Promise<SituacaoDoPagamento> {
+  const valorEsperado = opcoes.valorEsperado ?? 0;
   const resposta = await fetch(`${BASE}/payment_check`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -165,7 +170,7 @@ export async function consultarPagamento(opcoes: {
   return {
     // Pago de verdade: a API diz que sim E o valor bate com o que cobramos.
     // Sem a segunda metade, uma cobrança de R$ 1 "aprovada" valeria uma vaga.
-    pago: Boolean(dados.success) && Boolean(dados.paid) && valorPago >= opcoes.valorEsperado,
+    pago: Boolean(dados.success) && Boolean(dados.paid) && valorPago >= valorEsperado,
     valorPago,
     parcelas: Number(dados.installments ?? 1),
     formaDeCaptura: String(dados.capture_method ?? ''),
