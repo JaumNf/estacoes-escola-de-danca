@@ -43,7 +43,7 @@ import { WHATSAPP_ESCOLA } from '@/lib/intensivo';
  */
 
 /** Um passo do formulário, só para dar nome ao estado de envio. */
-type Situacao = 'preenchendo' | 'enviando' | 'erro' | 'semCheckout';
+type Situacao = 'preenchendo' | 'enviando' | 'erro';
 
 export default function IngressoBaileForm() {
   const [formato, setFormato] = useState<Formato>('individual');
@@ -55,7 +55,6 @@ export default function IngressoBaileForm() {
 
   const [situacao, setSituacao] = useState<Situacao>('preenchendo');
   const [erro, setErro] = useState('');
-  const [protocolo, setProtocolo] = useState('');
   const [tocado, setTocado] = useState({ nome1: false, nome2: false, whatsapp1: false });
 
   /**
@@ -107,17 +106,23 @@ export default function IngressoBaileForm() {
         return;
       }
 
-      setProtocolo(corpo.protocolo || '');
-
       if (corpo.checkoutUrl) {
         // O ingresso já está gravado como "aguardando". Agora o pagamento.
         window.location.href = corpo.checkoutUrl;
         return;
       }
 
-      // Gravou, mas a cobrança não pôde ser criada. Em vez de deixar a pessoa
-      // sem saída, ela sai daqui com o protocolo e o WhatsApp da escola.
-      setSituacao('semCheckout');
+      // Gravou, mas a cobrança não pôde ser criada. O caminho é um só: tentar
+      // de novo. O botão continua embaixo, e apertá-lo refaz o envio inteiro.
+      //
+      // Isso pode deixar uma linha "Aguardando pagamento" a mais na planilha,
+      // já que a primeira tentativa gravou. É troca consciente: uma linha
+      // órfã num caminho raro custa menos que uma venda perdida, e só uma das
+      // duas vira "Pago".
+      setErro(
+        'A página de pagamento não abriu. Seus dados já estão com a gente — aperte em Pagar de novo.',
+      );
+      setSituacao('erro');
     } catch {
       setErro('Sua conexão caiu no meio do envio. Confere a internet e tenta de novo.');
       setSituacao('erro');
@@ -129,7 +134,7 @@ export default function IngressoBaileForm() {
     return (
       <div className="bg-white rounded-[32px] p-8 text-[#682c0b] shadow-2xl shadow-black/20">
         <div className="w-14 h-14 rounded-full bg-brown-100 grid place-items-center mx-auto mb-5">
-          <Ticket className="text-brown-500" size={26} aria-hidden />
+          <Ticket className="text-brown-700" size={26} aria-hidden />
         </div>
         <h3 className="text-2xl font-display font-bold text-center mb-3">
           A venda antecipada fechou
@@ -153,43 +158,6 @@ export default function IngressoBaileForm() {
     );
   }
 
-  // ── Gravou, mas sem link de pagamento ─────────────────────────────────────
-  if (situacao === 'semCheckout') {
-    const mensagem = encodeURIComponent(
-      `Oi! Comprei o ingresso do ${BAILE.nome}${
-        protocolo ? `, protocolo ${protocolo}` : ''
-      }, e quero combinar o pagamento.`,
-    );
-    return (
-      <div className="bg-white rounded-[32px] p-8 text-[#682c0b] shadow-2xl shadow-black/20">
-        <div className="w-14 h-14 rounded-full bg-green-100 grid place-items-center mx-auto mb-5">
-          <Check className="text-green-700" size={26} aria-hidden />
-        </div>
-        <h3 className="text-2xl font-display font-bold text-center mb-3">Ingresso reservado</h3>
-        <p className="text-brown-700 text-center mb-5">
-          Seus dados já estão com a gente. Só o pagamento pelo site não abriu agora — chama no
-          WhatsApp que a gente combina o PIX em um minuto.
-        </p>
-        {protocolo && (
-          <div className="flex flex-col items-center gap-1 bg-brown-50 border border-brown-200 rounded-2xl px-6 py-4 mb-5">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-brown-600">
-              Protocolo
-            </span>
-            <span className="text-xl font-display font-bold tabular-nums">{protocolo}</span>
-          </div>
-        )}
-        <a
-          href={`https://wa.me/${WHATSAPP_ESCOLA}?text=${mensagem}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="pressable w-full inline-flex items-center justify-center gap-2 bg-[#25D366] text-white px-6 py-4 rounded-2xl font-bold hover:bg-[#1da851]"
-        >
-          <MessageCircle size={18} aria-hidden /> Combinar o pagamento
-        </a>
-      </div>
-    );
-  }
-
   // ── Formulário ────────────────────────────────────────────────────────────
   const enviando = situacao === 'enviando';
 
@@ -200,13 +168,13 @@ export default function IngressoBaileForm() {
       className="bg-white rounded-[32px] p-6 md:p-8 text-[#682c0b] shadow-2xl shadow-black/20"
     >
       <h3 className="text-2xl font-display font-bold mb-1">Seu ingresso</h3>
-      <p className="text-sm text-brown-600 mb-6">
+      <p className="text-sm text-brown-700 mb-6">
         {BAILE.periodo} · {BAILE.horario}
       </p>
 
       {/* Formato */}
       <fieldset className="mb-6">
-        <legend className="text-xs font-bold uppercase tracking-widest text-brown-600 mb-3">
+        <legend className="text-xs font-bold uppercase tracking-widest text-brown-700 mb-3">
           Para quantas pessoas
         </legend>
         <div className="grid grid-cols-2 gap-3">
@@ -218,9 +186,12 @@ export default function IngressoBaileForm() {
           ).map(({ id, rotulo, icone: Icone }) => {
             const ativo = formato === id;
             return (
+              // O input é `sr-only`, então o anel de foco do navegador não
+              // aparece em lugar nenhum. Sem o `has-[:focus-visible]` abaixo,
+              // quem navega por teclado atravessa este grupo às cegas.
               <label
                 key={id}
-                className={`pressable-lg cursor-pointer rounded-2xl border-2 px-4 py-4 text-center transition-[background-color,border-color] ${
+                className={`pressable-lg cursor-pointer rounded-2xl border-2 px-4 py-4 text-center transition-[background-color,border-color] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[#682c0b] ${
                   ativo
                     ? 'border-[#682c0b] bg-[#fffbeb]'
                     : 'border-brown-200 bg-white hover:bg-brown-50/60'
@@ -240,7 +211,7 @@ export default function IngressoBaileForm() {
                   className={`mx-auto mb-1.5 ${ativo ? 'text-[#682c0b]' : 'text-brown-400'}`}
                 />
                 <span className="block font-bold text-sm">{rotulo}</span>
-                <span className="block text-xs text-brown-600 tabular-nums mt-0.5">
+                <span className="block text-xs text-brown-700 tabular-nums mt-0.5">
                   {formatarReais(precoDoIngresso(id))}
                 </span>
               </label>
@@ -322,14 +293,14 @@ export default function IngressoBaileForm() {
           {tocado.whatsapp1 && !whatsappOk && (
             <p className="text-xs text-red-700 mt-1.5">Use DDD + número, como (67) 99263-0948.</p>
           )}
-          <p className="text-xs text-brown-500 mt-1.5">
+          <p className="text-xs text-brown-700 mt-1.5">
             É por aqui que a gente confirma seu ingresso. Um contato basta para os dois.
           </p>
         </div>
 
         <div>
           <label htmlFor="baile-email" className="block text-sm font-bold mb-1.5">
-            E-mail <span className="font-normal text-brown-500">(opcional)</span>
+            E-mail <span className="font-normal text-brown-700">(opcional)</span>
           </label>
           <input
             id="baile-email"
@@ -346,14 +317,16 @@ export default function IngressoBaileForm() {
               Confere o e-mail — ou deixe em branco, que também funciona.
             </p>
           )}
-          <p className="text-xs text-brown-500 mt-1.5">
+          <p className="text-xs text-brown-700 mt-1.5">
             Preenchendo, você adianta uma etapa na página de pagamento.
           </p>
         </div>
       </div>
 
-      {/* Consentimento */}
-      <label className="flex items-start gap-3 mb-6 cursor-pointer">
+      {/* Consentimento. Mesmo cuidado dos rádios: o input é `sr-only` e sem o
+          `has-[:focus-visible]` o foco do teclado some nesta caixa — que é
+          obrigatória para comprar. */}
+      <label className="flex items-start gap-3 mb-6 cursor-pointer rounded-lg p-1 -m-1 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[#682c0b]">
         <input
           type="checkbox"
           checked={consentimento}
@@ -398,30 +371,14 @@ export default function IngressoBaileForm() {
         </p>
       </div>
 
-      {/* Toda mensagem de erro sai com uma saída junto. Mandar a pessoa falar
-          no WhatsApp sem dar o link é o beco sem saída que já custou uma
-          inscrição real nesta escola, em 19/10/2026. */}
+      {/* A compra tem um caminho só: este formulário, indo para a InfinitePay.
+          Por isso o erro não oferece atalho por fora — ele nomeia o problema e
+          a saída é o próprio botão, logo abaixo. Toda mensagem daqui e da rota
+          tem de terminar em algo que a pessoa possa fazer nesta tela. */}
       {erro && (
-        <div
-          role="alert"
-          className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 mb-5"
-        >
-          <div className="flex items-start gap-2.5">
-            <AlertCircle size={17} className="text-red-700 shrink-0 mt-0.5" aria-hidden />
-            <p className="text-sm text-red-800">{erro}</p>
-          </div>
-          <a
-            href={`https://wa.me/${WHATSAPP_ESCOLA}?text=${encodeURIComponent(
-              `Oi! Tentei comprar o ingresso do ${BAILE.nome} pelo site e não consegui. Meu nome é ${
-                nome1.trim() || '...'
-              }.`,
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="pressable mt-3 w-full inline-flex items-center justify-center gap-2 bg-[#25D366] text-white px-5 py-3 rounded-xl font-bold text-sm hover:bg-[#1da851]"
-          >
-            <MessageCircle size={16} aria-hidden /> Garantir pelo WhatsApp
-          </a>
+        <div role="alert" className="flex items-start gap-2.5 rounded-xl border border-red-300 bg-red-50 px-4 py-3 mb-5">
+          <AlertCircle size={17} className="text-red-700 shrink-0 mt-0.5" aria-hidden />
+          <p className="text-sm text-red-900">{erro}</p>
         </div>
       )}
 
@@ -434,6 +391,12 @@ export default function IngressoBaileForm() {
           <>
             <Loader2 size={18} className="animate-spin" aria-hidden /> Levando para o pagamento…
           </>
+        ) : situacao === 'erro' ? (
+          // Depois de um erro o botão nomeia a saída, não repete a oferta:
+          // "Pagar R$ 15" de novo parece o mesmo botão que acabou de falhar.
+          <>
+            Tentar de novo <Ticket size={18} aria-hidden />
+          </>
         ) : (
           <>
             Pagar {formatarReais(total)} <Ticket size={18} aria-hidden />
@@ -441,7 +404,7 @@ export default function IngressoBaileForm() {
         )}
       </button>
 
-      <p className="text-xs text-brown-500 text-center mt-3">
+      <p className="text-xs text-brown-700 text-center mt-3">
         Você paga na página da InfinitePay, no PIX ou no cartão. O cartão tem a taxa da operadora.
       </p>
     </form>

@@ -153,6 +153,27 @@ h1, h2, h3, h4, h5, h6 {
   50% { transform: rotate(3deg) scale(0.98); }
 }
 
+/* Entrada que não pode sumir com o conteúdo.
+   O estado de REPOUSO no CSS é o estado final — visível, sem deslocamento. A
+   animação só desce desse estado e volta. Se o CSS não carregar, se a animação
+   não rodar, se o JavaScript morrer no caminho: o conteúdo está lá.
+   É o contrário do que o `motion` faz numa entrada `initial={{opacity:0}}`, que
+   o servidor manda com `style="opacity:0"` no HTML — e aí uma falha de JS
+   deixa a página em branco. Na /baile isso apagava o formulário de compra. */
+@keyframes surgir {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.25rem, 0);
+  }
+}
+
+@utility surge {
+  animation: surgir 620ms var(--ease-out-soft) both;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
 /* Movimento reduzido: para as animações em laço (pulse, ping, bounce, wiggle).
    Transições de cor e opacidade continuam no tempo normal — o problema é o
    movimento, não o esmaecimento.

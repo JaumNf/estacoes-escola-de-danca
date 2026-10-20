@@ -38,9 +38,13 @@ function erro(mensagem: string, status: number) {
   return NextResponse.json({ erro: mensagem }, { status });
 }
 
-/** O que se oferece quando a venda automática não dá — nunca um beco sem saída. */
-const FALE_COM_A_GENTE =
-  'A venda pelo site está indisponível agora. Chama a gente no WhatsApp que garantimos seu ingresso na hora.';
+/**
+ * A compra tem um caminho só: o formulário, indo para a InfinitePay. Por isso
+ * nenhuma mensagem daqui manda a pessoa para fora — toda saída tem de ser algo
+ * que ela possa fazer na própria tela, e nesta rota isso é sempre tentar de novo.
+ */
+const FORA_DO_AR =
+  'A venda pelo site está fora do ar neste momento. Tenta de novo em alguns minutos.';
 
 export async function POST(request: NextRequest) {
   if (!BAILE.ativo) {
@@ -61,11 +65,11 @@ export async function POST(request: NextRequest) {
   const credenciais = credenciaisDaPlanilha();
   if (!credenciais) {
     // Sem destino configurado, dizer "deu tudo certo" seria perder a venda.
-    return erro(FALE_COM_A_GENTE, 503);
+    return erro(FORA_DO_AR, 503);
   }
 
   if (!CHECKOUT.ativo || !CHECKOUT.handle) {
-    return erro(FALE_COM_A_GENTE, 503);
+    return erro(FORA_DO_AR, 503);
   }
 
   let dados: FormData;
@@ -149,10 +153,7 @@ export async function POST(request: NextRequest) {
 
   if (!gravacao.ok) {
     console.error('[baile]', gravacao.motivo);
-    return erro(
-      'Não conseguimos registrar seu ingresso agora. Manda no WhatsApp que a gente resolve na hora.',
-      502,
-    );
+    return erro('Não conseguimos registrar seu ingresso agora. Tenta de novo em instantes.', 502);
   }
 
   // O ingresso já está gravado. Agora a cobrança.
@@ -182,9 +183,9 @@ export async function POST(request: NextRequest) {
     });
     checkoutUrl = link.url;
   } catch (falha) {
-    // O ingresso está registrado; só o pagamento automático falhou. Em vez de
-    // perder a venda, o formulário manda a pessoa para o WhatsApp com o
-    // protocolo na mão.
+    // O ingresso está registrado; só a cobrança não nasceu. Devolvemos `ok`
+    // sem `checkoutUrl`, e o formulário pede para tentar de novo — o caminho
+    // da compra é um só, e não há atalho por fora dele.
     console.error('[baile] não consegui criar o link de pagamento:', falha);
   }
 

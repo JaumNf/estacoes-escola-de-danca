@@ -19,7 +19,7 @@
  * O baile não precisa saber que o intensivo existe.
  */
 
-import { formatarReais, type Formato } from '@/lib/comum';
+import type { Formato } from '@/lib/comum';
 
 export const BAILE = {
   /**
@@ -110,9 +110,4 @@ export function economiaDaDupla(): number {
 export function descricaoDoIngresso(formato: Formato): string {
   const quem = formato === 'dupla' ? 'ingresso para dois' : 'ingresso individual';
   return `${BAILE.nome} — ${quem} · ${BAILE.dia}/${BAILE.mes} ${BAILE.horario}`;
-}
-
-/** A frase do preço, pronta para a tela. */
-export function precoEscrito(formato: Formato): string {
-  return formatarReais(precoDoIngresso(formato));
 }
