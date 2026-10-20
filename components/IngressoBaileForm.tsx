@@ -22,7 +22,6 @@ import {
   formatarReais,
   formatarTelefone,
   telefoneValido,
-  emailValido,
   type Formato,
 } from '@/lib/comum';
 import { WHATSAPP_ESCOLA } from '@/lib/intensivo';
@@ -50,7 +49,6 @@ export default function IngressoBaileForm() {
   const [nome1, setNome1] = useState('');
   const [nome2, setNome2] = useState('');
   const [whatsapp1, setWhatsapp1] = useState('');
-  const [email1, setEmail1] = useState('');
   const [consentimento, setConsentimento] = useState(false);
 
   const [situacao, setSituacao] = useState<Situacao>('preenchendo');
@@ -75,10 +73,7 @@ export default function IngressoBaileForm() {
   const nome1Ok = nome1.trim().length >= 3;
   const nome2Ok = formato === 'individual' || nome2.trim().length >= 3;
   const whatsappOk = telefoneValido(whatsapp1);
-  // O e-mail é opcional: serve só para a InfinitePay pular uma etapa dela.
-  // Se estiver escrito, precisa estar escrito direito.
-  const emailOk = email1.trim() === '' || emailValido(email1);
-  const podeEnviar = nome1Ok && nome2Ok && whatsappOk && emailOk && consentimento;
+  const podeEnviar = nome1Ok && nome2Ok && whatsappOk && consentimento;
 
   async function enviar(evento: React.FormEvent) {
     evento.preventDefault();
@@ -93,7 +88,6 @@ export default function IngressoBaileForm() {
     dados.set('nome1', nome1.trim());
     if (formato === 'dupla') dados.set('nome2', nome2.trim());
     dados.set('whatsapp1', whatsapp1);
-    if (email1.trim()) dados.set('email1', email1.trim());
     dados.set('consentimento', 'true');
 
     try {
@@ -298,29 +292,12 @@ export default function IngressoBaileForm() {
           </p>
         </div>
 
-        <div>
-          <label htmlFor="baile-email" className="block text-sm font-bold mb-1.5">
-            E-mail <span className="font-normal text-brown-700">(opcional)</span>
-          </label>
-          <input
-            id="baile-email"
-            name="email1"
-            type="email"
-            autoComplete="email"
-            value={email1}
-            onChange={(e) => setEmail1(e.target.value)}
-            placeholder="voce@email.com"
-            className="w-full px-4 py-3 rounded-xl border-2 border-brown-200 bg-white focus:outline-none focus:border-terracotta"
-          />
-          {!emailOk && (
-            <p className="text-xs text-red-700 mt-1.5">
-              Confere o e-mail — ou deixe em branco, que também funciona.
-            </p>
-          )}
-          <p className="text-xs text-brown-700 mt-1.5">
-            Preenchendo, você adianta uma etapa na página de pagamento.
-          </p>
-        </div>
+        {/* Não se pede e-mail aqui: o ingresso precisa de nome e número, e é
+            isso. Em troca, a InfinitePay abre o passo "Contato" dela pedindo
+            e-mail e a confirmação do número — ela só pula esse passo quando a
+            cobrança nasce com e-mail, o que foi medido em 19/10/2026, isolando
+            um campo de cada vez. A rota continua aceitando `email1` se algum
+            dia voltar a vir. */}
       </div>
 
       {/* Consentimento. Mesmo cuidado dos rádios: o input é `sr-only` e sem o
