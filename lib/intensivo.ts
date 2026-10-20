@@ -130,7 +130,7 @@ export const LOTES: Lote[] = [
     id: 'primeiro',
     nome: 'Primeiro lote',
     porAula: 30,
-    porAulaDupla: 50,
+    porAulaDupla: 45,
     // Vira segundo lote no dia 21.
     ate: '2026-10-21T00:00:00-04:00',
   },
@@ -146,7 +146,7 @@ export const LOTES: Lote[] = [
  * Força um lote, ignorando as datas. Serve para antecipar ou segurar uma
  * virada à mão. Deixe `null` para o calendário mandar.
  *
- * Travado no primeiro lote (R$ 30 / R$ 50) em 20/10/2026, por decisão da
+ * Travado no primeiro lote (R$ 30 / R$ 45) em 20/10/2026, por decisão da
  * escola. Note que deixar `null` aqui NÃO manteria este preço: o calendário
  * viraria para o segundo lote — R$ 35 e R$ 60 — na meia-noite do dia 21, a um
  * dia do curso. Travar é o que garante o preço anunciado até o fim.
