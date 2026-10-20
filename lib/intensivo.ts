@@ -9,9 +9,33 @@
  * ⚠️  Enquanto `EDICAO.ativa` for false, nada disso aparece para o visitante:
  *     a página mostra o aviso de "novas edições em breve".
  *     As linhas marcadas "CONFIRMAR" ainda esperam a informação da escola.
+ *
+ * O BAILE NÃO SE VENDE AQUI. Ele é produto próprio, mora em `lib/baile.ts` e é
+ * vendido em `/baile`. Nesta edição ele aparece no cronograma do sábado, porque
+ * é a noite que fecha o curso, e quem fecha as quatro aulas entra de graça —
+ * mas a entrada não é um item deste carrinho.
  */
 
+import { BAILE } from '@/lib/baile';
+import type { Formato } from '@/lib/comum';
+
 export type Nivel = 'Do Zero' | 'Intermediário' | 'Todos os níveis';
+
+// O vocabulário compartilhado com o baile vive em `lib/comum.ts`. Reexportado
+// aqui porque mais de quarenta lugares já importam estes nomes deste arquivo —
+// mudar todos eles não compraria nada.
+export {
+  formatarReais,
+  digitosDoTelefone,
+  telefoneValido,
+  formatarTelefone,
+  whatsappComDdi,
+  emailValido,
+  type Formato,
+} from '@/lib/comum';
+
+/** O baile desta edição, para quem já importa daqui. A fonte é `lib/baile.ts`. */
+export { BAILE } from '@/lib/baile';
 
 export interface Aula {
   /** Identificador estável. Vai para a planilha e para o cálculo no servidor. */
@@ -26,8 +50,9 @@ export interface Aula {
   nome: string;
   nivel: Nivel;
   /**
-   * Baile e afins: entram na seleção e têm preço próprio (ver `Lote`), mas não
-   * contam como aula para as faixas de desconto.
+   * O baile. Aparece no cronograma porque é a noite que fecha o curso, mas
+   * **não se vende aqui**: o ingresso é comprado em `/baile`, e quem fecha as
+   * aulas todas entra de graça (ver `DESCONTOS` e `entradaDoBaileInclusa`).
    */
   evento?: boolean;
   /**
@@ -38,9 +63,17 @@ export interface Aula {
   descricao?: string;
 }
 
-/** Só o que pode ser comprado: tira os intervalos da jogada. */
+/**
+ * Só o que pode ser comprado nesta página: as aulas.
+ *
+ * Intervalo nunca foi vendável. O baile deixou de ser em 20/10/2026, quando a
+ * venda dele passou para `/baile` — e esta função é o ponto único onde isso é
+ * decidido: a rota da API filtra por ela antes de calcular o preço, então um
+ * id de baile que chegue pelo formulário é descartado no servidor, não só
+ * escondido na tela.
+ */
 export function ehVendavel(aula: Aula): boolean {
-  return !aula.intervalo;
+  return !aula.intervalo && !aula.evento;
 }
 
 export const EDICAO = {
@@ -84,35 +117,6 @@ export interface Lote {
   ate?: string;
 }
 
-/**
- * O baile tem preço próprio, igual em todos os lotes: mais barato para quem
- * compra adiantado, mais caro na portaria.
- */
-export const BAILE = {
-  /** Por pessoa, comprando pelo site. */
-  antecipado: 15,
-  /** O casal, comprando pelo site. */
-  antecipadoDupla: 25,
-  /** Por pessoa, na portaria. Não se vende aqui: é só informação. */
-  naHora: 20,
-  /** Início do baile, em ISO — é a partir daqui que o prazo é contado. */
-  comecaEm: '2026-10-24T20:00:00-04:00',
-  /** A venda antecipada fecha este tanto de minutos antes do baile. */
-  fechaAntesEmMinutos: 60,
-} as const;
-
-/**
- * A venda antecipada ainda está aberta? Depois do prazo, a entrada só na
- * portaria — e o formulário para de oferecer o que não pode cumprir.
- *
- * Recebe o instante de propósito: assim o servidor e o navegador chegam ao
- * mesmo resultado sem depender de quando a função foi chamada.
- */
-export function vendaAntecipadaDoBaileAberta(agora: Date = new Date()): boolean {
-  const limite = new Date(BAILE.comecaEm).getTime() - BAILE.fechaAntesEmMinutos * 60_000;
-  return agora.getTime() < limite;
-}
-
 export const LOTES: Lote[] = [
   {
     id: 'promocional',
@@ -141,8 +145,13 @@ export const LOTES: Lote[] = [
 /**
  * Força um lote, ignorando as datas. Serve para antecipar ou segurar uma
  * virada à mão. Deixe `null` para o calendário mandar.
+ *
+ * Travado no primeiro lote (R$ 30 / R$ 50) em 20/10/2026, por decisão da
+ * escola. Note que deixar `null` aqui NÃO manteria este preço: o calendário
+ * viraria para o segundo lote — R$ 35 e R$ 60 — na meia-noite do dia 21, a um
+ * dia do curso. Travar é o que garante o preço anunciado até o fim.
  */
-export const LOTE_FORCADO: LoteId | null = 'promocional';
+export const LOTE_FORCADO: LoteId | null = 'primeiro';
 
 /**
  * O lote que está valendo agora: o primeiro cuja data-limite ainda não passou.
@@ -172,13 +181,15 @@ export function viradaDoLote(agora: Date = new Date()): Date | null {
 
 /**
  * Faixas de desconto por quantidade de aulas. Valem em todos os lotes.
- * O desconto incide sobre as aulas; a entrada do baile não é descontada —
- * ou vem de brinde, na faixa que tem `incluiBaile`.
+ *
+ * O desconto incide sobre as aulas. A faixa marcada `incluiBaile` dá a entrada
+ * do baile: ela não entra na conta como item de valor zero — simplesmente não é
+ * cobrada, e a planilha registra "entrada inclusa" para a portaria saber.
  */
 export const DESCONTOS: {
   minimoAulas: number;
   percentual: number;
-  /** Ganha a entrada do baile junto. */
+  /** A entrada do baile vai junto, sem custo. */
   incluiBaile?: boolean;
 }[] = [
   { minimoAulas: 3, percentual: 10 },
@@ -250,21 +261,24 @@ export const AULAS: Aula[] = [
     nome: 'Lambada',
     nivel: 'Do Zero',
   },
+  // O baile fecha o sábado. Está aqui para aparecer no cronograma, com os
+  // dados vindos de `lib/baile.ts` — uma data só, num lugar só. Não é vendido
+  // nesta página: `ehVendavel` o exclui, e o ingresso se compra em /baile.
   {
     id: 'sab-baile',
-    dia: '24',
-    mes: 'OUT',
-    diaSemana: 'Sábado',
-    horario: '20:00 às 01:00',
-    nome: 'Baile de Halloween',
+    dia: BAILE.dia,
+    mes: BAILE.mes,
+    diaSemana: BAILE.diaSemana,
+    horario: BAILE.horario,
+    nome: BAILE.nome,
     nivel: 'Todos os níveis',
     evento: true,
-    descricao: 'Fantasia é opcional, mas a gente sabe que você quer.',
+    descricao: BAILE.observacao,
   },
 ];
 
 /** Quantas aulas de verdade a edição tem — o baile e os intervalos ficam fora. */
-export const TOTAL_DE_AULAS = AULAS.filter((a) => ehVendavel(a) && !a.evento).length;
+export const TOTAL_DE_AULAS = AULAS.filter(ehVendavel).length;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Pagamento
@@ -424,27 +438,29 @@ export const WHATSAPP_ESCOLA = '5567992630948';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Cálculo
-
-export type Formato = 'individual' | 'dupla';
+//
+// `Formato` — individual ou dupla — mora em `lib/comum.ts`, porque o ingresso
+// do baile usa a mesma escolha. Está reexportado no topo deste arquivo.
 
 export interface Orcamento {
   lote: Lote;
-  /** Soma só das aulas, antes do desconto. */
+  /** Soma das aulas, antes do desconto. */
   subtotalAulas: number;
-  /** Entrada do baile, quando escolhida e não ganha de brinde. */
-  subtotalBaile: number;
-  /** Tudo somado, antes do desconto. */
+  /** O mesmo que `subtotalAulas`: o baile não é item desta conta. */
   subtotal: number;
   percentualDesconto: number;
-  /** Quanto o desconto tirou, em reais. Incide só sobre as aulas. */
+  /** Quanto o desconto tirou, em reais. */
   desconto: number;
   total: number;
-  /** Quantas aulas de verdade — o baile não entra. */
   quantidadeAulas: number;
-  /** O baile foi escolhido? */
-  baileEscolhido: boolean;
-  /** O baile saiu de graça pela faixa de desconto? */
-  baileDeBrinde: boolean;
+  /**
+   * A entrada do baile vai de graça com esta inscrição?
+   *
+   * Não soma nem subtrai nada do total — é um fato que a planilha registra
+   * para a portaria saber quem entra sem ingresso. Quem não cai nesta faixa
+   * compra o ingresso em /baile, à parte.
+   */
+  entradaDoBaileInclusa: boolean;
   /** O que falta para a próxima faixa, para avisar quem está quase lá. */
   proximaFaixa?: { faltam: number; percentual: number; incluiBaile: boolean };
 }
@@ -453,11 +469,14 @@ export function aulaPorId(id: string): Aula | undefined {
   return AULAS.find((aula) => aula.id === id);
 }
 
-/** Preço de um item avulso, no lote que está valendo. */
+/**
+ * Preço de uma aula, no lote que está valendo.
+ *
+ * Zero para o que não se vende aqui — intervalo e baile. O preço do ingresso do
+ * baile está em `precoDoIngresso`, em `lib/baile.ts`.
+ */
 export function precoDe(aula: Aula, formato: Formato, lote: Lote = loteAtivo()): number {
-  if (aula.intervalo) return 0;
-  // O baile não acompanha o lote: tem preço próprio, de venda antecipada.
-  if (aula.evento) return formato === 'dupla' ? BAILE.antecipadoDupla : BAILE.antecipado;
+  if (!ehVendavel(aula)) return 0;
   return formato === 'dupla' ? lote.porAulaDupla : lote.porAula;
 }
 
@@ -465,29 +484,25 @@ export function precoDe(aula: Aula, formato: Formato, lote: Lote = loteAtivo()):
  * Calcula o valor de uma inscrição. É a mesma função usada pelo formulário e
  * pela rota da API: o servidor nunca confia no total que o navegador mandou.
  *
- * Regras: o desconto incide sobre as aulas, não sobre a entrada do baile. Na
- * faixa marcada com `incluiBaile`, a entrada do baile não é cobrada.
+ * O baile não entra na conta — `ehVendavel` o descarta antes de tudo, mesmo que
+ * o id dele chegue na lista. O que a faixa das quatro aulas dá é a entrada
+ * franca, registrada em `entradaDoBaileInclusa`, sem virar linha de preço.
  */
 export function calcularOrcamento(ids: readonly string[], formato: Formato): Orcamento {
   const lote = loteAtivo();
 
-  const escolhidas = ids
+  const aulas = ids
     .map(aulaPorId)
     .filter((aula): aula is Aula => Boolean(aula))
-    .filter(ehVendavel); // intervalo não se compra, nem por engano
+    .filter(ehVendavel); // intervalo e baile não se compram aqui, nem por engano
 
-  const aulas = escolhidas.filter((aula) => !aula.evento);
-  const baile = escolhidas.find((aula) => aula.evento);
   const quantidadeAulas = aulas.length;
 
   const faixa = DESCONTOS
     .filter((d) => quantidadeAulas >= d.minimoAulas)
     .sort((a, b) => b.minimoAulas - a.minimoAulas)[0];
 
-  const baileDeBrinde = Boolean(baile) && Boolean(faixa?.incluiBaile);
-
   const subtotalAulas = aulas.reduce((soma, aula) => soma + precoDe(aula, formato, lote), 0);
-  const subtotalBaile = baile && !baileDeBrinde ? precoDe(baile, formato, lote) : 0;
 
   const percentualDesconto = faixa?.percentual ?? 0;
   // Arredonda para o real: ninguém paga centavo em inscrição de curso.
@@ -500,14 +515,12 @@ export function calcularOrcamento(ids: readonly string[], formato: Formato): Orc
   return {
     lote,
     subtotalAulas,
-    subtotalBaile,
-    subtotal: subtotalAulas + subtotalBaile,
+    subtotal: subtotalAulas,
     percentualDesconto,
     desconto,
-    total: subtotalAulas + subtotalBaile - desconto,
+    total: subtotalAulas - desconto,
     quantidadeAulas,
-    baileEscolhido: Boolean(baile),
-    baileDeBrinde,
+    entradaDoBaileInclusa: Boolean(faixa?.incluiBaile),
     proximaFaixa: proxima
       ? {
           faltam: proxima.minimoAulas - quantidadeAulas,
@@ -516,77 +529,6 @@ export function calcularOrcamento(ids: readonly string[], formato: Formato): Orc
         }
       : undefined,
   };
-}
-
-/**
- * A regra do baile, aplicada em cima de uma seleção nova.
- *
- * Completou as aulas todas, o baile entra sozinho — é brinde, e ninguém devia
- * precisar descobrir isso marcando mais uma caixa. Se depois tirar uma aula, o
- * baile que entrou sozinho sai junto: deixá-lo marcado viraria uma cobrança
- * que a pessoa não pediu.
- *
- * O momento em que ela mexe no baile com a própria mão encerra o automático: a
- * partir dali a escolha é dela, e a gente não desfaz nem refaz.
- *
- * Fica aqui, e não no componente, porque é regra de negócio: assim dá para
- * testá-la sem navegador.
- */
-export interface EstadoDoBaile {
-  /** O baile presente na seleção entrou por brinde, e não por escolha. */
-  baileAutomatico: boolean;
-  /** A pessoa já tirou o baile com a própria mão. Não se oferece de novo. */
-  baileRecusado: boolean;
-}
-
-export function aplicarRegraDoBaile(
-  proximas: readonly string[],
-  opcoes: Partial<EstadoDoBaile> & {
-    /** Esta mudança foi a pessoa marcando ou desmarcando o próprio baile? */
-    mexeuNoBaile?: boolean;
-    /** A venda antecipada ainda está aberta? Fora do prazo, não se oferece. */
-    vendaAberta?: boolean;
-  },
-): EstadoDoBaile & { selecao: string[] } {
-  const {
-    baileAutomatico = false,
-    baileRecusado = false,
-    mexeuNoBaile = false,
-    vendaAberta = true,
-  } = opcoes;
-
-  const selecao = [...proximas];
-  const baile = AULAS.find((aula) => aula.evento);
-  if (!baile) return { selecao, baileAutomatico: false, baileRecusado };
-
-  const temBaile = selecao.includes(baile.id);
-
-  // A pessoa mexeu no baile: a escolha passa a ser dela, e tirar é uma recusa
-  // que vale para o resto da inscrição — senão o baile voltaria sozinho na
-  // próxima vez que ela completasse as aulas.
-  if (mexeuNoBaile) {
-    return { selecao, baileAutomatico: false, baileRecusado: !temBaile };
-  }
-
-  const quantasAulas = selecao.filter((id) => {
-    const aula = aulaPorId(id);
-    return aula && ehVendavel(aula) && !aula.evento;
-  }).length;
-  const completou = quantasAulas >= TOTAL_DE_AULAS;
-
-  if (completou && !temBaile && vendaAberta && !baileRecusado) {
-    return { selecao: [...selecao, baile.id], baileAutomatico: true, baileRecusado };
-  }
-
-  if (!completou && temBaile && baileAutomatico) {
-    return {
-      selecao: selecao.filter((id) => id !== baile.id),
-      baileAutomatico: false,
-      baileRecusado,
-    };
-  }
-
-  return { selecao, baileAutomatico, baileRecusado };
 }
 
 /** Agrupa as aulas por dia, preservando a ordem do array. */
@@ -603,66 +545,5 @@ export function aulasPorDia(): { dia: string; mes: string; diaSemana: string; au
   return dias;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Telefone
-//
-// Mora aqui, e não no formulário, porque o servidor precisa da mesma regra.
-// Quando as duas pontas tinham cópias diferentes, um número digitado com o
-// código do país chegou torto na planilha: "(55) 67992-6309".
-
-/**
- * Só os dígitos do número nacional: sem código de país, sem zero de discagem.
- *
- * O cuidado aqui é que **DDD 55 existe** (Santa Maria, RS). Então o "55" da
- * frente só é tratado como código do país quando o número não caberia num
- * nacional — que tem 10 ou 11 dígitos. Com 12 ou 13, o 55 sobra, e aí é DDI.
- */
-export function digitosDoTelefone(bruto: string): string {
-  let d = bruto.replace(/\D/g, '');
-  // "0" ou "021" na frente é prefixo de discagem, não faz parte do número.
-  d = d.replace(/^0+/, '');
-  if (d.startsWith('55') && (d.length === 12 || d.length === 13)) d = d.slice(2);
-  return d.slice(0, 11);
-}
-
-/** Celular (11 dígitos) ou fixo (10), já descontados DDI e zeros. */
-export function telefoneValido(bruto: string): boolean {
-  const d = digitosDoTelefone(bruto);
-  return d.length === 10 || d.length === 11;
-}
-
-/** (67) 99263-0948 — a máscara que o campo mostra enquanto se digita. */
-export function formatarTelefone(bruto: string): string {
-  const d = digitosDoTelefone(bruto);
-  if (d.length <= 2) return d;
-  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
-  if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
-  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
-}
-
-/**
- * Validação de e-mail deliberadamente frouxa: algo@algo.algo.
- *
- * Quem erra o próprio e-mail não é pego por regra nenhuma, e regra apertada
- * rejeita endereço legítimo — o que aqui custaria uma inscrição. O e-mail
- * serve para a InfinitePay aceitar o contato pronto, não para nos comunicarmos.
- */
-export function emailValido(bruto: string): boolean {
-  const e = bruto.trim();
-  return e.length <= 120 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);
-}
-
-/** Com o DDI, como a planilha e o WhatsApp esperam. Null se não for válido. */
-export function whatsappComDdi(bruto: string): string | null {
-  const d = digitosDoTelefone(bruto);
-  return telefoneValido(d) ? `55${d}` : null;
-}
-
-export function formatarReais(valor: number): string {
-  return valor.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  });
-}
+// Telefone, e-mail e dinheiro ficam em `lib/comum.ts`, reexportados no topo
+// deste arquivo: o baile precisa das mesmas regras e não pode depender daqui.

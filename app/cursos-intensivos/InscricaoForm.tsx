@@ -33,7 +33,6 @@ import {
   EDICAO,
   PIX,
   WHATSAPP_ESCOLA,
-  aplicarRegraDoBaile,
   aulaPorId,
   aulasPorDia,
   calcularOrcamento,
@@ -47,12 +46,11 @@ import {
   taxaDoCredito,
   telefoneValido,
   totalNoCredito,
-  vendaAntecipadaDoBaileAberta,
   viradaDoLote,
   type Aula,
-  type EstadoDoBaile,
   type Formato,
 } from '@/lib/intensivo';
+import { vendaAntecipadaAberta } from '@/lib/baile';
 import { gerarPixCopiaECola } from '@/lib/pix';
 
 const ETAPAS = [
@@ -179,18 +177,17 @@ export default function InscricaoForm() {
   const [qrCode, setQrCode] = useState('');
   const [copiado, setCopiado] = useState(false);
   /**
-   * O prazo da venda antecipada do baile depende da hora atual, que o servidor
-   * e o navegador não compartilham. Começa aberto e se corrige depois da
-   * montagem: assim o HTML do servidor e o da primeira renderização batem.
+   * O ingresso do baile não se vende aqui — a venda é em /baile. Isto só decide
+   * o que a linha do cronograma oferece a quem não ganhou a entrada: comprar
+   * antecipado, ou pagar na portaria.
+   *
+   * O prazo depende da hora atual, que o servidor e o navegador não
+   * compartilham. Começa aberto e se corrige depois da montagem: assim o HTML
+   * do servidor e o da primeira renderização batem.
    */
   const [antecipadaAberta, setAntecipadaAberta] = useState(true);
-  /** Se o baile entrou de brinde, e se a pessoa já o recusou uma vez. */
-  const [estadoDoBaile, setEstadoDoBaile] = useState<EstadoDoBaile>({
-    baileAutomatico: false,
-    baileRecusado: false,
-  });
   useEffect(() => {
-    setAntecipadaAberta(vendaAntecipadaDoBaileAberta());
+    setAntecipadaAberta(vendaAntecipadaAberta());
   }, []);
 
   const tituloEtapaRef = useRef<HTMLHeadingElement>(null);
@@ -334,36 +331,29 @@ export default function InscricaoForm() {
     setEtapa((n) => Math.min(3, n + 1));
   }
 
-  /** A regra mora em lib/intensivo.ts; aqui só se liga ao estado. */
-  function aplicarSelecao(proximas: string[], mexeuNoBaile = false) {
-    const resultado = aplicarRegraDoBaile(proximas, {
-      ...estadoDoBaile,
-      mexeuNoBaile,
-      vendaAberta: antecipadaAberta,
-    });
-    setSelecionadas(resultado.selecao);
-    setEstadoDoBaile({
-      baileAutomatico: resultado.baileAutomatico,
-      baileRecusado: resultado.baileRecusado,
-    });
-  }
-
+  /**
+   * A seleção é só de aulas. Não há mais regra de baile entrando e saindo do
+   * carrinho sozinho: a entrada franca das quatro aulas é um fato do orçamento
+   * (`entradaDoBaileInclusa`), não um item marcável.
+   */
   function alternarAula(id: string) {
     const aula = aulaPorId(id);
-    const proximas = selecionadas.includes(id)
-      ? selecionadas.filter((x) => x !== id)
-      : [...selecionadas, id];
-    aplicarSelecao(proximas, Boolean(aula?.evento));
+    // Guarda contra o id de algo que não se vende — o baile tem uma linha no
+    // cronograma e um clique nela não pode virar cobrança.
+    if (!aula || !ehVendavel(aula)) return;
+    setSelecionadas((atuais) =>
+      atuais.includes(id) ? atuais.filter((x) => x !== id) : [...atuais, id],
+    );
   }
 
   function alternarDia(aulasDoDia: Aula[]) {
     const ids = aulasDoDia.filter(ehVendavel).map((a) => a.id);
-    const todasMarcadas = ids.every((id) => selecionadas.includes(id));
-    const proximas = todasMarcadas
-      ? selecionadas.filter((id) => !ids.includes(id))
-      : [...new Set([...selecionadas, ...ids])];
-    // "Marcar tudo" num dia não é a pessoa mexendo no baile de propósito.
-    aplicarSelecao(proximas);
+    setSelecionadas((atuais) => {
+      const todasMarcadas = ids.every((id) => atuais.includes(id));
+      return todasMarcadas
+        ? atuais.filter((id) => !ids.includes(id))
+        : [...new Set([...atuais, ...ids])];
+    });
   }
 
   async function escolherArquivo(arquivo: File | null) {
@@ -820,25 +810,62 @@ export default function InscricaoForm() {
                               );
                             }
 
-                            // Passado o prazo, a entrada do baile só na portaria:
-                            // o formulário para de vender o que não pode cumprir.
-                            if (aula.evento && !antecipadaAberta) {
+                            // O baile aparece porque é a noite que fecha o
+                            // curso, mas o ingresso não se compra aqui: a venda
+                            // é em /baile. Quem fecha as aulas todas entra de
+                            // graça, e aí a linha deixa de oferecer compra.
+                            if (aula.evento) {
+                              const inclusa = orcamento.entradaDoBaileInclusa;
                               return (
                                 <div
                                   key={aula.id}
-                                  className="flex items-center gap-3 px-4 py-3.5 bg-brown-50/40"
+                                  className={`flex items-center gap-3 px-4 py-3.5 ${
+                                    inclusa ? 'bg-[#fffbeb]' : 'bg-brown-50/40'
+                                  }`}
                                 >
                                   <span aria-hidden className="w-5 shrink-0 grid place-items-center">
-                                    <Music size={14} className="text-brown-400" />
+                                    <Music
+                                      size={14}
+                                      className={inclusa ? 'text-[#b45309]' : 'text-brown-400'}
+                                    />
                                   </span>
                                   <span className="flex-1 min-w-0">
-                                    <span className="font-bold text-brown-600">{aula.nome}</span>
+                                    <span className="font-bold text-[#682c0b]">{aula.nome}</span>
+                                    <span className="block text-xs text-brown-600 mt-0.5 tabular-nums">
+                                      {aula.horario}
+                                    </span>
                                     <span className="block text-xs text-brown-600 mt-0.5">
-                                      A venda antecipada fechou. Entrada na portaria.
+                                      {inclusa ? (
+                                        'Sua entrada está inclusa — você fecha as aulas todas.'
+                                      ) : antecipadaAberta ? (
+                                        <>
+                                          Ingresso à parte, por{' '}
+                                          {formatarReais(BAILE.antecipado)} antecipado.{' '}
+                                          <a
+                                            href="/baile"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="font-bold text-orange-700 underline underline-offset-2"
+                                          >
+                                            Comprar na página do baile
+                                          </a>
+                                        </>
+                                      ) : (
+                                        <>
+                                          A venda antecipada fechou. Entrada na portaria, por{' '}
+                                          {formatarReais(BAILE.naHora)}.
+                                        </>
+                                      )}
                                     </span>
                                   </span>
-                                  <span className="font-display font-bold text-brown-700 shrink-0 tabular-nums">
-                                    {formatarReais(BAILE.naHora)}
+                                  <span className="shrink-0 text-right">
+                                    {inclusa ? (
+                                      <span className="text-sm font-bold text-green-700">
+                                        inclusa
+                                      </span>
+                                    ) : (
+                                      <span className="text-xs text-brown-500">à parte</span>
+                                    )}
                                   </span>
                                 </div>
                               );
@@ -874,45 +901,24 @@ export default function InscricaoForm() {
                                 <span className="flex-1 min-w-0">
                                   <span className="flex items-center gap-2 flex-wrap">
                                     <span className="font-bold text-[#682c0b]">{aula.nome}</span>
-                                    {aula.evento ? (
-                                      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-orange-100 text-orange-800 text-[9px] font-bold rounded uppercase tracking-wider">
-                                        <Music size={9} /> Baile
-                                      </span>
-                                    ) : (
-                                      <span
-                                        className={`px-2 py-0.5 text-[9px] font-bold rounded uppercase tracking-wider ${
-                                          aula.nivel === 'Do Zero'
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-blue-100 text-blue-800'
-                                        }`}
-                                      >
-                                        {aula.nivel}
-                                      </span>
-                                    )}
+                                    <span
+                                      className={`px-2 py-0.5 text-[9px] font-bold rounded uppercase tracking-wider ${
+                                        aula.nivel === 'Do Zero'
+                                          ? 'bg-green-100 text-green-800'
+                                          : 'bg-blue-100 text-blue-800'
+                                      }`}
+                                    >
+                                      {aula.nivel}
+                                    </span>
                                   </span>
                                   <span className="block text-xs text-brown-600 mt-0.5 tabular-nums">
                                     {aula.horario}
                                     {aula.descricao ? ` · ${aula.descricao}` : ''}
                                   </span>
-                                  {aula.evento && (
-                                    <span className="block text-xs text-brown-500 mt-0.5">
-                                      {formatarReais(BAILE.naHora)} na portaria · antecipado só até
-                                      1h antes
-                                    </span>
-                                  )}
                                 </span>
 
                                 <span className="font-display font-bold shrink-0 tabular-nums text-right">
-                                  {aula.evento && orcamento.baileDeBrinde ? (
-                                    <>
-                                      <span className="block text-brown-400 line-through text-sm font-body font-medium">
-                                        {formatarReais(preco(aula))}
-                                      </span>
-                                      <span className="block text-green-700 text-sm">grátis</span>
-                                    </>
-                                  ) : (
-                                    <span className="text-[#682c0b]">{formatarReais(preco(aula))}</span>
-                                  )}
+                                  <span className="text-[#682c0b]">{formatarReais(preco(aula))}</span>
                                 </span>
                               </label>
                             );
@@ -950,18 +956,12 @@ export default function InscricaoForm() {
                         </div>
                       )}
 
-                      {orcamento.baileEscolhido && (
-                        <div
-                          className={`flex justify-between text-sm ${
-                            orcamento.baileDeBrinde ? 'text-[#fbbf24] font-bold' : 'text-orange-200'
-                          }`}
-                        >
-                          <span>Baile de Halloween</span>
-                          <span className="tabular-nums">
-                            {orcamento.baileDeBrinde
-                              ? 'incluso'
-                              : formatarReais(orcamento.subtotalBaile)}
-                          </span>
+                      {/* A entrada franca não soma nem subtrai — aparece para
+                          a pessoa saber que não precisa comprar ingresso. */}
+                      {orcamento.entradaDoBaileInclusa && (
+                        <div className="flex justify-between text-sm text-[#fbbf24] font-bold">
+                          <span>{BAILE.nome}</span>
+                          <span className="tabular-nums">entrada inclusa</span>
                         </div>
                       )}
 

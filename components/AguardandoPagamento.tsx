@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, MessageCircle } from 'lucide-react';
 
-import { EDICAO, WHATSAPP_ESCOLA } from '@/lib/intensivo';
+import { WHATSAPP_ESCOLA } from '@/lib/intensivo';
 
 /**
  * Mostrado quando a pessoa voltou do checkout mas a InfinitePay ainda não
@@ -14,12 +14,22 @@ import { EDICAO, WHATSAPP_ESCOLA } from '@/lib/intensivo';
  * deixar a pessoa olhando para uma tela parada, a página se atualiza sozinha
  * por cerca de um minuto. Passado isso, para de tentar e oferece o caminho
  * humano — insistir para sempre só gastaria bateria e esperança.
+ *
+ * Serve à inscrição do curso e ao ingresso do baile: a espera é a mesma, só a
+ * palavra muda. Vive em `components/` por isso, e não ao lado de uma rota.
  */
 
 const INTERVALO_MS = 5000;
 const MAXIMO_DE_TENTATIVAS = 12; // ~1 minuto
 
-export default function AguardandoPagamento({ protocolo }: { protocolo?: string }) {
+export default function AguardandoPagamento({
+  protocolo,
+  /** Como a compra se chama na mensagem do WhatsApp. */
+  oQue = 'a inscrição',
+}: {
+  protocolo?: string;
+  oQue?: string;
+}) {
   const router = useRouter();
   const [tentativas, setTentativas] = useState(0);
   const desistiu = tentativas >= MAXIMO_DE_TENTATIVAS;
@@ -36,8 +46,8 @@ export default function AguardandoPagamento({ protocolo }: { protocolo?: string 
 
   const mensagem = encodeURIComponent(
     protocolo
-      ? `Oi! Paguei a inscrição do ${EDICAO.nome} e quero confirmar. Meu protocolo é ${protocolo}.`
-      : `Oi! Paguei a inscrição do ${EDICAO.nome} e quero confirmar.`,
+      ? `Oi! Paguei ${oQue} e quero confirmar. Meu protocolo é ${protocolo}.`
+      : `Oi! Paguei ${oQue} e quero confirmar.`,
   );
 
   if (desistiu) {

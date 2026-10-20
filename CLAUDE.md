@@ -35,9 +35,12 @@ React Leaflet · `@google/genai`.
   (`InscricaoForm.tsx`, `Countdown.tsx`, `AulaExperimentalModal.tsx`).
 - `components/` — compartilhados: Header, Footer, Chatbot, FAQ, Feedback, mapa, banner de
   cookies, menu de acessibilidade.
-- **Duas rotas de API**, ambas só de servidor: `app/api/chat` (Gemini) e
-  `app/api/inscricao` (inscrições do intensivo). Os outros formulários ainda enviam para
-  `formsubmit.co` e WhatsApp (`wa.me`).
+- **Três rotas de API**, todas só de servidor: `app/api/chat` (Gemini),
+  `app/api/inscricao` (inscrições do intensivo) e `app/api/baile` (ingresso do baile).
+  As duas últimas gravam na MESMA planilha, pelo mesmo `lib/planilha.ts`, e a confirmação
+  de pagamento das duas passa por `app/api/pagamento/webhook`, que acha a linha pelo
+  protocolo e não precisa saber qual produto foi vendido. Os formulários de contato ainda
+  enviam para `formsubmit.co` e WhatsApp (`wa.me`).
 - Imagens ficam em `public/images/` como WebP e passam pelo otimizador do Next. Não há
   `remotePatterns`: imagem nova entra no repositório, não por hotlink.
 - `public/` tem `manifest.json`, `sw.js`, `og.jpg` e `images/`.
@@ -52,10 +55,35 @@ da API leem daqui — **não escreva data nem preço direto em componente.**
   breve" (`components/EdicaoEmBreve.tsx`) e o formulário nem é montado.
 - Linhas marcadas `// CONFIRMAR` são valores que ainda precisam ser conferidos com a
   escola antes de publicar.
-- Item com `intervalo: true` aparece no cronograma mas não é vendido; com `evento: true`
-  (o baile) é vendido, mas não conta para a faixa de desconto.
+- Item com `intervalo: true` ou `evento: true` (o baile) aparece no cronograma mas **não é
+  vendido** — quem decide isso é `ehVendavel()`, e a rota da API filtra por ela antes de
+  calcular o preço. Quem fecha as 4 aulas ganha a entrada do baile: é o campo
+  `entradaDoBaileInclusa` do orçamento, que não vira linha de preço nenhuma.
 - O preço é recalculado no servidor em `app/api/inscricao/route.ts`: o total que o
   navegador manda é ignorado de propósito.
+
+## O baile mora noutro arquivo, e se vende noutra página
+
+`lib/baile.ts` é a fonte de verdade do baile: nome, data, horário, local, preço antecipado
+(individual e casal), preço de portaria e quanto antes a venda fecha. `BAILE.ativo` é o
+interruptor: com `false`, a `/baile` mostra "novas edições em breve" e o formulário não é
+montado.
+
+**A venda é só em `/baile`.** Até 20/10/2026 a entrada era um item do formulário do
+intensivo e esta página ficava desligada, com um formulário que mandava os dados para o
+`formsubmit.co` — não passava pelo checkout, não confirmava pagamento e não chegava na
+planilha. Hoje `/baile` usa a mesma máquina do intensivo: `POST /api/baile` → planilha →
+link da InfinitePay → `/baile/obrigado` → webhook.
+
+- A linha do ingresso cabe nas colunas que o Apps Script já tem (`quantidadeAulas: 0` é o
+  que a separa de uma inscrição). **Não é preciso mexer no `Codigo.gs` por causa disso.**
+- `lib/intensivo.ts` importa `lib/baile.ts`, nunca o contrário. O que os dois dividem —
+  `formatarReais`, as regras de telefone e e-mail, o tipo `Formato` — está em
+  `lib/comum.ts` e é reexportado por `lib/intensivo.ts`, para não quebrar os quarenta e
+  tantos lugares que já importam esses nomes de lá.
+- O prazo da venda antecipada é conferido nas duas pontas: na tela (depois da montagem,
+  para não quebrar a hidratação) e de novo no servidor, porque a página pode estar aberta
+  desde antes de fechar.
 
 **Inscrições → Google Sheets:** o formulário faz `POST /api/inscricao` (multipart, com o
 comprovante). A rota valida, recalcula o preço, gera o protocolo e repassa em JSON para um

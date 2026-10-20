@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
 import {
   BAILE,
+  CHECKOUT,
   CREDITO,
   DESCONTOS,
   EDICAO,
@@ -39,25 +40,47 @@ function perguntas() {
       pergunta: 'Posso fazer só uma aula?',
       resposta: `Pode. Cada aula custa ${formatarReais(lote.porAula)} (${formatarReais(lote.porAulaDupla)} a dupla) e você escolhe as que couberem na sua semana. ${
         faixaCheia
-          ? `Fazendo as ${TOTAL_DE_AULAS}, saem ${faixaCheia.percentual}% de desconto e a entrada do baile vai junto.`
+          ? `Fazendo as ${TOTAL_DE_AULAS}, saem ${faixaCheia.percentual}% de desconto e a entrada do baile vai junto, sem pagar nada a mais.`
           : ''
       }`,
     },
     {
+      pergunta: 'O ingresso do baile vem junto com as aulas?',
+      resposta: (
+        <>
+          Só para quem fecha as {TOTAL_DE_AULAS} aulas — aí a entrada está inclusa e não precisa
+          comprar nada. Fazendo menos aulas, o ingresso é à parte e se compra na{' '}
+          <a
+            href="/baile"
+            className="font-bold text-orange-700 underline underline-offset-2"
+          >
+            página do baile
+          </a>
+          : {formatarReais(BAILE.antecipado)} por pessoa ({formatarReais(BAILE.antecipadoDupla)} o
+          casal) antecipado, ou {formatarReais(BAILE.naHora)} na portaria.
+        </>
+      ),
+    },
+    {
       pergunta: 'O baile é só para quem faz as aulas?',
-      resposta: `Não, o baile é aberto ao público. A entrada custa ${formatarReais(
-        BAILE.antecipado,
-      )} comprando aqui pelo site (${formatarReais(
-        BAILE.antecipadoDupla,
-      )} a dupla) e ${formatarReais(
-        BAILE.naHora,
-      )} na portaria. A venda antecipada fecha uma hora antes de começar.`,
+      resposta: (
+        <>
+          Não, o baile é aberto a todo mundo — inclusive a quem nunca pisou numa aula. A venda
+          antecipada é na{' '}
+          <a href="/baile" className="font-bold text-orange-700 underline underline-offset-2">
+            página do baile
+          </a>{' '}
+          e fecha uma hora antes de começar; depois disso, entrada na portaria.
+        </>
+      ),
     },
     {
       pergunta: 'Como pago?',
-      resposta: CREDITO.ativo
-        ? `Por PIX ou no cartão de crédito. No PIX, o QR Code já aparece com o valor certo e você anexa o comprovante no próprio formulário. No crédito, o pagamento abre na página da ${CREDITO.operadora}.`
-        : 'Por PIX. O QR Code aparece com o valor já preenchido e você anexa o comprovante no próprio formulário — a gente confere e confirma sua vaga pelo WhatsApp.',
+      resposta: CHECKOUT.ativo
+        ? 'Pelo site. Você preenche a inscrição, cai na página de pagamento e escolhe PIX ou cartão de crédito. No PIX a confirmação é na hora, sem precisar anexar comprovante nenhum. No cartão, a operadora acrescenta a taxa dela e dá para parcelar.'
+        : CREDITO.ativo
+          ? `Por PIX ou no cartão de crédito. No PIX, o QR Code já aparece com o valor certo e você anexa o comprovante no próprio formulário. No crédito, o pagamento abre na página da ${CREDITO.operadora}.`
+          : 'Por PIX. O QR Code aparece com o valor já preenchido e você anexa o comprovante no próprio formulário — a gente confere e confirma sua vaga pelo WhatsApp.',
     },
     {
       pergunta: 'Que roupa eu uso?',

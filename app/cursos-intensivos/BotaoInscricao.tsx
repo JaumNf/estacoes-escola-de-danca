@@ -1,15 +1,18 @@
 'use client';
 
 import { ArrowRight } from 'lucide-react';
-import { AULAS, calcularOrcamento, formatarReais, loteAtivo } from '@/lib/intensivo';
+import { AULAS, calcularOrcamento, ehVendavel, formatarReais, loteAtivo } from '@/lib/intensivo';
 
-/** Tudo que dá para comprar: as aulas e o baile. */
-const TUDO = AULAS.filter((aula) => !aula.intervalo).map((aula) => aula.id);
+/** Tudo que dá para comprar nesta página: as aulas. O baile se vende em /baile. */
+const TUDO = AULAS.filter(ehVendavel).map((aula) => aula.id);
 
 /**
- * Quanto custa fazer o intensivo inteiro — com o desconto das 4 aulas e o
- * baile de brinde já aplicados. É a frase mais forte que a página tem, e sai
- * do mesmo cálculo que o formulário usa: não há número escrito à mão.
+ * Quanto custa fazer o intensivo inteiro, com o desconto das 4 aulas já
+ * aplicado. É a frase mais forte que a página tem, e sai do mesmo cálculo que o
+ * formulário usa: não há número escrito à mão.
+ *
+ * A entrada do baile vem inclusa nesta faixa, e por isso não aparece na soma —
+ * nada é cobrado por ela.
  */
 export function precoDoPacoteCompleto(): number {
   return calcularOrcamento(TUDO, 'individual').total;

@@ -13,6 +13,12 @@ import {
   type Formato,
 } from '@/lib/intensivo';
 import { criarLinkDePagamento, emCentavos, urlPublica } from '@/lib/pagamento';
+import {
+  credenciaisDaPlanilha,
+  gerarProtocolo,
+  gravarNaPlanilha,
+  limparNome,
+} from '@/lib/planilha';
 
 /**
  * Recebe uma inscrição do Curso Intensivo e repassa para a planilha do Google.
@@ -33,23 +39,8 @@ const TAMANHO_MAXIMO_COMPROVANTE = 3 * 1024 * 1024;
 
 const TIPOS_ACEITOS = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'application/pdf'];
 
-/**
- * Protocolo curto e legível em voz alta, sem caracteres que se confundem
- * (0/O, 1/I/L). É o que a pessoa cita no WhatsApp e o que identifica a
- * transferência no extrato.
- */
-function gerarProtocolo(): string {
-  const alfabeto = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-  let sufixo = '';
-  const aleatorio = new Uint8Array(6);
-  crypto.getRandomValues(aleatorio);
-  for (const byte of aleatorio) sufixo += alfabeto[byte % alfabeto.length];
-  return `EST-${sufixo}`;
-}
-
-function limparNome(bruto: string): string {
-  return bruto.replace(/\s+/g, ' ').trim().slice(0, 80);
-}
+/** O protocolo, o nome limpo e a gravação moram em `lib/planilha.ts`: a venda
+ *  do ingresso do baile usa exatamente os mesmos. */
 
 function erro(mensagem: string, status: number) {
   return NextResponse.json({ erro: mensagem }, { status });
@@ -60,9 +51,8 @@ export async function POST(request: NextRequest) {
     return erro('As inscrições desta edição não estão abertas.', 409);
   }
 
-  const webhook = process.env.INSCRICOES_WEBHOOK_URL;
-  const token = process.env.INSCRICOES_TOKEN;
-  if (!webhook || !token) {
+  const credenciais = credenciaisDaPlanilha();
+  if (!credenciais) {
     // Sem destino configurado, dizer "deu tudo certo" seria perder a inscrição.
     return erro(
       'O envio automático está fora do ar. Mande seus dados pelo WhatsApp que a gente garante sua vaga na hora.',
@@ -193,8 +183,7 @@ export async function POST(request: NextRequest) {
     })
     .join(' | ');
 
-  const corpo = {
-    token,
+  const gravacao = await gravarNaPlanilha(credenciais, {
     protocolo,
     enviadoEm: new Date().toISOString(),
     edicao: EDICAO.nome,
@@ -209,13 +198,15 @@ export async function POST(request: NextRequest) {
     whatsapp2,
     aulas: descricaoAulas,
     quantidadeAulas: orcamento.quantidadeAulas,
-    baile: orcamento.baileEscolhido
-      ? orcamento.baileDeBrinde
-        ? 'Sim (brinde das 4 aulas)'
-        : 'Sim (pago)'
-      : 'Não',
+    // O ingresso do baile não se vende mais aqui. O que esta coluna informa é
+    // se a entrada vai franca pela faixa das aulas todas — a portaria precisa
+    // disso para deixar a pessoa entrar sem ingresso na mão.
+    baile: orcamento.entradaDoBaileInclusa
+      ? `Entrada inclusa (${orcamento.quantidadeAulas} aulas)`
+      : 'Não — ingresso à parte',
     subtotalAulas: orcamento.subtotalAulas,
-    subtotalBaile: orcamento.subtotalBaile,
+    // A entrada inclusa não é cobrança de valor zero: nada é cobrado por ela.
+    subtotalBaile: 0,
     percentualDesconto: orcamento.percentualDesconto,
     desconto: orcamento.desconto,
     // No crédito a taxa da operadora é repassada, então o que a pessoa paga
@@ -229,100 +220,60 @@ export async function POST(request: NextRequest) {
     // inscrição de quem desiste no meio do caminho.
     status: viaCheckout ? 'Aguardando pagamento' : 'A conferir',
     arquivo,
-  };
+  });
 
-  try {
-    // O Apps Script responde em segundos; sem teto, uma indisponibilidade do
-    // Google deixaria a pessoa olhando o botão girar.
-    const resposta = await fetch(webhook, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(corpo),
-      signal: AbortSignal.timeout(20_000),
-      // O Apps Script responde 302 para o domínio de conteúdo do Google.
-      redirect: 'follow',
-    });
-
-    const texto = await resposta.text();
-    if (!resposta.ok) {
-      console.error('[inscricao] planilha respondeu', resposta.status, texto.slice(0, 500));
-      return erro(
-        'Não conseguimos registrar sua inscrição agora. Manda no WhatsApp que a gente resolve na hora.',
-        502,
-      );
-    }
-
-    // O script devolve JSON; se vier HTML, algo está mal configurado.
-    let resultado: { ok?: boolean; erro?: string; comprovanteUrl?: string } = {};
-    try {
-      resultado = JSON.parse(texto);
-    } catch {
-      console.error('[inscricao] resposta não-JSON da planilha:', texto.slice(0, 500));
-      return erro(
-        'Não conseguimos registrar sua inscrição agora. Manda no WhatsApp que a gente resolve na hora.',
-        502,
-      );
-    }
-
-    if (!resultado.ok) {
-      console.error('[inscricao] planilha recusou:', resultado.erro);
-      return erro(
-        'Não conseguimos registrar sua inscrição agora. Manda no WhatsApp que a gente resolve na hora.',
-        502,
-      );
-    }
-
-    // A inscrição já está gravada. Agora, se for pelo checkout, criamos a
-    // cobrança e devolvemos para onde mandar a pessoa.
-    let checkoutUrl: string | undefined;
-    if (viaCheckout) {
-      try {
-        const link = await criarLinkDePagamento({
-          handle: CHECKOUT.handle,
-          orderNsu: protocolo,
-          itens: [
-            {
-              quantity: 1,
-              price: emCentavos(totalCobrado),
-              description: `${EDICAO.nome} — ${orcamento.quantidadeAulas} ${
-                orcamento.quantidadeAulas === 1 ? 'aula' : 'aulas'
-              }${orcamento.baileEscolhido ? ' + baile' : ''} (${protocolo})`,
-            },
-          ],
-          redirectUrl: urlPublica(`/cursos-intensivos/inscricao/obrigado?protocolo=${protocolo}`),
-          webhookUrl: urlPublica('/api/pagamento/webhook'),
-          // Os três juntos são o que faz a InfinitePay dar a etapa "Contato"
-          // por preenchida. Faltando um, ela reabre o passo inteiro — que é o
-          // comportamento antigo, aceitável, e não um erro.
-          cliente: {
-            name: nome1,
-            phone_number: whatsapp1,
-            ...(email1 ? { email: email1 } : {}),
-          },
-          endereco: ENDERECO_COBRANCA,
-        });
-        checkoutUrl = link.url;
-      } catch (falha) {
-        // A inscrição já foi registrada; só o pagamento automático falhou.
-        // Em vez de perder a venda, o formulário cai no caminho manual.
-        console.error('[inscricao] não consegui criar o link de pagamento:', falha);
-      }
-    }
-
-    return NextResponse.json({
-      ok: true,
-      protocolo,
-      // O que a pessoa pagou de verdade — no crédito, já com a taxa repassada.
-      total: totalCobrado,
-      totalFormatado: formatarReais(totalCobrado),
-      taxaCartao,
-      checkoutUrl,
-    });
-  } catch (falha) {
-    console.error('[inscricao] falha ao falar com a planilha:', falha);
+  if (!gravacao.ok) {
+    console.error('[inscricao]', gravacao.motivo);
     return erro(
       'Não conseguimos registrar sua inscrição agora. Manda no WhatsApp que a gente resolve na hora.',
       502,
     );
   }
+
+  // A inscrição já está gravada. Agora, se for pelo checkout, criamos a
+  // cobrança e devolvemos para onde mandar a pessoa.
+  let checkoutUrl: string | undefined;
+  if (viaCheckout) {
+    try {
+      const link = await criarLinkDePagamento({
+        handle: CHECKOUT.handle,
+        orderNsu: protocolo,
+        itens: [
+          {
+            quantity: 1,
+            price: emCentavos(totalCobrado),
+            description: `${EDICAO.nome} — ${orcamento.quantidadeAulas} ${
+              orcamento.quantidadeAulas === 1 ? 'aula' : 'aulas'
+            } (${protocolo})`,
+          },
+        ],
+        redirectUrl: urlPublica(`/cursos-intensivos/inscricao/obrigado?protocolo=${protocolo}`),
+        webhookUrl: urlPublica('/api/pagamento/webhook'),
+        // Os três juntos são o que faz a InfinitePay dar a etapa "Contato"
+        // por preenchida. Faltando um, ela reabre o passo inteiro — que é o
+        // comportamento antigo, aceitável, e não um erro.
+        cliente: {
+          name: nome1,
+          phone_number: whatsapp1,
+          ...(email1 ? { email: email1 } : {}),
+        },
+        endereco: ENDERECO_COBRANCA,
+      });
+      checkoutUrl = link.url;
+    } catch (falha) {
+      // A inscrição já foi registrada; só o pagamento automático falhou.
+      // Em vez de perder a venda, o formulário cai no caminho manual.
+      console.error('[inscricao] não consegui criar o link de pagamento:', falha);
+    }
+  }
+
+  return NextResponse.json({
+    ok: true,
+    protocolo,
+    // O que a pessoa pagou de verdade — no crédito, já com a taxa repassada.
+    total: totalCobrado,
+    totalFormatado: formatarReais(totalCobrado),
+    taxaCartao,
+    checkoutUrl,
+  });
 }

@@ -4,7 +4,7 @@ import { CheckCircle2, MessageCircle, Users } from 'lucide-react';
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AguardandoPagamento from './AguardandoPagamento';
+import AguardandoPagamento from '@/components/AguardandoPagamento';
 import { CHECKOUT, COMUNIDADE_WHATSAPP, EDICAO, WHATSAPP_ESCOLA } from '@/lib/intensivo';
 import { consultarPagamento } from '@/lib/pagamento';
 
@@ -114,7 +114,7 @@ export default async function ObrigadoPage({
           {/* Enquanto não há confirmação, a página se atualiza sozinha. */}
           {!pago && temIdentificador && (
             <div className="mb-8">
-              <AguardandoPagamento protocolo={protocolo} />
+              <AguardandoPagamento protocolo={protocolo} oQue={`a inscrição do ${EDICAO.nome}`} />
             </div>
           )}
 

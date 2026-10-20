@@ -6,7 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import EdicaoEmBreve from '@/components/EdicaoEmBreve';
 import InscricaoForm from '../InscricaoForm';
-import { AULAS, EDICAO, calcularOrcamento, formatarReais, loteAtivo } from '@/lib/intensivo';
+import { AULAS, EDICAO, calcularOrcamento, ehVendavel, formatarReais, loteAtivo } from '@/lib/intensivo';
 
 /**
  * Página só da inscrição, para mandar o link direto no WhatsApp, no Instagram
@@ -26,7 +26,8 @@ import { AULAS, EDICAO, calcularOrcamento, formatarReais, loteAtivo } from '@/li
  */
 export const revalidate = 600;
 
-const TUDO = AULAS.filter((aula) => !aula.intervalo).map((aula) => aula.id);
+// Só as aulas: o ingresso do baile não se vende nesta página.
+const TUDO = AULAS.filter(ehVendavel).map((aula) => aula.id);
 const PRECO_CHEIO = calcularOrcamento(TUDO, 'individual').total;
 
 const TITULO = EDICAO.ativa
@@ -36,7 +37,9 @@ const TITULO = EDICAO.ativa
 const DESCRICAO = EDICAO.ativa
   ? `${EDICAO.periodo}, no Teatro do Mundo, em Campo Grande. Aulas do zero a partir de ${formatarReais(
       loteAtivo().porAula,
-    )} — ou tudo, com o baile incluso, por ${formatarReais(PRECO_CHEIO)}. Garanta sua vaga pelo PIX.`
+    )} — ou as quatro, com a entrada do baile inclusa, por ${formatarReais(
+      PRECO_CHEIO,
+    )}. Garanta sua vaga pelo PIX ou no cartão.`
   : 'As inscrições do próximo curso intensivo ainda não abriram. Entre na comunidade e seja avisado primeiro.';
 
 export const metadata: Metadata = {

@@ -81,8 +81,8 @@ export default function NiveisSection() {
           </p>
           <p className="text-[#645c58] text-base md:text-lg leading-relaxed">
             <strong className="text-[#682c0b]">Nem precisa fazer todas.</strong> Escolhe as aulas
-            que cabem na sua semana — e se der para fazer as {TOTAL_DE_AULAS}, o desconto e a
-            entrada do baile entram sozinhos.
+            que cabem na sua semana — e se der para fazer as {TOTAL_DE_AULAS}, o desconto entra
+            sozinho e a entrada do baile vem inclusa.
           </p>
         </div>
 
