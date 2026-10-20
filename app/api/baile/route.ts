@@ -7,7 +7,7 @@ import {
   vendaAntecipadaAberta,
 } from '@/lib/baile';
 import { emailValido, formatarReais, whatsappComDdi, type Formato } from '@/lib/comum';
-import { CHECKOUT, ENDERECO_COBRANCA } from '@/lib/intensivo';
+import { CHECKOUT, ENDERECO_COBRANCA, PIX } from '@/lib/intensivo';
 import { criarLinkDePagamento, emCentavos, urlPublica } from '@/lib/pagamento';
 import {
   credenciaisDaPlanilha,
@@ -33,6 +33,11 @@ import {
  *     propósito: mandar o total pelo formulário seria deixar o cliente
  *     escolher quanto pagar.
  */
+
+/** Teto do comprovante depois da compressão feita no navegador. */
+const TAMANHO_MAXIMO_COMPROVANTE = 3 * 1024 * 1024;
+
+const TIPOS_ACEITOS = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'application/pdf'];
 
 function erro(mensagem: string, status: number) {
   return NextResponse.json({ erro: mensagem }, { status });
@@ -65,10 +70,6 @@ export async function POST(request: NextRequest) {
   const credenciais = credenciaisDaPlanilha();
   if (!credenciais) {
     // Sem destino configurado, dizer "deu tudo certo" seria perder a venda.
-    return erro(FORA_DO_AR, 503);
-  }
-
-  if (!CHECKOUT.ativo || !CHECKOUT.handle) {
     return erro(FORA_DO_AR, 503);
   }
 
@@ -115,6 +116,44 @@ export async function POST(request: NextRequest) {
     return erro('Precisamos do seu aceite para guardar seus dados e entrar em contato.', 400);
   }
 
+  // ── caminho do pagamento ──────────────────────────────────────────────────
+  //
+  // Dois caminhos, e o servidor decide qual vale — não o navegador. Pedir
+  // checkout com ele desligado cai no PIX; pedir PIX com ele desligado cai no
+  // checkout. Se nenhum dos dois estiver de pé, não há venda a fazer.
+  const checkoutDisponivel = CHECKOUT.ativo && Boolean(CHECKOUT.handle);
+  const pixDisponivel = PIX.ativo && Boolean(PIX.chave);
+  if (!checkoutDisponivel && !pixDisponivel) return erro(FORA_DO_AR, 503);
+
+  const pediuPix = String(dados.get('metodo') ?? '') === 'pix';
+  const viaCheckout = checkoutDisponivel && (!pediuPix || !pixDisponivel);
+
+  // ── comprovante ───────────────────────────────────────────────────────────
+  //
+  // Só existe no caminho do PIX: no checkout a confirmação vem pelo webhook e
+  // não há o que anexar. Sem comprovante no PIX, a linha nasceria "A conferir"
+  // sem nada para conferir.
+  const enviado = dados.get('comprovante');
+  let arquivo: { nome: string; tipo: string; base64: string } | null = null;
+
+  if (!viaCheckout) {
+    if (!(enviado instanceof File) || enviado.size === 0) {
+      return erro('Anexe o comprovante do PIX para a gente confirmar seu ingresso.', 400);
+    }
+    if (enviado.size > TAMANHO_MAXIMO_COMPROVANTE) {
+      return erro('O comprovante passou de 3 MB. Manda um print ou uma foto menor.', 413);
+    }
+    if (!TIPOS_ACEITOS.includes(enviado.type)) {
+      return erro('O comprovante precisa ser imagem (JPG, PNG) ou PDF.', 415);
+    }
+    const bytes = Buffer.from(await enviado.arrayBuffer());
+    arquivo = {
+      nome: enviado.name.replace(/[^\w.\-]/g, '_').slice(0, 80) || 'comprovante',
+      tipo: enviado.type,
+      base64: bytes.toString('base64'),
+    };
+  }
+
   // ── preço ─────────────────────────────────────────────────────────────────
   const total = precoDoIngresso(formato);
   const protocolo = gerarProtocolo();
@@ -146,14 +185,29 @@ export async function POST(request: NextRequest) {
     taxaCartao: 0,
     total,
     totalFormatado: formatarReais(total),
-    metodo: 'Checkout (PIX ou cartão)',
-    status: 'Aguardando pagamento',
-    arquivo: null,
+    metodo: viaCheckout ? 'Checkout (PIX ou cartão)' : 'PIX',
+    // No checkout a linha nasce "aguardando" e o webhook a promove a "Pago"
+    // sozinho. No PIX ela nasce "A conferir" e espera alguém da escola abrir
+    // o comprovante — é a diferença de trabalho entre os dois caminhos.
+    status: viaCheckout ? 'Aguardando pagamento' : 'A conferir',
+    arquivo,
   });
 
   if (!gravacao.ok) {
     console.error('[baile]', gravacao.motivo);
     return erro('Não conseguimos registrar seu ingresso agora. Tenta de novo em instantes.', 502);
+  }
+
+  // No PIX o trabalho acabou: o comprovante está gravado e a escola confere.
+  // Não há cobrança a criar, e devolver sem `checkoutUrl` é o sinal que o
+  // formulário usa para mostrar a tela de "comprovante recebido".
+  if (!viaCheckout) {
+    return NextResponse.json({
+      ok: true,
+      protocolo,
+      total,
+      totalFormatado: formatarReais(total),
+    });
   }
 
   // O ingresso já está gravado. Agora a cobrança.
