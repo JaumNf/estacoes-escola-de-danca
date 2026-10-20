@@ -430,8 +430,25 @@ export function creditoLevaOValor(): boolean {
   return /\{valor\}|\{centavos\}/.test(CREDITO.url);
 }
 
-/** Grupo onde a próxima edição é anunciada. */
+/**
+ * Comunidade geral da escola: onde a próxima edição é anunciada.
+ *
+ * É o link do cabeçalho, do rodapé, da página de contato e de aulas regulares.
+ * Serve a quem ainda não comprou nada.
+ */
 export const COMUNIDADE_WHATSAPP = 'https://chat.whatsapp.com/GleDoqpuQAh0K1Bo8fho7T';
+
+/**
+ * Grupo DESTA edição do intensivo — outro grupo, outro link.
+ *
+ * É por ele que horário, local e mudanças de última hora chegam a quem já se
+ * inscreveu, e por isso é a única ação da tela de confirmação: a inscrição
+ * está paga, mas a pessoa só fica sabendo das coisas se entrar aqui.
+ *
+ * ⚠️  Troque a cada edição, junto com `EDICAO`. Um link velho manda o aluno
+ *     novo para a turma do curso passado.
+ */
+export const GRUPO_INTENSIVO = 'https://chat.whatsapp.com/JAC5pq1CG141OZaziUXoM7';
 
 /** Número de atendimento, só dígitos, com DDI. */
 export const WHATSAPP_ESCOLA = '5567992630948';

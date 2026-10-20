@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { CheckCircle2, MessageCircle, Users } from 'lucide-react';
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AguardandoPagamento from '@/components/AguardandoPagamento';
-import { CHECKOUT, COMUNIDADE_WHATSAPP, EDICAO, WHATSAPP_ESCOLA } from '@/lib/intensivo';
+import { CHECKOUT, EDICAO, GRUPO_INTENSIVO, WHATSAPP_ESCOLA } from '@/lib/intensivo';
 import { consultarPagamento } from '@/lib/pagamento';
 
 /**
@@ -96,20 +95,9 @@ export default async function ObrigadoPage({
 
           <p className="text-brown-700 text-lg mb-8">
             {pago
-              ? 'Sua vaga está garantida. Entre no grupo para receber os avisos do curso — horário, local e tudo que mudar.'
+              ? 'Sua vaga está paga e garantida. Falta um passo: entrar no grupo do curso.'
               : 'Assim que o pagamento compensar, a gente confirma sua vaga pelo WhatsApp.'}
           </p>
-
-          {protocolo && (
-            <div className="inline-flex flex-col items-center gap-1 bg-brown-50 border border-brown-200 rounded-2xl px-8 py-5 mb-8">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-brown-600">
-                Protocolo
-              </span>
-              <span className="text-2xl font-display font-bold text-[#682c0b] tabular-nums tracking-wide">
-                {protocolo}
-              </span>
-            </div>
-          )}
 
           {/* Enquanto não há confirmação, a página se atualiza sozinha. */}
           {!pago && temIdentificador && (
@@ -118,47 +106,58 @@ export default async function ObrigadoPage({
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            {pago ? (
+          {/* Uma ação só, e ela é o grupo.
+              Quem chega aqui já pagou — não há nada a decidir, só uma coisa a
+              fazer. Um segundo botão competindo ("Voltar ao curso") só dava a
+              quem acabou de pagar uma porta para sair sem entrar no grupo, e é
+              no grupo que a aula acontece: horário, local e qualquer mudança
+              saem por lá e por mais nenhum canal. */}
+          {pago ? (
+            <>
               <a
-                href={COMUNIDADE_WHATSAPP}
+                href={GRUPO_INTENSIVO}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="pressable inline-flex items-center justify-center gap-2 bg-[#25D366] text-white px-6 py-4 rounded-2xl font-bold hover:bg-[#1da851]"
+                className="pressable w-full inline-flex items-center justify-center gap-2.5 bg-[#25D366] text-white px-6 py-5 rounded-2xl font-bold text-lg shadow-lg shadow-[#25D366]/25 hover:bg-[#1da851]"
               >
-                <Users size={18} aria-hidden /> Entrar no grupo
+                <Users size={22} aria-hidden /> Entrar no grupo do curso
               </a>
-            ) : (
-              <a
-                href={`https://wa.me/${WHATSAPP_ESCOLA}?text=${mensagemWhatsapp}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pressable inline-flex items-center justify-center gap-2 bg-[#682c0b] text-orange-50 px-6 py-4 rounded-2xl font-bold hover:bg-terracotta"
-              >
-                <MessageCircle size={18} aria-hidden /> Falar no WhatsApp
-              </a>
-            )}
-
-            <Link
-              href="/cursos-intensivos"
-              className="pressable inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-bold text-brown-800 border-2 border-brown-200 hover:bg-brown-50"
+              <p className="text-sm text-brown-700 mt-4">
+                É por lá que a gente manda <strong className="text-[#682c0b]">horário, local
+                e tudo que mudar</strong>. Quem não entra no grupo fica sem os avisos.
+              </p>
+            </>
+          ) : (
+            <a
+              href={`https://wa.me/${WHATSAPP_ESCOLA}?text=${mensagemWhatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pressable w-full inline-flex items-center justify-center gap-2 bg-[#682c0b] text-orange-50 px-6 py-4 rounded-2xl font-bold hover:bg-terracotta"
             >
-              Voltar ao curso
-            </Link>
-          </div>
+              <MessageCircle size={18} aria-hidden /> Falar no WhatsApp
+            </a>
+          )}
 
-          {pago && (
-            <p className="text-sm text-brown-600 mt-6">
-              Guarde o protocolo. Qualquer coisa,{' '}
-              <a
-                href={`https://wa.me/${WHATSAPP_ESCOLA}?text=${mensagemWhatsapp}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-bold text-orange-700 underline underline-offset-2"
-              >
-                fala com a gente
-              </a>
-              .
+          {/* O protocolo fica, mas como referência — não como o assunto da
+              tela. Quem precisa dele é quem vai falar com a escola, e o botão
+              do WhatsApp acima já o leva embutido na mensagem. */}
+          {protocolo && (
+            <p className="text-xs text-brown-700 mt-8 pt-5 border-t border-brown-100">
+              Protocolo{' '}
+              <span className="font-bold tabular-nums tracking-wide">{protocolo}</span>
+              {pago && (
+                <>
+                  {' '}·{' '}
+                  <a
+                    href={`https://wa.me/${WHATSAPP_ESCOLA}?text=${mensagemWhatsapp}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-bold text-orange-700 underline underline-offset-2"
+                  >
+                    falar com a gente
+                  </a>
+                </>
+              )}
             </p>
           )}
         </div>
