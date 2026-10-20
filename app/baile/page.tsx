@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { AlertCircle, Calendar, Clock, MapPin, Music, Ticket } from 'lucide-react';
+import { AlertCircle, Calendar, MapPin, Music, Ticket } from 'lucide-react';
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -44,6 +44,15 @@ const DESCRICAO = BAILE.ativo
     )} — ${formatarReais(BAILE.naHora)} na portaria. Não precisa levar par.`
   : 'Nossos bailes acontecem em edições especiais ao longo do ano. Entre na comunidade e seja avisado da próxima data.';
 
+/**
+ * Com uma edição no ar, o preview do link é o CARTAZ dela — é essa imagem que
+ * aparece quando alguém manda a página num grupo de WhatsApp, que é por onde a
+ * maior parte do público chega. Sem isto, sai a foto genérica do site.
+ */
+const IMAGEM = BAILE.ativo
+  ? [{ url: BAILE.arte.src, width: BAILE.arte.largura, height: BAILE.arte.altura, alt: BAILE.arte.alt }]
+  : undefined;
+
 export const metadata: Metadata = {
   title: TITULO,
   description: DESCRICAO,
@@ -55,6 +64,13 @@ export const metadata: Metadata = {
     siteName: 'Estações Escola de Dança',
     locale: 'pt_BR',
     type: 'website',
+    ...(IMAGEM ? { images: IMAGEM } : {}),
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITULO,
+    description: DESCRICAO,
+    ...(IMAGEM ? { images: IMAGEM } : {}),
   },
 };
 
@@ -171,67 +187,98 @@ export default function BailePage() {
             </p>
           </div>
 
-          <div className="max-w-xl mx-auto">
-            <div className="bg-white rounded-[32px] p-8 shadow-lg shadow-orange-900/5 border border-orange-100 relative overflow-hidden hover-fine:-translate-y-1 transition-[translate,box-shadow] duration-240">
-              <div className="absolute top-0 left-0 w-full h-1.5 bg-rose-500" />
-              {/* O local é um rótulo, não um título: quando era `h3` e o nome
-                  do baile `h4`, a estrutura dizia que o Teatro do Mundo contém
-                  o evento — o contrário do que a página conta, e o que um
-                  leitor de tela anunciaria. */}
-              <div className="flex items-center gap-3 mb-6">
-                <MapPin className="text-rose-600" size={20} aria-hidden />
-                <p className="font-bold text-brown-800 tracking-wide uppercase text-sm">
-                  Teatro do Mundo
-                </p>
-              </div>
+          {ativo ? (
+            // O cartaz manda, e os dados dele vêm ao lado EM TEXTO. O que está
+            // escrito dentro de uma imagem não é lido por leitor de tela, não é
+            // traduzido, não é selecionável e some se a imagem não carregar —
+            // por isso data, hora, preço e endereço aparecem nos dois lugares.
+            <div className="grid md:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] gap-8 md:gap-12 items-center">
+              <Image
+                src={BAILE.arte.src}
+                alt={BAILE.arte.alt}
+                width={BAILE.arte.largura}
+                height={BAILE.arte.altura}
+                sizes="(max-width: 768px) 100vw, 40vw"
+                className="w-full h-auto rounded-[28px] shadow-2xl shadow-black/25 ring-1 ring-black/10"
+              />
 
-              <div className="flex items-start gap-4">
-                <div className="bg-[#fffcf5] rounded-xl p-3 text-center min-w-[70px] border border-orange-100">
-                  {ativo ? (
-                    <>
-                      <span className="block text-xl font-bold text-[#682c0b] tabular-nums">
-                        {BAILE.dia}
-                      </span>
-                      <span className="block text-xs font-bold text-brown-700 uppercase">
-                        {BAILE.mes}
-                      </span>
-                    </>
-                  ) : (
-                    <Calendar className="text-orange-400 mx-auto" size={24} aria-hidden />
-                  )}
-                </div>
+              <div>
+                <h3 className="text-3xl md:text-4xl font-display font-bold text-[#682c0b] mb-3 text-balance">
+                  {BAILE.nome}
+                </h3>
+                {BAILE.observacao && (
+                  <p className="text-[#874c2e] text-lg mb-6">{BAILE.observacao}</p>
+                )}
 
-                <div>
-                  <h3 className="text-xl font-display font-bold text-[#682c0b] mb-1">
-                    {ativo ? BAILE.nome : 'Próximo baile em breve!'}
-                  </h3>
-                  <p className="text-[#874c2e] text-sm mb-2">
-                    {ativo ? (
-                      BAILE.observacao
-                    ) : (
-                      <>
-                        Estamos organizando a próxima edição.{' '}
-                        <strong>
-                          Assim que a data for definida, anunciamos aqui e na nossa comunidade no
-                          WhatsApp.
-                        </strong>
-                      </>
-                    )}
-                  </p>
-                  {ativo && (
-                    <div className="space-y-1">
-                      <p className="flex items-center gap-2 text-xs text-brown-700 tabular-nums">
-                        <Clock size={14} aria-hidden /> {BAILE.horario}
-                      </p>
-                      <p className="flex items-center gap-2 text-xs text-brown-700">
-                        <MapPin size={14} aria-hidden /> {BAILE.local}
-                      </p>
+                <dl className="space-y-3 mb-6">
+                  <div className="flex items-start gap-3">
+                    <Calendar className="text-rose-600 shrink-0 mt-0.5" size={18} aria-hidden />
+                    <div>
+                      <dt className="sr-only">Quando</dt>
+                      <dd className="font-bold text-brown-900">
+                        {BAILE.periodo}
+                        <span className="block font-normal text-brown-800 tabular-nums">
+                          {BAILE.horario}
+                        </span>
+                      </dd>
                     </div>
-                  )}
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <MapPin className="text-rose-600 shrink-0 mt-0.5" size={18} aria-hidden />
+                    <div>
+                      <dt className="sr-only">Onde</dt>
+                      <dd className="font-bold text-brown-900">
+                        {BAILE.local}
+                        <span className="block font-normal text-brown-800">{BAILE.cidade}</span>
+                      </dd>
+                    </div>
+                  </div>
+                </dl>
+
+                {BAILE.atracoes.length > 0 && (
+                  <ul className="flex flex-wrap gap-2">
+                    {BAILE.atracoes.map((atracao) => (
+                      <li
+                        key={atracao}
+                        className="rounded-full bg-white border border-orange-200 px-3.5 py-1.5 text-sm font-medium text-brown-900"
+                      >
+                        {atracao}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="max-w-xl mx-auto">
+              <div className="bg-white rounded-[32px] p-8 shadow-lg shadow-orange-900/5 border border-orange-100 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-rose-500" />
+                <div className="flex items-center gap-3 mb-6">
+                  <MapPin className="text-rose-600" size={20} aria-hidden />
+                  <p className="font-bold text-brown-800 tracking-wide uppercase text-sm">
+                    Teatro do Mundo
+                  </p>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="bg-[#fffcf5] rounded-xl p-3 min-w-[70px] border border-orange-100">
+                    <Calendar className="text-brown-700 mx-auto" size={24} aria-hidden />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-display font-bold text-[#682c0b] mb-1">
+                      Próximo baile em breve!
+                    </h3>
+                    <p className="text-[#874c2e] text-sm">
+                      Estamos organizando a próxima edição.{' '}
+                      <strong>
+                        Assim que a data for definida, anunciamos aqui e na nossa comunidade no
+                        WhatsApp.
+                      </strong>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 

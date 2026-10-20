@@ -57,6 +57,36 @@ export const BAILE = {
   /** Linha solta de ambiente. Deixe '' para esconder. */
   observacao: 'Fantasia é opcional, mas a gente sabe que você quer.',
 
+  /**
+   * O que a noite tem, além da pista. Cada item vira uma linha na página.
+   * Vazio esconde a lista inteira.
+   *
+   * Estes vieram da arte oficial do baile, não de suposição: quem escrever uma
+   * edição nova precisa confirmar com a escola antes de mudar.
+   */
+  atracoes: ['Baile de dança de salão', 'Dois ambientes', 'DJ Dadson e DJ Desproposito'],
+
+  /**
+   * O cartaz da edição.
+   *
+   * Serve a duas coisas, e a segunda é a que mais importa: além de aparecer na
+   * página, é a imagem que o WhatsApp e o Instagram mostram quando alguém
+   * manda o link. Sem ela o preview sai com a foto genérica do site.
+   *
+   * `alt` descreve a arte para quem não a enxerga. Os dados que estão escritos
+   * DENTRO do cartaz — data, hora, preço, endereço — também aparecem em texto
+   * na página, porque imagem não é lida, não é traduzida e não é selecionável.
+   */
+  arte: {
+    src: '/images/baile-halloween-2026.webp',
+    largura: 1122,
+    altura: 1402,
+    alt:
+      'Cartaz do Baile de Halloween da Estações: Jason, Freddy Krueger e Michael Myers ' +
+      'em verde, cada um com um laço rosa na cabeça, sobre fundo preto, com o nome do ' +
+      'baile em letras vermelhas de pincel e duas abóboras também de laço rosa.',
+  },
+
   // ── Preços ────────────────────────────────────────────────────────────────
 
   /** Por pessoa, comprando pelo site. */
