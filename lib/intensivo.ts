@@ -81,7 +81,7 @@ export const EDICAO = {
    * O interruptor geral. Com false, a página mostra "novas edições em breve"
    * e o formulário não é montado.
    */
-  ativa: true,
+  ativa: false,
 
   nome: 'Intensivo de Halloween',
   /** Aparece no hero, abaixo do título. */

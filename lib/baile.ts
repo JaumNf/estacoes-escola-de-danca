@@ -27,7 +27,7 @@ export const BAILE = {
    * Ligue junto de conferir TODOS os campos abaixo — principalmente `comecaEm`,
    * que é o que fecha a venda antecipada na hora certa.
    */
-  ativo: true,
+  ativo: false,
 
   nome: 'Baile de Halloween',
 
